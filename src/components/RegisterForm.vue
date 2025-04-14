@@ -5,7 +5,6 @@ import { authService } from '@/services/auth.service'
 
 
 const form = ref({
-  username: '',
   birthDate: '',
   email: '',
   password: '',
@@ -47,17 +46,6 @@ async function handleSubmit(event) {
 
 <template>
   <form @submit="handleSubmit" class="register-form">
-    <label for="username">Username</label>
-    <input
-      type="text"
-      id="username"
-      v-model="form.username"
-      placeholder="Enter your username"
-      title="Username must start with a letter, followed by 2-29 alphanumeric characters, dashes, or underscores."
-      required,
-      maxlength="30"
-      pattern="^[A-z][A-z0-9-_]{2,29}$"
-    />
     <label for="birthDate">Birth Date</label>
     <input
       type="date"

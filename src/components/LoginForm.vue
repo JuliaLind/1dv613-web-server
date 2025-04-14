@@ -4,7 +4,7 @@ import { authService } from '@/services/auth.service'
 
 
 const form = ref({
-  username: '',
+  email: '',
   password: '',
 })
 
@@ -30,17 +30,14 @@ async function handleSubmit(event) {
 </script>
 
 <template>
-  <form @submit="handleSubmit" class="register-form">
-    <label for="username">Username</label>
+  <form @submit="handleSubmit" class="login-form">
+    <label for="email">Email</label>
     <input
-      type="text"
-      id="username"
-      v-model="form.username"
-      placeholder="Enter your username"
-      title="Username must start with a letter, followed by 2-29 alphanumeric characters, dashes, or underscores."
-      required,
-      maxlength="30"
-      pattern="^[A-z][A-z0-9-_]{2,29}$"
+      type="email"
+      id="email"
+      v-model="form.email"
+      placeholder="Enter your email"
+      required
     />
     <label for="password">Password</label>
     <input
@@ -57,10 +54,6 @@ async function handleSubmit(event) {
     <p>
       Don't have an account? <a href="/register">Register</a>
     </p>
-    <!-- <p>
-      <a href="/forgot-password">Forgot Password?</a>
-    </p>
-    -->
   </form>
 </template>
 
