@@ -8,7 +8,7 @@ describe('LoginForm', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it('renders properly', () => {
+  it('Submit login form, ok', () => {
     authService.login = vi.fn()
     const wrapper = mount(LoginForm)
     const emailInput = wrapper.find('input[type="email"]')
@@ -19,7 +19,6 @@ describe('LoginForm', () => {
     emailInput.setValue(email)
     passwordInput.setValue(password)
     submitButton.trigger('submit')
-    expect(authService.login).toHaveBeenCalled()
-    expect(authService.login).toHaveBeenCalledWith({ email, password })
+    expect(authService.login).toHaveBeenCalledExactlyOnceWith({ email, password })
   })
 })

@@ -1,4 +1,4 @@
-const authUrl = process.env.VUE_AUTH_URL
+const authUrl = import.meta.env.VUE_AUTH_URL
 
 /**
  * Service for handling authentication requests.
@@ -34,7 +34,7 @@ export const authService = {
     let data
     try {
       data = await response.json()
-    } catch (error) {
+    } catch {
       throw new Error('Something went wrong')
     }
     if (!response.ok) {

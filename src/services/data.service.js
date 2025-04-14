@@ -1,4 +1,5 @@
-const authUrl = process.env.VUE_AUTH_URL
+const authUrl = import.meta.env.VUE_AUTH_URL
+const dataUrl = import.meta.env.VUE_DATA_URL
 
 /**
  * Service for handling authentication requests.
@@ -34,7 +35,7 @@ export class DataService {
     let data
     try {
       data = await response.json()
-    } catch (error) {
+    } catch {
       throw new Error('Something went wrong')
     }
     if (!response.ok) {
