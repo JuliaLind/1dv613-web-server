@@ -1,4 +1,4 @@
-const dataUrl = import.meta.env.VUE_DATA_URL
+const dataUrl = import.meta.env.VITE_DATA_URL
 import { AuthService } from './auth.service.js'
 
 /**
@@ -38,7 +38,7 @@ export class MealService {
       Authorization: `Bearer ${accessToken}`,
     }
 
-    const response = await fetch(`${dataUrl}/v1/${path}`, {
+    const response = await fetch(`${dataUrl}${path}`, {
       method,
       headers,
       body: JSON.stringify(body),
@@ -48,7 +48,7 @@ export class MealService {
   }
 
   async index(date=new Date()) {
-    const path = `meals/date/${date}`
+    const path = `/meals/date/${date}`
     const data = await this.request({ path })
     return data
   }

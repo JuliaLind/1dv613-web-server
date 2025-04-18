@@ -2,19 +2,18 @@
 import { ref, onMounted, defineProps } from 'vue'
 import { addDays, subDays, format } from 'date-fns'
 import Meal from '@/components/Meal.vue'
-import { FoodList } from '@/components/FoodList.vue'
+import FoodList from '@/components/FoodList.vue'
 import { MealService } from '@/services/meal.service.js'
 
 const props = defineProps({
   date: {
-    type: Date,
+    type: String,
     required: false,
     default: () => []
   }
 })
 
 const mealService = new MealService()
-
 const meals = ref({})
 
 
@@ -71,7 +70,7 @@ function closeFoodList() {
       />
     </div>
     <FoodList
-      v-show="current"
+      v-if="current"
       :foods="current.foods"
       @close="closeFoodList"
     />

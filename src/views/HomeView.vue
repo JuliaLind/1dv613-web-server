@@ -36,7 +36,7 @@ function prev() {
     />
     </div>
 
-    <MealList :date="current" />
+    <MealList :date="format(current, 'yyyy-MM-dd')" />
 
   </main>
 </template>

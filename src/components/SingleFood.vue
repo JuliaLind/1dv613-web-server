@@ -25,6 +25,8 @@ onMounted(async () => {
 })
 
 const weight = ref(0)
+const weightUnit = ref('g')
+const weightOptions = [{name: 'Gram', code: 'g'}]
 
 function calcValue (value_100g, weight) {
   return value_100g / 100 * weight
@@ -50,6 +52,16 @@ const data = computed(() => {
     <h2 class="text-xl font-bold text-slate-800 capitalize">{{ food.name }}, {{ food.brand }}</h2>
     <Button label="Add" size="small" @click="$emit('add-food')"/>
   </header>
+  <div class="flex flex-col gap-2 mt-4">
+    <div class="flex items-center justify-between">
+      <span class="text-slate-500 text-sm">Weight</span>
+      <InputNumber v-model="value2" inputId="minmax-buttons" mode="decimal" showButtons :min="0" :max="100" fluid />
+      <Select v-model="weightUnit" :options="weightOptions" optionLabel="name" class="w-full md:w-56" fluid />
+    </div>
+    <div class="flex items-center justify-between">
+      <span class="text-slate-500 text-sm">Kcal</span>
+      <span class="text-slate-800 text-xl font-bold">{{ data.kcal }} kcal</span>
+    </div>
 
   <footer class="flex justify-end mt-4">
     <Button

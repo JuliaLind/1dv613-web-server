@@ -7,7 +7,7 @@ import Toast from 'primevue/toast'
 <template>
   <div class="w-full max-w-[768px] min-h-screen bg-white min-h-screen p-4">
      <RouterView />
-     <Toast position="bottom-center" />
+     <Toast position="top-center" />
   </div>
 </template>
 
