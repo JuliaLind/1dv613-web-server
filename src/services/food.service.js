@@ -21,4 +21,13 @@ export class FoodService {
     const data = await response.json()
     return data
   }
+
+  async get(ean) {
+    const response = await fetch(`${dataUrl}/v1/foods/${ean}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch food item')
+    }
+    const data = await response.json()
+    return data
+  }
 }

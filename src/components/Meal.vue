@@ -1,7 +1,6 @@
 <script setup>
 import { ref, defineProps } from 'vue'
 import MealItem from '@/components/MealItem.vue'
-import title from 'title'
 
 
 const props = defineProps({
@@ -32,8 +31,6 @@ if (props.type.startsWith('snack')) {
   name = 'Snacks'
 }
 
-let foods = props.foods
-
 
 </script>
 
@@ -45,7 +42,7 @@ let foods = props.foods
   </header>
   <div class="flex flex-col gap-2 mt-4">
     <MealItem
-      v-for="food in props.foods"
+      v-for="food in foods"
       :key="food.ean"
       :ean="food.ean"
       :name="food.name"
@@ -60,6 +57,7 @@ let foods = props.foods
       class="p-button-text text-xl text-slate-800 primary-color"
       :aria-label="'Add food'"
       icon="pi pi-plus"
+      @click="$emit('add-food')"
     />
 </footer>
 </div>

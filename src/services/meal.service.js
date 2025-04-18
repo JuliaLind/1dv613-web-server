@@ -31,7 +31,7 @@ export class MealService {
     return res.json()
   }
 
-  async fetch({ path, method = 'GET', body = {} }) {
+  async fetch({ path, method = 'GET', body = undefined }) {
     const accessToken = localStorage.getItem('accessToken')
     const headers = {
       'Content-Type': 'application/json',
