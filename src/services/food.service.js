@@ -23,7 +23,7 @@ export class FoodService {
   }
 
   async get(ean) {
-    const response = await fetch(`${dataUrl}/foods/${ean}`)
+    const response = await fetch(`${dataUrl}/foods/ean/${ean}`)
     if (!response.ok) {
       throw new Error('Failed to fetch food item')
     }

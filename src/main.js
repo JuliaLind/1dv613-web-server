@@ -14,10 +14,11 @@ import Password from 'primevue/password'
 import FloatLabel from 'primevue/floatlabel'
 import { Form } from '@primevue/forms'
 import InputText from 'primevue/inputtext'
-import Message from 'primevue/message'
+import InputNumber from 'primevue/inputnumber'
 import { DatePicker } from 'primevue'
 import ToastService from 'primevue/toastservice'
 import Select from 'primevue/select'
+import Drawer from 'primevue/drawer'
 
 const app = createApp(App)
 
@@ -55,9 +56,11 @@ app.component('Password', Password)
 app.component('FloatLabel', FloatLabel)
 app.component('Form', Form)
 app.component('InputText', InputText)
-app.component('Message', Message)
+app.component('InputNumber', InputNumber)
 app.component('DatePicker', DatePicker)
 app.component('Select', Select)
+app.component('Drawer', Drawer)
+
 app.use(ToastService)
 
 app.use(createPinia())
