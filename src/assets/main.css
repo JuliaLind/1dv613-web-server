@@ -5,3 +5,7 @@
 main {
   max-width: 48em;
 }
+
+h1 {
+  color: var(--p-cyan-600);
+}

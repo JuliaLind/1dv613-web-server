@@ -1,4 +1,5 @@
-const authUrl = import.meta.env.VUE_AUTH_URL
+const authUrl = import.meta.env.VITE_AUTH_URL
+console.log(authUrl)
 
 /**
  * Service for handling authentication requests.

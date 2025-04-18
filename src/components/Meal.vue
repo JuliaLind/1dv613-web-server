@@ -3,6 +3,7 @@ import { ref, defineProps } from 'vue'
 import MealItem from '@/components/MealItem.vue'
 import title from 'title'
 
+
 const props = defineProps({
   id: {
     type: String,
@@ -31,13 +32,15 @@ if (props.type.startsWith('snack')) {
   name = 'Snacks'
 }
 
+let foods = props.foods
+
 
 </script>
 
 <template>
-<div>
+<div class="bg-white rounded-lg shadow-md p-6">
   <header class="flex items-center justify-between">
-    <h2 class="text-2xl font-bold text-slate-800 capitalize">{{ name }}</h2>
+    <h2 class="text-xl font-bold text-slate-800 capitalize">{{ name }}</h2>
     <span class="text-slate-500 text-sm">{{ kcal }} kcal</span>
   </header>
   <div class="flex flex-col gap-2 mt-4">
@@ -52,7 +55,7 @@ if (props.type.startsWith('snack')) {
       :kcal_100g="food.kcal_100g"
     />
   </div>
-  <footer class="flex items-center justify-between mt-4">
+  <footer class="flex justify-end mt-4">
     <Button
       class="p-button-text text-xl text-slate-800 primary-color"
       :aria-label="'Add food'"

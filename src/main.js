@@ -16,6 +16,8 @@ import { Form } from '@primevue/forms'
 import InputText from 'primevue/inputtext'
 import Message from 'primevue/message'
 import { DatePicker } from 'primevue'
+import ToastService from 'primevue/toastservice'
+import Card from 'primevue/card'
 
 const app = createApp(App)
 
@@ -55,6 +57,8 @@ app.component('Form', Form)
 app.component('InputText', InputText)
 app.component('Message', Message)
 app.component('DatePicker', DatePicker)
+app.component('Card', Card)
+app.use(ToastService)
 
 app.use(createPinia())
 app.use(router)

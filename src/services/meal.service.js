@@ -11,7 +11,7 @@ export class MealService {
     this.#authService = authService
   }
 
-  async request(params = { path, method: 'GET', body: {} }) {
+  async request(params = { path, method: 'GET', body: undefined }) {
     let res = await this.fetch(params)
     let ok = true
 
