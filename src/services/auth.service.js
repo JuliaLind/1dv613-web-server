@@ -3,7 +3,7 @@ const authUrl = import.meta.env.VUE_AUTH_URL
 /**
  * Service for handling authentication requests.
  */
-export const authService = {
+export class AuthService {
   /**
    * Sends a POST request containing a body
    * to the authentication server.
@@ -21,7 +21,7 @@ export const authService = {
       body: JSON.stringify(data)
     })
     return await this.handleRes(response)
-  },
+  }
 
   /**
    * Handles the response from a fetch request.
@@ -41,7 +41,7 @@ export const authService = {
       throw new Error(data.message)
     }
     return data
-  },
+  }
 
   /**
    * Registers a new user.
@@ -54,7 +54,7 @@ export const authService = {
    */
   async register(user) {
     await this.post('/register', user)
-  },
+  }
 
   /**
    * Logs in the user.
@@ -68,7 +68,7 @@ export const authService = {
   async login(credentials) {
     const res = await this.post('/login', credentials)
     this.setTokens(res)
-  },
+  }
 
   /**
    * Stores the access and refresh tokens in local storage.
@@ -80,7 +80,7 @@ export const authService = {
   setTokens(tokens) {
     localStorage.setItem('accessToken', tokens.accessToken)
     localStorage.setItem('refreshToken', tokens.refreshToken)
-  },
+  }
 
   /**
    * Gets the refresh token from local storage.
@@ -93,7 +93,7 @@ export const authService = {
       throw new Error('No refresh token found')
     }
     return token
-  },
+  }
 
   /**
    * Refreshes the access token using the refresh token.
@@ -112,7 +112,15 @@ export const authService = {
         'Authorization': `Bearer ${refreshtoken}`
       },
     })
-    const res = await this.handleRes(response)
-    this.setTokens(res)
+    try {
+      const res = await this.handleRes(response)
+      this.setTokens(res)
+      return true
+    } catch {
+      // todo redirect to login page
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+      return false
+    }
   }
 }

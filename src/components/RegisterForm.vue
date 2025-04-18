@@ -1,25 +1,16 @@
 <script setup>
 import { ref } from 'vue'
-import { subYears, format } from 'date-fns'
-import { authService } from '@/services/auth.service'
+import { format } from 'date-fns'
+import { AuthService } from '@/services/auth.service'
 
+const authService = new AuthService()
 
-const form = ref({
-  birthDate: '',
-  email: '',
-  password: '',
-})
+const birthDate = ref('')
+const email = ref('')
+const password = ref('')
 const confirmPassword = ref('')
-const minBirthDate = subYears(new Date(), this.age)
-
-/**
- * Validates the form inputs.
- */
-function validateForm() {
-  if (form.value.password !== confirmPassword.value) {
-    throw new Error('Passwords do not match')
-  }
-}
+const minDate = new Date()
+minDate.setFullYear(minDate.getFullYear() - 18)
 
 
 /**
@@ -30,60 +21,50 @@ function validateForm() {
  * @throws {Error} - Throws an error if the form is invalid
  */
 async function handleSubmit(event) {
+  if (!form.checkValidity() || confirmPassword.value !== password.value) {
+      return
+    }
+
   event.preventDefault()
   try {
-    validateForm()
-
-    await authService.register(form.value)
+    const form = event.target
+    await authService.register({
+      birthDate: birthDate.value,
+      email: email.value,
+      password: password.value
+    })
   } catch (error) {
     // TODO add a toast or something
     console.error(error.message)
   }
 }
 
-
 </script>
 
 <template>
-  <form @submit="handleSubmit" class="register-form">
-    <label for="birthDate">Birth Date</label>
-    <input
-      type="date"
-      id="birthDate"
-      :min="format(minBirthDate, 'yyyy-MM-dd')"
-      v-model="form.birthDate"
-      placeholder="Enter your birth date"
-      title="You must be at least 18 years old to register."
-      required
-    />
-    <label for="email">Email</label>
-    <input
-      type="email"
-      id="email"
-      v-model="form.email"
-      placeholder="Enter your email"
-      required
-    />
-    <label for="password">Password</label>
-    <input
-      type="password"
-      id="password"
-      v-model="form.password"
-      placeholder="Enter your password"
-      minlength="8"
-      title="Password must be at least 8 characters long"
-      maxlength="256"
-      required
-    />
-    <label for="confirmPassword">Confirm Password</label>
-    <input
-      type="password"
-      id="confirmPassword"
-      v-model="confirmPassword"
-      placeholder="Confirm your password"
-      required
-    />
-    <button type="submit">Register</button>
+  <form @submit="handleSubmit" class="flex flex-col gap-4 max-w-md w-full mx-auto">
+    <FloatLabel variant="on">
+      <DatePicker id="birthDate" v-model="buttondisplay" showIcon fluid :showOnFocus="false" dateFormat="yyyy-mm-dd" :min="format(minDate, 'yyyy-MM-dd')" required/>
+      <label for="birthDate">Date of birth</label>
+    </FloatLabel>
+
+      <FloatLabel variant="on">
+        <InputText id="email" type="email" v-model="email" />
+        <label for="email">Email</label>
+      </FloatLabel>
+
+      <FloatLabel variant="on">
+        <Password id="password" v-model="password" toggleMask feedback="false" minlength="8" maxlength="255" required />
+        <label for="password">Password</label>
+      </FloatLabel>
+
+
+    <FloatLabel variant="on">
+    <Password v-model="confirmPassword" toggleMask :invalid="!confirmPassword || confirmPassword !== form.password" minlength="8"/>
+      <label for="on_label">Confirm Password</label>
+    </FloatLabel>
+
+    <Button type="submit" label="Submit" />
     <p>
       Already have an account? <a href="/login">Login</a>
     </p>
