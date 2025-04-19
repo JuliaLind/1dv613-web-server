@@ -26,6 +26,9 @@ async function prev() {
 const formattedDate = computed(() => {
   return format(currentDate.value, 'yyyy-MM-dd')
 })
+const weekday = computed(() => {
+  return format(currentDate.value, 'EEEE')
+})
 
 
 const router = useRouter()
@@ -132,7 +135,7 @@ onMounted(async () => {
 
 function selectMeal(type) {
   currentMeal.value = meals.value[type]
-  console.log('current selected meal', currentMeal.value)
+
   visible.value = true
 }
 
@@ -152,8 +155,6 @@ async function setItem(food) {
       currentMeal.value = meal
       meals.value[currentMeal.value.type] = meal
     } else {
-      // const foodItems = await mealService.addFoodItem(currentMeal.value.id, item)
-      // currentMeal.value.foodItems = foodItems
       const newId = await mealService.addFoodItem(currentMeal.value.id, item)
       food.id = newId
       console.log(food)
@@ -205,6 +206,7 @@ async function removeFoodItem({ foodId, type }) {
     <div id="date-picker" class="flex items-center justify-center gap-4">
       <Button @click="prev" class="p-button-text text-xl text-slate-800 primary-color primary-color-text"
         :aria-label="'Previous date'" icon="pi pi-chevron-left" />
+      <span>{{ weekday }}</span>
       <span>{{ formattedDate }}</span>
       <Button @click="next" class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Next date'"
         icon="pi pi-chevron-right" />
