@@ -1,5 +1,5 @@
 const authUrl = import.meta.env.VITE_AUTH_URL
-console.log(authUrl)
+
 
 /**
  * Service for handling authentication requests.
@@ -116,12 +116,13 @@ export class AuthService {
     try {
       const res = await this.handleRes(response)
       this.setTokens(res)
-      return true
-    } catch {
-      // todo redirect to login page
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('refreshToken')
-      return false
+      // return true
+    } catch (error){
+      if (error.message === 'jwt expired') {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+      }
+      throw new Error(error.message)
     }
   }
 }

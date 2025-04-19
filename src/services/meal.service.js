@@ -13,19 +13,14 @@ export class MealService {
 
   async request(params = { path, method: 'GET', body: undefined }) {
     let res = await this.fetch(params)
-    let ok = true
 
     if (res.status === 401) {
-      ok = await this.#authService.refresh()
+      await this.#authService.refresh()
+  
+      res = await this.fetch(params)
     }
 
-    if (!ok) {
-      return undefined
-    }
-
-    res = await this.fetch(params)
-
-    if (res.status === 204) {
+    if (!res.ok || res.status === 204) {
       return undefined
     }
     return res.json()

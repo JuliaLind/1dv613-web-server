@@ -49,7 +49,7 @@ const addFood = (data) => {
 <template>
 <Button
   variant="text"
-  class="w-full text-left py-3 px-2 hover:bg-slate-50 transition-colors border-b border-slate-200 flex flex-row gap-4 " @click="openDrawer"
+  class="w-full text-left hover:bg-slate-50 transition-colors border-b border-slate-200 flex flex-row gap-4 " @click="openDrawer"
 >
   <img
     v-if="props.img"
@@ -58,7 +58,7 @@ const addFood = (data) => {
     class="w-16 h-16 object-cover rounded-lg mb-2"
   />
   <div class="flex flex-col gap-1 w-full">
-    <span class="text-left w-full font-semibold text-slate-800 capitalize">
+    <span class="text-left w-full font-semibold text-slate-600 capitalize">
       {{ props.name }}, {{ props.brand ?? '' }}
     </span>
     <span class="text-left w-full text-slate-500 text-sm">
