@@ -5,19 +5,22 @@ import { MealService } from '@/services/meal.service.js'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import MealList from '@/components/MealList.vue'
-import FoodList from '@/components/FoodList.vue'
+import { FoodService } from '@/services/food.service'
+
 import { createToastService } from '@/services/toast.service'
+import FoodDetail from '@/components/FoodDetail.vue'
 
 const currentMeal = ref(null)
 const currentDate = ref(new Date())
+
 async function next() {
   currentDate.value = addDays(currentDate.value, 1)
-  await fetchData()
+  await fetchMeals()
 }
 
 async function prev() {
   currentDate.value = subDays(currentDate.value, 1)
-  await fetchData()
+  await fetchMeals()
 }
 
 const formattedDate = computed(() => {
@@ -31,13 +34,12 @@ const toastService = createToastService(toast)
 
 const mealService = new MealService()
 const meals = ref({})
+const visible = ref(false)
 
-
-
-const fetchData = async () => {
+async function fetchMeals() {
   try {
-    meals.value = await mealService.index(formattedDate.value)
-    currentMeal.value = null
+    const data = await mealService.index(formattedDate.value)
+    meals.value = data
   } catch (error) {
     if (error.message === 'jwt expired') {
       toastService.alertError('Session expired', 'Please login again')
@@ -45,62 +47,207 @@ const fetchData = async () => {
       return
     }
     toastService.alertError('Something went wrong', 'Please try again later')
-    console.error('Error fetching data:', error)
   }
+}
+
+const foodService = new FoodService()
+let page = 1
+const fetchMore = ref(true)
+const products = ref([])
+const query = ref('')
+
+async function fetchProducts() {
+  try {
+    const data = await getUnfiltered()
+
+    products.value = [...products.value, ...data]
+  } catch (error) {
+    toastService.alertError('Something went wrong', 'Please try again later')
+  }
+}
+
+async function search() {
+  try {
+    const data = await getFiltered()
+    products.value = [...products.value, ...data]
+  } catch (error) {
+    toastService.alertError('Something went wrong', 'Please try again later')
+  }
+}
+
+async function getFiltered() {
+  try {
+    const data = await foodService.search(query.value, page)
+    page = data.page + 1
+    if (data.to === data.total || data.foodItems.length === 0) {
+      fetchMore.value = false
+    }
+    return data.foodItems
+  } catch (error) {
+    toastService.alertError('Something went wrong', 'Please try again later')
+  }
+}
+
+async function getUnfiltered() {
+  try {
+    const data = await foodService.index(page)
+
+    page = data.page + 1
+
+    if (data.to === data.total || data.foodItems.length === 0) {
+      fetchMore.value = false
+    }
+
+    return data.foodItems
+  } catch (error) {
+    toastService.alertError('Something went wrong', 'Please try again later')
+  }
+}
+
+async function loadMore() {
+  if (query.value.length > 2) {
+    await search()
+  } else {
+    await fetchProducts()
+  }
+}
+
+async function onInput() {
+  page = 1
+  let data = []
+
+  if (query.value.length > 0) {
+    data = await getFiltered()
+  } else if (query.value.length === 0) {
+    data = await getUnfiltered()
+  }
+  products.value = data
 }
 
 
 onMounted(async () => {
-  await fetchData()
+  await fetchMeals()
+  await fetchProducts()
 })
 
-function addFood(type) {
-  const meal = meals.value[type]
-  console.log(type, 'selected')
-  if (meal) {
-    currentMeal.value = {
-      id: meal.id,
-      foods: meal.foods,
+function selectMeal(type) {
+  currentMeal.value = meals.value[type]
+  console.log('current selected meal', currentMeal.value)
+  visible.value = true
+}
+
+async function setItem(food) {
+  const item = {
+    ean: food.ean,
+    weight: food.weight,
+    unit: food.unit
+  }
+  try {
+    if (!currentMeal.value.id) {
+      const meal = await mealService.post({
+        date: formattedDate.value,
+        type: currentMeal.value.type,
+        foodItems: [item]
+      })
+      currentMeal.value = meal
+      meals.value[currentMeal.value.type] = meal
+    } else {
+      // const foodItems = await mealService.addFoodItem(currentMeal.value.id, item)
+      // currentMeal.value.foodItems = foodItems
+      const newId = await mealService.addFoodItem(currentMeal.value.id, item)
+      food.id = newId
+      console.log(food)
+      currentMeal.value.foodItems.push(food)
     }
-  } else {
-    currentMeal.value = {
-      type,
-      date: currentDate.value,
-      foods: []
+  } catch (error) {
+    if (error.status === 401) {
+      router.push('/login')
+      toastService.alertError('Session expired', 'Please login again')
+      return
     }
+    toastService.alertError('Something went wrong', 'Please try again later')
+    console.error('Error fetching data:', error)
   }
 }
 
-function closeFoodList() {
-  currentMeal.value = null
+async function removeFoodItem({ foodId, type }) {
+  try {
+    const meal = meals.value[type]
+
+    if (meal.foodItems.length === 1) {
+      await mealService.del(meal.id)
+      meals.value[type] = {
+        id: null,
+        type: type,
+        foodItems: []
+      }
+      return
+    }
+    await mealService.delFoodItem(meal.id, foodId)
+
+    meal.foodItems = meal.foodItems.filter((item) => item.id !== foodId)
+  } catch (error) {
+    if (error.status === 401) {
+      router.push('/login')
+      toastService.alertError('Session expired', 'Please login again')
+      return
+    }
+    toastService.alertError('Something went wrong', 'Please try again later')
+    console.error('Error fetching data:', error)
+  }
+
 }
 
 </script>
 
 <template>
   <main>
-    <div v-show="!currentMeal" id="date-picker" class="flex items-center justify-center gap-4">
-      <Button
-      @click="prev"
-      class="p-button-text text-xl text-slate-800 primary-color primary-color-text"
-      :aria-label="'Previous date'"
-      icon="pi pi-chevron-left"
-      
-    />
+    <div id="date-picker" class="flex items-center justify-center gap-4">
+      <Button @click="prev" class="p-button-text text-xl text-slate-800 primary-color primary-color-text"
+        :aria-label="'Previous date'" icon="pi pi-chevron-left" />
       <span>{{ formattedDate }}</span>
-      <Button
-      @click="next"
-      class="p-button-text text-xl text-slate-800 primary-color"
-      :aria-label="'Next date'"
-      icon="pi pi-chevron-right"
-    />
+      <Button @click="next" class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Next date'"
+        icon="pi pi-chevron-right" />
     </div>
 
-    <MealList v-show="!currentMeal" :key="currentDate" :meals="meals" @add-food="addFood"/>
-    <FoodList
-      v-if="currentMeal"
-      :foods="currentMeal.foods"
-      @close="closeFoodList"
-    />
+    <MealList :key="currentDate" :meals="meals" @add-food="selectMeal" 
+    @delete="removeFoodItem"/>
+
+
+
+    <!-- Products list -->
+    <Drawer v-model:visible="visible" position="right">
+      <template #header>
+        <IconField>
+          <InputIcon class="pi pi-search" />
+          <InputText v-model="query" placeholder="Search" @input="onInput" />
+        </IconField>
+      </template>
+      <Accordion value="0">
+        <AccordionPanel v-for="product in products" :key="product.ean" :value="product.ean">
+          <AccordionHeader>
+            <div class="w-full text-left flex flex-row gap-4">
+              <img v-if="product.img.sm" :src="product.img.sm" :alt="product.name"
+                class="w-16 h-16 object-cover rounded-lg mb-2" />
+              <div class="flex flex-col gap-1 w-full">
+                <span class="text-left w-full font-semibold text-slate-600 capitalize text-sm">
+                  {{ product.name }}, {{ product.brand ?? '' }}
+                </span>
+                <span class="text-left w-full text-slate-500 text-sm">
+                  {{ product.kcal_100g }} kcal per 100g
+                </span>
+              </div>
+            </div>
+          </AccordionHeader>
+          <AccordionContent>
+            <FoodDetail :ean="product.ean" @add-food="setItem" />
+          </AccordionContent>
+        </AccordionPanel>
+      </Accordion>
+      <div class="flex justify-center">
+        <Button label="Load more" @click="loadMore" text class="mt-1" />
+      </div>
+    </Drawer>
+
   </main>
 </template>

@@ -33,14 +33,23 @@ export class AuthService {
    */
   async handleRes(response) {
     let data
+
+    if (response.status === 401) {
+      const error = new Error('Unauthorized')
+      error.status = 401
+      throw error
+    }
+
+    if (!response.ok) {
+      throw new Error(data.message)
+    }
+
     try {
       data = await response.json()
     } catch {
       throw new Error('Something went wrong')
     }
-    if (!response.ok) {
-      throw new Error(data.message)
-    }
+
     return data
   }
 
@@ -117,8 +126,8 @@ export class AuthService {
       const res = await this.handleRes(response)
       this.setTokens(res)
       // return true
-    } catch (error){
-      if (error.message === 'jwt expired') {
+    } catch (error) {
+      if (error.status === 401) {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
       }

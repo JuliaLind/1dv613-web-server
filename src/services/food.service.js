@@ -14,7 +14,7 @@ export class FoodService {
   }
 
   async search(query, page = 1) {
-    const response = await fetch(`${dataUrl}/foods?page=${page}&query=${query}`)
+    const response = await fetch(`${dataUrl}/foods/search?page=${page}&query=${query}`)
     if (!response.ok) {
       throw new Error('Failed to fetch food items')
     }

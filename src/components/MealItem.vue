@@ -1,9 +1,12 @@
 <script setup>
-import { defineProps } from 'vue'
-import { ref } from 'vue'
+import { defineProps, ref, defineEmits } from 'vue'
 
 
 const props = defineProps({
+  id: {
+    type: String,
+    required: true
+  },
   ean: {
     type: String,
     required: true
@@ -20,7 +23,7 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  weight_unit: {
+  unit: {
     type: String,
     required: true
   },
@@ -28,17 +31,42 @@ const props = defineProps({
     type: Number,
     required: true
   },
+  img: {
+    type: String,
+    required: false
+  }
 })
 
-const kcal = props.kcal_100g / 100 * props.weight
+const kcal = Math.round(props.kcal_100g / 100 * props.weight)
+
+
+// const emit = defineEmits(['delete', 'update'])
+
+
+function handleClick() {
+  // open the change weight moda
+}
 
 </script>
 
 <template>
-<div>
-  <span class="text-2xl font-bold text-slate-800 capitalize">{{ props.name }}, {{ props.brand ?? '' }}</span>
-  <span class="text-slate-500 text-sm">{{ props.weight }} {{ props.weight_unit }}</span>
-  <span class="text-slate-500 text-sm">{{ kcal }} kcal</span>
+  <div class="w-full text-left flex flex-row gap-4">
+    <img
+    v-if="img"
+    :src="img"
+    :alt="name"
+    class="w10 h-10 object-cover rounded-sm mb-2"
+  >
+    <div class="flex flex-col w-full">
+      <span class="text-left w-full font-semibold text-sm capitalize">
+        {{ name }}, {{ brand ?? '' }}
+      </span>
+      <span class="text-sm">{{ weight }} {{ unit }} = 
+        {{ kcal }} kcal 
+      </span>
+    </div>
+    <Button icon="pi pi-times" @click="$emit('delete')" text severity="warn" rounded class="absolute top-1 right-1 z-20 text-red-500" />
+
 </div>
 </template>
 

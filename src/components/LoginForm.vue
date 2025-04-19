@@ -12,14 +12,14 @@ const toast = useToast()
 const router = useRouter()
 const toastService = createToastService(toast)
 
-async function handleSubmit (event) {
-  const form = event.target
 
-  if (!form.checkValidity()) {
-    return
+async function handleSubmit (event) {
+  event.preventDefault()
+
+  if (!(email.value && password.value)) {
+    toastService.alertError('Validation error', 'Please fill in all fields')
   }
 
-  event.preventDefault()
   try {
     await authService.login({
       email: email.value,

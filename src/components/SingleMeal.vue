@@ -1,6 +1,7 @@
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, computed } from 'vue'
 import MealItem from '@/components/MealItem.vue'
+import { MealService } from '@/services/meal.service'
 
 
 const props = defineProps({
@@ -12,20 +13,22 @@ const props = defineProps({
     type: String,
     required: true
   },
-  foods: {
+  foodItems: {
     type: Array,
     required: false,
     default: () => []
   }
 })
 
-const kcal = ref(0)
+const kcal = computed(() => {
+  let totalKcal = 0
+  for (const food of props.foodItems) {
+    console.log(food)
+    totalKcal += (food.kcal_100g / 100 * food.weight)
+  }
+  return Math.round(totalKcal)
+})
 
-for (const food of props.foods) {
-  kcal.value += (food.kcal_100g / 100 * food.weight)
-}
-
-// let name = title(props.type)
 let name = props.type
 if (props.type.startsWith('snack')) {
   name = 'Snacks'
@@ -35,24 +38,27 @@ if (props.type.startsWith('snack')) {
 </script>
 
 <template>
-<div class="bg-white rounded-lg shadow-md p-6">
+<div class="bg-white rounded-l shadow-md p-4">
   <header class="flex items-center justify-between">
-    <h2 class="text-xl font-bold text-slate-800 capitalize">{{ name }}</h2>
-    <span class="text-slate-500 text-sm">{{ kcal }} kcal</span>
+    <h2 class="text-l font-bold capitalize">{{ name }}</h2>
+    <span class="text-slate-500 font-bold text-m">{{ kcal }} kcal</span>
   </header>
-  <div class="flex flex-col gap-2 mt-4">
+  <div class="flex flex-col gap-1 mt-2">
     <MealItem
-      v-for="food in foods"
-      :key="food.ean"
+      v-for="food in foodItems"
+      :key="food.id"
+      :id="food.id"
       :ean="food.ean"
       :name="food.name"
       :brand="food.brand"
       :weight="food.weight"
-      :weight_unit="food.weight_unit"
+      :unit="food.unit"
       :kcal_100g="food.kcal_100g"
+      :img="food.img?.sm"
+      @delete="$emit('delete', food.id)"
     />
   </div>
-  <footer class="flex justify-end mt-4">
+  <footer class="flex justify-end">
     <Button
       class="p-button-text text-xl text-slate-800 primary-color"
       :aria-label="'Add food'"
