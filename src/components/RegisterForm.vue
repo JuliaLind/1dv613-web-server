@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import validator from 'validator'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { AuthService } from '@/services/auth.service'
@@ -14,8 +15,39 @@ const birthDate = ref('')
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
+
 const minDate = new Date()
 minDate.setFullYear(minDate.getFullYear() - 18)
+
+
+function validateForm (form) {
+  let errors = 0
+
+  if (confirmPassword.value !== password.value) {
+    errors++
+    toastService.alertError('Validation error', 'Passwords do not match')
+  }
+
+  if (!(validator.isEmail(email.value))) {
+    errors++
+    toastService.alertError('Validation error', 'Please fill in valid email')
+  }
+
+  if (!birthDate.value || birthDate.value > minDate.value) {
+    errors++
+    toastService.alertError('Validation error', 'You must be at least 18 years old to create an account')
+  }
+
+  if (!password.value || password.value.length < 8) {
+    errors++
+    toastService.alertError('Validation error', 'Password must be at least 8 characters long')
+  }
+
+  if (errors > 0) {
+    return false
+  }
+  return true
+}
 
 
 /**
@@ -26,12 +58,12 @@ minDate.setFullYear(minDate.getFullYear() - 18)
  * @throws {Error} - Throws an error if the form is invalid
  */
 async function handleSubmit(event) {
-  const form = event.target
-  if (!form.checkValidity() || confirmPassword.value !== password.value) {
+  event.preventDefault()
+
+  if (!validateForm()) {
     return
   }
 
-  event.preventDefault()
   try {
     await authService.register({
       birthDate: birthDate.value,
@@ -51,23 +83,23 @@ async function handleSubmit(event) {
 <template>
   <form @submit="handleSubmit" class="flex flex-col gap-4 p-6 bg-white max-w-md w-full mx-auto">
     <FloatLabel variant="on">
-      <DatePicker id="birthDate" v-model="birthDate" showIcon :showOnFocus="false" dateFormat="yy-mm-dd" min="{{format(minDate, 'yyyy-MM-dd')}}" required/>
+      <DatePicker id="birthDate" v-model="birthDate" showIcon :showOnFocus="false" dateFormat="yy-mm-dd"  required />
       <label for="birthDate">Date of birth</label>
     </FloatLabel>
 
       <FloatLabel variant="on">
-        <InputText id="email" type="email" v-model="email" />
+        <InputText id="email" type="email" v-model="email" required />
         <label for="email">Email</label>
       </FloatLabel>
 
       <FloatLabel variant="on">
-        <Password id="password" v-model="password" toggleMask  minlength="8" maxlength="255" required />
+        <Password id="password" v-model="password" toggleMask  :minlength="8" :maxlength="255" required />
         <label for="password">Password</label>
       </FloatLabel>
 
 
     <FloatLabel variant="on">
-    <Password v-model="confirmPassword" toggleMask :invalid="!confirmPassword || confirmPassword !== password" minlength="8"/>
+    <Password v-model="confirmPassword" toggleMask :invalid="!confirmPassword || confirmPassword !== password" />
       <label for="on_label">Confirm Password</label>
     </FloatLabel>
 

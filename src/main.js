@@ -20,6 +20,23 @@ import ToastService from 'primevue/toastservice'
 import Select from 'primevue/select'
 import Drawer from 'primevue/drawer'
 
+import Accordion from 'primevue/accordion'
+import AccordionPanel from 'primevue/accordionpanel'
+import AccordionHeader from 'primevue/accordionheader'
+import AccordionContent from 'primevue/accordioncontent'
+
+
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Row from 'primevue/row'
+
+
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
+
+
+
+
 const app = createApp(App)
 
 
@@ -45,9 +62,9 @@ const cyan = definePreset(Aura, {
 app.use(PrimeVue, {
   theme: {
     preset: cyan,
-    options: {
-      darkModeSelector: false || 'none',
-    }
+    // options: {
+    //   darkModeSelector: false || 'none',
+    // }
   }
 })
 
@@ -60,6 +77,15 @@ app.component('InputNumber', InputNumber)
 app.component('DatePicker', DatePicker)
 app.component('Select', Select)
 app.component('Drawer', Drawer)
+app.component('Accordion', Accordion)
+app.component('AccordionPanel', AccordionPanel)
+app.component('AccordionHeader', AccordionHeader)
+app.component('AccordionContent', AccordionContent)
+app.component('DataTable', DataTable)
+app.component('Column', Column)
+app.component('Row', Row)
+app.component('IconField', IconField)
+app.component('InputIcon', InputIcon)
 
 app.use(ToastService)
 

@@ -24,7 +24,18 @@ export default defineConfig([
 
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
-  
+
+  {
+    name: 'app/vue-custom-rules',
+    files: ['**/*.{vue,js}'],
+    rules: {
+      'vue/multi-word-component-names': ['error', {
+        ignores: ['Button', 'Form', 'Password', 'Select', 'Drawer', 'Accordion']
+      }],
+      'vue/no-reserved-component-names': 'off'
+    }
+  },
+
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
