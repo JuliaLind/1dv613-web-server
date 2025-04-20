@@ -8,7 +8,7 @@ import MealList from '@/components/MealList.vue'
 import { FoodService } from '@/services/food.service'
 import DateChanger from '@/components/DateChanger.vue'
 import { createToastService } from '@/services/toast.service'
-import FoodDetail from '@/components/FoodDetail.vue'
+import SingleProduct from '@/components/SingleProduct.vue'
 
 const currentMeal = ref(null)
 const currentDate = ref(format(new Date(), 'yyyy-MM-dd'))
@@ -252,7 +252,7 @@ const data = computed(() => {
             </div>
           </AccordionHeader>
           <AccordionContent>
-            <FoodDetail :ean="product.ean" @done="setItem" />
+            <SingleProduct :ean="product.ean" @add-food="setItem" />
           </AccordionContent>
         </AccordionPanel>
       </Accordion>

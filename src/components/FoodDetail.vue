@@ -1,18 +1,7 @@
 <script setup>
 import { ref, defineProps, onMounted, computed } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { FoodService }from '@/services/food.service'
 
-import { createToastService } from '@/services/toast.service'
-const toast = useToast()
-const toastService = createToastService(toast)
-const  foodService = new FoodService()
-
-const { ean, info } = defineProps({
-  ean: {
-    type: String,
-    required: true
-  },
+const { info } = defineProps({
   info: {
     type: Object,
     required: false,
@@ -21,19 +10,6 @@ const { ean, info } = defineProps({
 
 const food = ref(info)
 
-onMounted(async () => {
-  if (food.value) {
-    return
-  }
-  try {
-    food.value = await foodService.get(ean)
-  } catch (error) {
-    toastService.alertError('Fetch error', error.message)
-  }
-})
-
-const weight = ref(info?.weight ?? 100)
-const unit = ref(info?.unit ?? 'g')
 const weightOptions = [{name: 'g', code: 'g'}]
 
 function calcValue (value_100g, weight) {
@@ -44,7 +20,7 @@ const data = computed(() => {
   const rows = []
   rows.push({
     name: 'kcal',
-    value: calcValue(food.value.kcal_100g, weight.value)
+    value: calcValue(food.value.kcal_100g, food.value.weight)
   })
   for (const nutrient of Object.keys(food.value.macros_100g)) {
       rows.push({
@@ -53,7 +29,7 @@ const data = computed(() => {
         // then convert to lowercase
         // example saturatedFat -> saturated fat
         name: nutrient.replace(/([A-Z])/g, ' $1').toLowerCase(),
-        value: calcValue(food.value.macros_100g[nutrient], weight.value)
+        value: calcValue(food.value.macros_100g[nutrient], food.value.weight)
       })
     }
   return rows
@@ -70,20 +46,16 @@ const data = computed(() => {
 
   <footer class="flex justify-end mt-4">
     <div class="flex items-center justify-between gap-1">
-      <InputNumber v-model="weight" inputId="integeronly" :min="0" :max="5000" @input="e => weight = e.value" fluid class="basis-full"
+      <InputNumber v-model="food.weight" inputId="integeronly" :min="0" :max="5000" @input="e => food.weight = e.value" fluid class="basis-full"
       />
       <Select
-        v-model="unit"
+        v-model="food.unit"
         :options="weightOptions"
         optionValue="code"
         optionLabel="name"
         class="basis-10"
       />
-      <Button @click="$emit('done', {
-        ...food,
-        weight,
-        unit
-      })" class="basis-30"
+      <Button @click="$emit('done', food)" class="basis-30"
       :aria-label="'Add'" icon="pi pi-check" fluid />
 
     </div>
