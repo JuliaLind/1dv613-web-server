@@ -38,6 +38,7 @@ import Toolbar from 'primevue/toolbar'
 
 import Chip from 'primevue/chip'
 
+import OverlayPanel from 'primevue/overlaypanel'
 const app = createApp(App)
 
 
@@ -91,6 +92,8 @@ app.component('InputIcon', InputIcon)
 app.component('Toolbar', Toolbar)
 
 app.component('Chip', Chip)
+
+app.component('OverlayPanel', OverlayPanel)
 
 
 app.use(ToastService)

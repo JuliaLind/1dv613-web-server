@@ -10,6 +10,8 @@ const { info } = defineProps({
 
 const food = ref(info)
 
+console.log(food.value)
+
 const weightOptions = [{name: 'g', code: 'g'}]
 
 function calcValue (value_100g, weight) {

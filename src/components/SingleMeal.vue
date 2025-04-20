@@ -46,15 +46,9 @@ if (props.type.startsWith('snack')) {
     <MealItem
       v-for="food in foodItems"
       :key="food.id"
-      :id="food.id"
-      :ean="food.ean"
-      :name="food.name"
-      :brand="food.brand"
-      :weight="food.weight"
-      :unit="food.unit"
-      :kcal_100g="food.kcal_100g"
-      :img="food.img?.sm"
+      :food="food"
       @delete="$emit('delete', food.id)"
+      @update="$emit('update', food)"
     />
   </div>
   <footer class="flex justify-end">

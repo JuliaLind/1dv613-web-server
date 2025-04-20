@@ -10,6 +10,7 @@ const props = defineProps({
   }
 })
 
+
 </script>
 
 <template>
@@ -22,6 +23,7 @@ const props = defineProps({
         :foodItems="meal.foodItems"
         @add-food="$emit('add-food', type)"
         @delete="(foodId) => $emit('delete', { foodId, type })"
+        @update="(food) => $emit('update', { food, type })"
       />
     </div>
 </template>

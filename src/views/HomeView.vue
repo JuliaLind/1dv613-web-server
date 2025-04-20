@@ -1,14 +1,15 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { addDays, subDays, format } from 'date-fns'
+import { format } from 'date-fns'
 import { MealService } from '@/services/meal.service.js'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import MealList from '@/components/MealList.vue'
-import { FoodService } from '@/services/food.service'
+
 import DateChanger from '@/components/DateChanger.vue'
 import { createToastService } from '@/services/toast.service'
-import SingleProduct from '@/components/SingleProduct.vue'
+
+import ProductList from '@/components/ProductList.vue'
 
 const currentMeal = ref(null)
 const currentDate = ref(format(new Date(), 'yyyy-MM-dd'))
@@ -21,98 +22,31 @@ const mealService = new MealService()
 const meals = ref({})
 const visible = ref(false)
 
-async function fetchMeals() {
+async function reqServer(func, params=[]) {
   try {
-    const data = await mealService.index(currentDate.value)
-    meals.value = data
+    return await func(...params)
   } catch (error) {
-    if (error.message === 'jwt expired') {
-      toastService.alertError('Session expired', 'Please login again')
+    handleError(error)
+  }
+}
+
+function handleError(error) {
+  if (error.status === 401) {
       router.push('/login')
+      toastService.alertError('Session expired', 'Please login again')
       return
     }
     toastService.alertError('Something went wrong', 'Please try again later')
-  }
+    console.error('Error fetching data:', error)
 }
 
-const foodService = new FoodService()
-let page = 1
-const fetchMore = ref(true)
-const products = ref([])
-const query = ref('')
-
-async function fetchProducts() {
-  try {
-    const data = await getUnfiltered()
-
-    products.value = [...products.value, ...data]
-  } catch (error) {
-    toastService.alertError('Something went wrong', 'Please try again later')
-  }
+async function fetchMeals() {
+  const data = await mealService.index(currentDate.value)
+  meals.value = data
 }
-
-async function search() {
-  try {
-    const data = await getFiltered()
-    products.value = [...products.value, ...data]
-  } catch (error) {
-    toastService.alertError('Something went wrong', 'Please try again later')
-  }
-}
-
-async function getFiltered() {
-  try {
-    const data = await foodService.search(query.value, page)
-    page = data.page + 1
-    if (data.to === data.total || data.foodItems.length === 0) {
-      fetchMore.value = false
-    }
-    return data.foodItems
-  } catch (error) {
-    toastService.alertError('Something went wrong', 'Please try again later')
-  }
-}
-
-async function getUnfiltered() {
-  try {
-    const data = await foodService.index(page)
-
-    page = data.page + 1
-
-    if (data.to === data.total || data.foodItems.length === 0) {
-      fetchMore.value = false
-    }
-
-    return data.foodItems
-  } catch (error) {
-    toastService.alertError('Something went wrong', 'Please try again later')
-  }
-}
-
-async function loadMore() {
-  if (query.value.length > 2) {
-    await search()
-  } else {
-    await fetchProducts()
-  }
-}
-
-async function onInput() {
-  page = 1
-  let data = []
-
-  if (query.value.length > 0) {
-    data = await getFiltered()
-  } else if (query.value.length === 0) {
-    data = await getUnfiltered()
-  }
-  products.value = data
-}
-
 
 onMounted(async () => {
-  await fetchMeals()
-  await fetchProducts()
+  await reqServer(fetchMeals)
 })
 
 function selectMeal(type) {
@@ -121,64 +55,53 @@ function selectMeal(type) {
   visible.value = true
 }
 
+
 async function setItem(food) {
   const item = {
     ean: food.ean,
     weight: food.weight,
     unit: food.unit
   }
-  try {
-    if (!currentMeal.value.id) {
-      const meal = await mealService.post({
-        date: currentDate.value,
-        type: currentMeal.value.type,
-        foodItems: [item]
-      })
-      currentMeal.value = meal
-      meals.value[currentMeal.value.type] = meal
-    } else {
-      const newId = await mealService.addFoodItem(currentMeal.value.id, item)
-      food.id = newId
+  if (!currentMeal.value.id) {
+    const meal = await mealService.post({
+      date: currentDate.value,
+      type: currentMeal.value.type,
+      foodItems: [item]
+    })
+    currentMeal.value = meal
+    meals.value[currentMeal.value.type] = meal
+  } else {
+    const newId = await mealService.addFoodItem(currentMeal.value.id, item)
+    food.id = newId
 
-      currentMeal.value.foodItems.push(food)
-    }
-  } catch (error) {
-    if (error.status === 401) {
-      router.push('/login')
-      toastService.alertError('Session expired', 'Please login again')
-      return
-    }
-    toastService.alertError('Something went wrong', 'Please try again later')
-    console.error('Error fetching data:', error)
+    currentMeal.value.foodItems.push(food)
   }
 }
 
 async function removeFoodItem({ foodId, type }) {
-  try {
-    const meal = meals.value[type]
+  const meal = meals.value[type]
 
-    if (meal.foodItems.length === 1) {
-      await mealService.del(meal.id)
-      meals.value[type] = {
-        id: null,
-        type: type,
-        foodItems: []
-      }
-      return
+  if (meal.foodItems.length === 1) {
+    await mealService.del(meal.id)
+    meals.value[type] = {
+      id: null,
+      type: type,
+      foodItems: []
     }
-    await mealService.delFoodItem(meal.id, foodId)
-
-    meal.foodItems = meal.foodItems.filter((item) => item.id !== foodId)
-  } catch (error) {
-    if (error.status === 401) {
-      router.push('/login')
-      toastService.alertError('Session expired', 'Please login again')
-      return
-    }
-    toastService.alertError('Something went wrong', 'Please try again later')
-    console.error('Error fetching data:', error)
+    return
   }
+  await mealService.delFoodItem(meal.id, foodId)
 
+  meal.foodItems = meal.foodItems.filter((item) => item.id !== foodId)
+}
+
+async function updFoodItem({ food, type}) {
+  const {id, weight, unit } = food
+  const meal = meals.value[type]
+  await mealService.updFoodItem(meal.id, { id, weight, unit })
+  const foodItem = meal.foodItems.find((item) => item.id === id)
+  foodItem.weight = weight
+  foodItem.unit = unit
 }
 
 const data = computed(() => {
@@ -225,41 +148,8 @@ const data = computed(() => {
       </template>
     </Toolbar>
 
-    <MealList :key="currentDate" :meals="meals" @add-food="selectMeal" @delete="removeFoodItem" />
+    <MealList :key="currentDate" :meals="meals" @add-food="selectMeal" @delete="(data) => reqServer(removeFoodItem, [data])" @update="(data) => reqServer(updFoodItem, [data])" />
 
-    <!-- Products list -->
-    <Drawer v-model:visible="visible" position="right">
-      <template #header>
-        <IconField>
-          <InputIcon class="pi pi-search" />
-          <InputText v-model="query" placeholder="Search" @input="onInput" />
-        </IconField>
-      </template>
-      <Accordion value="0">
-        <AccordionPanel v-for="product in products" :key="product.ean" :value="product.ean">
-          <AccordionHeader>
-            <div class="w-full text-left flex flex-row gap-4">
-              <img v-if="product.img.sm" :src="product.img.sm" :alt="product.name"
-                class="w-16 h-16 object-cover rounded-lg mb-2" />
-              <div class="flex flex-col gap-1 w-full">
-                <span class="text-left w-full font-semibold text-slate-600 capitalize text-sm">
-                  {{ product.name }}, {{ product.brand ?? '' }}
-                </span>
-                <span class="text-left w-full text-slate-500 text-sm">
-                  {{ product.kcal_100g }} kcal per 100g
-                </span>
-              </div>
-            </div>
-          </AccordionHeader>
-          <AccordionContent>
-            <SingleProduct :ean="product.ean" @add-food="setItem" />
-          </AccordionContent>
-        </AccordionPanel>
-      </Accordion>
-      <div class="flex justify-center">
-        <Button label="Load more" @click="loadMore" text class="mt-1" />
-      </div>
-    </Drawer>
-
+    <ProductList v-model:visible="visible" :meal="currentMeal" @add-food="(data) => reqServer(setItem, [data])" />
   </main>
 </template>
