@@ -1,73 +1,84 @@
 <script setup>
 import { defineProps, ref, defineEmits } from 'vue'
+import FoodDetail from '@/components/FoodDetail.vue'
 
-
-const props = defineProps({
-  id: {
-    type: String,
+const { food } = defineProps({
+  food: {
+    type: Object,
     required: true
-  },
-  ean: {
-    type: String,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  brand: {
-    type: String,
-    required: false
-  },
-  weight: {
-    type: Number,
-    required: true,
-  },
-  unit: {
-    type: String,
-    required: true
-  },
-  kcal_100g: {
-    type: Number,
-    required: true
-  },
-  img: {
-    type: String,
-    required: false
   }
 })
 
-const kcal = Math.round(props.kcal_100g / 100 * props.weight)
+const {
+  id,
+  ean,
+  name,
+  brand,
+  // weight,
+  // unit,
+  kcal_100g,
+  img
+} = food
 
+const kcal = Math.round(kcal_100g / 100 * food.weight)
 
-// const emit = defineEmits(['delete', 'update'])
+const edit = ref(false)
 
+const menu = ref()
 
-function handleClick() {
-  // open the change weight moda
+function toggleMenu(event) {
+  menu.value.toggle(event)
 }
+
+
+defineEmits(['delete', 'update'])
 
 </script>
 
 <template>
-  <div class="w-full text-left flex flex-row gap-4">
+  <div class="w-full text-left flex flex-row gap-4 relative">
     <img
-    v-if="img"
-    :src="img"
-    :alt="name"
-    class="w10 h-10 object-cover rounded-sm mb-2"
-  >
+      v-if="img?.sm"
+      :src="img.sm"
+      :alt="name"
+      class="w-10 h-10 object-cover rounded-sm"
+    />
+
     <div class="flex flex-col w-full">
-      <span class="text-left w-full font-semibold text-sm capitalize">
+      <span class="font-semibold text-sm capitalize">
         {{ name }}, {{ brand ?? '' }}
       </span>
-      <span class="text-sm">{{ weight }} {{ unit }} = 
-        {{ kcal }} kcal 
+      <span class="text-sm">
+        {{ food.weight }} {{ food.unit }} = {{ kcal }} kcal
       </span>
     </div>
-    <Button icon="pi pi-times" @click="$emit('delete')" text severity="warn" rounded class="absolute top-1 right-1 z-20 text-red-500" />
 
-</div>
+    <Button
+      icon="pi pi-ellipsis-v"
+      @click="toggleMenu($event)"
+      text
+      rounded
+      class="self-start"
+    />
+
+    <OverlayPanel ref="menu" :dismissable="true">
+      <div class="flex flex-col gap-2">
+        <Button
+          label="Edit"
+          text
+          @click="edit = true; $refs.menu.hide()"
+        />
+        <Button
+          label="Delete"
+          text
+          severity="danger"
+          @click="$emit('delete'); $refs.menu.hide()"
+        />
+      </div>
+    </OverlayPanel>
+  </div>
+
+  <FoodDetail v-if="edit" :info="food" @done="$emit('update', food); edit = false" />
 </template>
 
 <style scoped>
