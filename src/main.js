@@ -34,8 +34,9 @@ import Row from 'primevue/row'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 
+import Toolbar from 'primevue/toolbar'
 
-
+import Chip from 'primevue/chip'
 
 const app = createApp(App)
 
@@ -86,6 +87,11 @@ app.component('Column', Column)
 app.component('Row', Row)
 app.component('IconField', IconField)
 app.component('InputIcon', InputIcon)
+
+app.component('Toolbar', Toolbar)
+
+app.component('Chip', Chip)
+
 
 app.use(ToastService)
 

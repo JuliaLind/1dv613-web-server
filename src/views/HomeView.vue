@@ -31,6 +31,7 @@ const weekday = computed(() => {
 })
 
 
+
 const router = useRouter()
 const toast = useToast()
 const toastService = createToastService(toast)
@@ -157,7 +158,7 @@ async function setItem(food) {
     } else {
       const newId = await mealService.addFoodItem(currentMeal.value.id, item)
       food.id = newId
-      console.log(food)
+
       currentMeal.value.foodItems.push(food)
     }
   } catch (error) {
@@ -199,6 +200,33 @@ async function removeFoodItem({ foodId, type }) {
 
 }
 
+const data = computed(() => {
+  let totals = {
+    kcal: 0,
+    protein: 0,
+    fat: 0,
+    saturatedFat: 0,
+    carbohydrates: 0,
+    sugars: 0,
+    fiber: 0,
+    salt: 0
+  }
+
+  for (const meal of Object.values(meals.value)) {
+    for (const foodItem of meal.foodItems) {
+      totals.kcal += Math.round(foodItem.kcal_100g / 100 * foodItem.weight)
+      for (const nutrient of Object.keys(totals)) {
+        if (nutrient === 'kcal') {
+          continue
+        }
+        totals[nutrient] += Math.round(foodItem.macros_100g[nutrient] / 100 * foodItem.weight)
+      }
+    }
+  }
+
+  return totals
+})
+
 </script>
 
 <template>
@@ -211,6 +239,20 @@ async function removeFoodItem({ foodId, type }) {
       <Button @click="next" class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Next date'"
         icon="pi pi-chevron-right" />
     </div>
+<Toolbar>
+    <template #start>
+    </template>
+
+    <template #center>
+    </template>
+
+    <template #end>
+      <span class="text-xs">{{ data.kcal }} kcal</span>
+    </template>
+</Toolbar>
+
+
+
 
     <MealList :key="currentDate" :meals="meals" @add-food="selectMeal" 
     @delete="removeFoodItem"/>

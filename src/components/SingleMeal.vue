@@ -23,7 +23,6 @@ const props = defineProps({
 const kcal = computed(() => {
   let totalKcal = 0
   for (const food of props.foodItems) {
-    console.log(food)
     totalKcal += (food.kcal_100g / 100 * food.weight)
   }
   return Math.round(totalKcal)
