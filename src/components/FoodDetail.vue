@@ -8,25 +8,32 @@ const toast = useToast()
 const toastService = createToastService(toast)
 const  foodService = new FoodService()
 
-const props = defineProps({
+const { ean, info } = defineProps({
   ean: {
     type: String,
     required: true
+  },
+  info: {
+    type: Object,
+    required: false,
   }
 })
 
-const food = ref(null)
+const food = ref(info)
 
 onMounted(async () => {
+  if (food.value) {
+    return
+  }
   try {
-    food.value = await foodService.get(props.ean)
+    food.value = await foodService.get(ean)
   } catch (error) {
     toastService.alertError('Fetch error', error.message)
   }
 })
 
-const weight = ref(100)
-const unit = ref('g')
+const weight = ref(info?.weight ?? 100)
+const unit = ref(info?.unit ?? 'g')
 const weightOptions = [{name: 'g', code: 'g'}]
 
 function calcValue (value_100g, weight) {
@@ -63,21 +70,22 @@ const data = computed(() => {
 
   <footer class="flex justify-end mt-4">
     <div class="flex items-center justify-between gap-1">
-      <InputNumber v-model="weight" inputId="minmax-buttons" mode="decimal" showButtons :min="0" :max="5000" fluid @input="e => weight = e.value"
+      <InputNumber v-model="weight" inputId="integeronly" :min="0" :max="5000" @input="e => weight = e.value" fluid class="basis-full"
       />
       <Select
         v-model="unit"
         :options="weightOptions"
         optionValue="code"
         optionLabel="name"
-        placeholder="Select a meal"
-        fluid
+        class="basis-10"
       />
-      <Button label="Add" @click="$emit('add-food', {
+      <Button @click="$emit('done', {
         ...food,
         weight,
         unit
-      })" />
+      })" class="basis-30"
+      :aria-label="'Add'" icon="pi pi-check" fluid />
+
     </div>
 </footer>
 </div>

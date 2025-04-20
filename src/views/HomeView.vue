@@ -252,7 +252,7 @@ const data = computed(() => {
             </div>
           </AccordionHeader>
           <AccordionContent>
-            <FoodDetail :ean="product.ean" @add-food="setItem" />
+            <FoodDetail :ean="product.ean" @done="setItem" />
           </AccordionContent>
         </AccordionPanel>
       </Accordion>
