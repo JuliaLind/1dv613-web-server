@@ -6,31 +6,12 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import MealList from '@/components/MealList.vue'
 import { FoodService } from '@/services/food.service'
-
+import DateChanger from '@/components/DateChanger.vue'
 import { createToastService } from '@/services/toast.service'
 import FoodDetail from '@/components/FoodDetail.vue'
 
 const currentMeal = ref(null)
-const currentDate = ref(new Date())
-
-async function next() {
-  currentDate.value = addDays(currentDate.value, 1)
-  await fetchMeals()
-}
-
-async function prev() {
-  currentDate.value = subDays(currentDate.value, 1)
-  await fetchMeals()
-}
-
-const formattedDate = computed(() => {
-  return format(currentDate.value, 'yyyy-MM-dd')
-})
-const weekday = computed(() => {
-  return format(currentDate.value, 'EEEE')
-})
-
-
+const currentDate = ref(format(new Date(), 'yyyy-MM-dd'))
 
 const router = useRouter()
 const toast = useToast()
@@ -42,7 +23,7 @@ const visible = ref(false)
 
 async function fetchMeals() {
   try {
-    const data = await mealService.index(formattedDate.value)
+    const data = await mealService.index(currentDate.value)
     meals.value = data
   } catch (error) {
     if (error.message === 'jwt expired') {
@@ -149,7 +130,7 @@ async function setItem(food) {
   try {
     if (!currentMeal.value.id) {
       const meal = await mealService.post({
-        date: formattedDate.value,
+        date: currentDate.value,
         type: currentMeal.value.type,
         foodItems: [item]
       })
@@ -231,33 +212,20 @@ const data = computed(() => {
 
 <template>
   <main>
-    <div id="date-picker" class="flex items-center justify-center gap-4">
-      <Button @click="prev" class="p-button-text text-xl text-slate-800 primary-color primary-color-text"
-        :aria-label="'Previous date'" icon="pi pi-chevron-left" />
-      <span>{{ weekday }}</span>
-      <span>{{ formattedDate }}</span>
-      <Button @click="next" class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Next date'"
-        icon="pi pi-chevron-right" />
-    </div>
-<Toolbar>
-    <template #start>
-    </template>
+    <DateChanger :date="currentDate" @update="(newDate) => { currentDate = newDate; fetchMeals() }" />
+    <Toolbar>
+      <template #start>
+      </template>
 
-    <template #center>
-    </template>
+      <template #center>
+      </template>
 
-    <template #end>
-      <span class="text-xs">{{ data.kcal }} kcal</span>
-    </template>
-</Toolbar>
+      <template #end>
+        <span class="text-xs">{{ data.kcal }} kcal</span>
+      </template>
+    </Toolbar>
 
-
-
-
-    <MealList :key="currentDate" :meals="meals" @add-food="selectMeal" 
-    @delete="removeFoodItem"/>
-
-
+    <MealList :key="currentDate" :meals="meals" @add-food="selectMeal" @delete="removeFoodItem" />
 
     <!-- Products list -->
     <Drawer v-model:visible="visible" position="right">
