@@ -25,18 +25,13 @@ import AccordionPanel from 'primevue/accordionpanel'
 import AccordionHeader from 'primevue/accordionheader'
 import AccordionContent from 'primevue/accordioncontent'
 
-
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import Row from 'primevue/row'
-
 
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 
 import Toolbar from 'primevue/toolbar'
-
-import Chip from 'primevue/chip'
 
 import OverlayPanel from 'primevue/overlaypanel'
 const app = createApp(App)
@@ -45,17 +40,17 @@ const app = createApp(App)
 const cyan = definePreset(Aura, {
   semantic: {
     primary: {
-        50: '{cyan.50}',
-        100: '{cyan.100}',
-        200: '{cyan.200}',
-        300: '{cyan.300}',
-        400: '{cyan.400}',
-        500: '{cyan.500}',
-        600: '{cyan.600}',
-        700: '{cyan.700}',
-        800: '{cyan.800}',
-        900: '{cyan.900}',
-        950: '{cyan.950}'
+      50: '{cyan.50}',
+      100: '{cyan.100}',
+      200: '{cyan.200}',
+      300: '{cyan.300}',
+      400: '{cyan.400}',
+      500: '{cyan.500}',
+      600: '{cyan.600}',
+      700: '{cyan.700}',
+      800: '{cyan.800}',
+      900: '{cyan.900}',
+      950: '{cyan.950}'
     }
   }
 })
@@ -63,10 +58,7 @@ const cyan = definePreset(Aura, {
 
 app.use(PrimeVue, {
   theme: {
-    preset: cyan,
-    // options: {
-    //   darkModeSelector: false || 'none',
-    // }
+    preset: cyan
   }
 })
 
@@ -85,13 +77,11 @@ app.component('AccordionHeader', AccordionHeader)
 app.component('AccordionContent', AccordionContent)
 app.component('DataTable', DataTable)
 app.component('Column', Column)
-app.component('Row', Row)
 app.component('IconField', IconField)
 app.component('InputIcon', InputIcon)
 
 app.component('Toolbar', Toolbar)
 
-app.component('Chip', Chip)
 
 app.component('OverlayPanel', OverlayPanel)
 

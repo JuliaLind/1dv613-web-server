@@ -10,20 +10,12 @@ const props = defineProps({
   }
 })
 
-
 </script>
 
 <template>
-    <div id="meal-list" class="flex flex-col gap-4 mt-4">
-      <Meal
-        v-if="props.meals"
-        v-for="(meal, type) in props.meals" 
-        :key="type"
-        :type="type"
-        :foodItems="meal.foodItems"
-        @add-food="$emit('add-food', type)"
-        @delete="(foodId) => $emit('delete', { foodId, type })"
-        @update="(food) => $emit('update', { food, type })"
-      />
-    </div>
+  <div v-if="props.meals" id="meal-list" class="flex flex-col gap-4 mt-4">
+    <Meal v-for="(meal, type) in props.meals" :key="type" :type="type" :foodItems="meal.foodItems"
+      @add-food="$emit('add-food', type)" @delete="(foodId) => $emit('delete', { foodId, type })"
+      @update="(food) => $emit('update', { food, type })" />
+  </div>
 </template>
