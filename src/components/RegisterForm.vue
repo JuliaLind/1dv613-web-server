@@ -1,53 +1,29 @@
 <script setup>
-import { ref, computed } from 'vue'
-import validator from 'validator'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { AuthService } from '@/services/auth.service'
 import { createToastService } from '@/services/toast.service'
+import {
+  validateEmail, validatePassword, validateBirthDate,
+  matchPasswords
+} from '@/helpers/validate'
 
 const toast = useToast()
 const authService = new AuthService()
 const router = useRouter()
 const toastService = createToastService(toast)
 
-const birthDate = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
+
+const form = ref({
+  birthDate: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
 
 const minDate = new Date()
 minDate.setFullYear(minDate.getFullYear() - 18)
-
-
-function validateForm (form) {
-  let errors = 0
-
-  if (confirmPassword.value !== password.value) {
-    errors++
-    toastService.alertError('Validation error', 'Passwords do not match')
-  }
-
-  if (!(validator.isEmail(email.value))) {
-    errors++
-    toastService.alertError('Validation error', 'Please fill in valid email')
-  }
-
-  if (!birthDate.value || birthDate.value > minDate.value) {
-    errors++
-    toastService.alertError('Validation error', 'You must be at least 18 years old to create an account')
-  }
-
-  if (!password.value || password.value.length < 8) {
-    errors++
-    toastService.alertError('Validation error', 'Password must be at least 8 characters long')
-  }
-
-  if (errors > 0) {
-    return false
-  }
-  return true
-}
 
 
 /**
@@ -60,21 +36,24 @@ function validateForm (form) {
 async function handleSubmit(event) {
   event.preventDefault()
 
-  if (!validateForm()) {
-    return
-  }
+  const { birthDate, email, password, confirmPassword } = form
 
   try {
+    validateBirthDate(birthDate, minDate)
+    validateEmail(email)
+    validatePassword(password)
+    matchPasswords(password, confirmPassword)
+
     await authService.register({
-      birthDate: birthDate.value,
-      email: email.value,
-      password: password.value
+      birthDate,
+      email,
+      password
     })
+
     toastService.alertSuccess('Registration successful', 'Please log in')
     router.push('/login')
   } catch (error) {
     toastService.alertError('Registration failed', error.message)
-    console.error(error.message)
   }
 }
 
@@ -83,23 +62,24 @@ async function handleSubmit(event) {
 <template>
   <form @submit="handleSubmit" class="flex flex-col gap-4 p-6 bg-white max-w-md w-full mx-auto">
     <FloatLabel variant="on">
-      <DatePicker id="birthDate" v-model="birthDate" showIcon :showOnFocus="false" dateFormat="yy-mm-dd"  required />
+      <DatePicker id="birthDate" v-model="form.birthDate" showIcon :showOnFocus="false" dateFormat="yy-mm-dd"
+        required />
       <label for="birthDate">Date of birth</label>
     </FloatLabel>
 
-      <FloatLabel variant="on">
-        <InputText id="email" type="email" v-model="email" required />
-        <label for="email">Email</label>
-      </FloatLabel>
+    <FloatLabel variant="on">
+      <InputText id="email" type="email" v-model="form.email" required />
+      <label for="email">Email</label>
+    </FloatLabel>
 
-      <FloatLabel variant="on">
-        <Password id="password" v-model="password" toggleMask  :minlength="8" :maxlength="255" required />
-        <label for="password">Password</label>
-      </FloatLabel>
+    <FloatLabel variant="on">
+      <Password id="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required />
+      <label for="password">Password</label>
+    </FloatLabel>
 
 
     <FloatLabel variant="on">
-    <Password v-model="confirmPassword" toggleMask :invalid="!confirmPassword || confirmPassword !== password" />
+      <Password v-model="form.confirmPassword" toggleMask :invalid="!confirmPassword || confirmPassword !== password" />
       <label for="on_label">Confirm Password</label>
     </FloatLabel>
 
@@ -115,6 +95,4 @@ async function handleSubmit(event) {
   </form>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,13 +1,13 @@
 <script setup>
-import { ref, defineProps, onMounted, computed } from 'vue'
+import { ref, defineProps, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import FoodDetail from '@/components/FoodDetail.vue'
-import { FoodService }from '@/services/food.service'
+import { FoodService } from '@/services/food.service'
 
 import { createToastService } from '@/services/toast.service'
 const toast = useToast()
 const toastService = createToastService(toast)
-const  foodService = new FoodService()
+const foodService = new FoodService()
 
 const { ean } = defineProps({
   ean: {
@@ -31,10 +31,7 @@ onMounted(async () => {
 </script>
 
 <template>
-<FoodDetail v-if="food"
-  :info="food" @done="(foodInfo) => { $emit('add-food', foodInfo)}" />
+  <FoodDetail v-if="food" :info="food" @done="(foodInfo) => { $emit('add-food', foodInfo) }" />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

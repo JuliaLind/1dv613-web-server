@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 
-import { authService } from '../auth.service.js'
+import { AuthService } from '../auth.service.js'
 
 describe('Auth service', () => {
   afterEach(() => {
@@ -13,6 +13,7 @@ describe('Auth service', () => {
     accessToken: 'myacccesstoken',
     refreshToken: 'myrefreshtoken',
   }
+  const authService = new AuthService()
 
   it('login, ok', async () => {
     // save for later restoring

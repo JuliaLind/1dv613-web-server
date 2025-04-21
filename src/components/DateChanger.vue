@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, defineProps } from 'vue'
+import { ref, computed, defineProps } from 'vue'
 import { addDays, subDays, format } from 'date-fns'
 
 
@@ -11,18 +11,7 @@ const { date } = defineProps({
 })
 
 const emit = defineEmits(['update'])
-
 const currentDate = ref(new Date(date))
-
-function next() {
-  currentDate.value = addDays(currentDate.value, 1)
-  update()
-}
-
-function prev() {
-  currentDate.value = subDays(currentDate.value, 1)
-  update()
-}
 
 const formattedDate = computed(() => {
   return format(currentDate.value, 'yyyy-MM-dd')
@@ -32,21 +21,40 @@ const weekday = computed(() => {
   return format(currentDate.value, 'EEEE')
 })
 
-function update() {
-  emit('update', formattedDate.value)
+/**
+ * Changes to next date
+ */
+function next() {
+  currentDate.value = addDays(currentDate.value, 1)
+  update(formattedDate.value)
 }
 
+/**
+ * Changes to previous date
+ */
+function prev() {
+  currentDate.value = subDays(currentDate.value, 1)
+  update(formattedDate.value)
+}
 
+/**
+ * Emits the new date to the parent component
+ *
+ * @param {string} date - The new date
+ */
+function update(date) {
+  emit('update', date)
+}
 
 </script>
 
 <template>
-    <div id="date-picker" class="flex items-center justify-center gap-4">
-      <Button @click="prev" class="p-button-text text-xl text-slate-800 primary-color primary-color-text"
-        :aria-label="'Previous date'" icon="pi pi-chevron-left" />
-      <span>{{ weekday }}</span>
-      <span>{{ formattedDate }}</span>
-      <Button @click="next" class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Next date'"
-        icon="pi pi-chevron-right" />
-    </div>
+  <div id="date-picker" class="flex items-center justify-center gap-4">
+    <Button @click="prev" class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Previous date'"
+      icon="pi pi-chevron-left" />
+    <span>{{ weekday }}</span>
+    <span>{{ formattedDate }}</span>
+    <Button @click="next" class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Next date'"
+      icon="pi pi-chevron-right" />
+  </div>
 </template>

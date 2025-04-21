@@ -1,7 +1,7 @@
 <script setup>
-import { ref, defineProps, computed } from 'vue'
+import { defineProps, computed } from 'vue'
 import MealItem from '@/components/MealItem.vue'
-import { MealService } from '@/services/meal.service'
+import { weightedValue } from '@/helpers/nutrients'
 
 
 const props = defineProps({
@@ -23,13 +23,13 @@ const props = defineProps({
 const kcal = computed(() => {
   let totalKcal = 0
   for (const food of props.foodItems) {
-    totalKcal += (food.kcal_100g / 100 * food.weight)
+    totalKcal += weightedValue(food.weight, food.kcal_100g)
   }
-  return Math.round(totalKcal)
+  return totalKcal
 })
 
 let name = props.type
-if (props.type.startsWith('snack')) {
+if (props.type.startsWith('s')) {
   name = 'Snacks'
 }
 
@@ -37,31 +37,20 @@ if (props.type.startsWith('snack')) {
 </script>
 
 <template>
-<div class="bg-white rounded-l shadow-md p-4">
-  <header class="flex items-center justify-between">
-    <h2 class="text-l font-bold capitalize">{{ name }}</h2>
-    <span class="text-slate-500 font-bold text-m">{{ kcal }} kcal</span>
-  </header>
-  <div class="flex flex-col gap-1 mt-2">
-    <MealItem
-      v-for="food in foodItems"
-      :key="food.id"
-      :food="food"
-      @delete="$emit('delete', food.id)"
-      @update="$emit('update', food)"
-    />
+  <div class="bg-white rounded-l shadow-md p-4">
+    <header class="flex items-center justify-between">
+      <h2 class="text-l font-bold capitalize">{{ name }}</h2>
+      <span class="text-slate-500 font-bold text-m">{{ kcal }} kcal</span>
+    </header>
+    <div class="flex flex-col gap-1 mt-2">
+      <MealItem v-for="food in foodItems" :key="food.id" :food="food" @delete="$emit('delete', food.id)"
+        @update="$emit('update', food)" />
+    </div>
+    <footer class="flex justify-end">
+      <Button class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Add food'" icon="pi pi-plus"
+        @click="$emit('add-food')" />
+    </footer>
   </div>
-  <footer class="flex justify-end">
-    <Button
-      class="p-button-text text-xl text-slate-800 primary-color"
-      :aria-label="'Add food'"
-      icon="pi pi-plus"
-      @click="$emit('add-food')"
-    />
-</footer>
-</div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

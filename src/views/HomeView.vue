@@ -10,6 +10,8 @@ import DateChanger from '@/components/DateChanger.vue'
 import { createToastService } from '@/services/toast.service'
 
 import ProductList from '@/components/ProductList.vue'
+import { weightedNutrients } from '@/helpers/nutrients'
+import { fnWrapper } from '@/helpers/helpers'
 
 const currentMeal = ref(null)
 const currentDate = ref(format(new Date(), 'yyyy-MM-dd'))
@@ -22,22 +24,13 @@ const mealService = new MealService()
 const meals = ref({})
 const visible = ref(false)
 
-async function reqServer(func, params=[]) {
-  try {
-    return await func(...params)
-  } catch (error) {
-    handleError(error)
-  }
-}
-
 function handleError(error) {
   if (error.status === 401) {
-      router.push('/login')
-      toastService.alertError('Session expired', 'Please login again')
-      return
-    }
-    toastService.alertError('Something went wrong', 'Please try again later')
-    console.error('Error fetching data:', error)
+    router.push('/login')
+    toastService.alertError('Session expired', 'Please login again')
+    return
+  }
+  toastService.alertError('Something went wrong', 'Please try again later')
 }
 
 async function fetchMeals() {
@@ -46,9 +39,14 @@ async function fetchMeals() {
 }
 
 onMounted(async () => {
-  await reqServer(fetchMeals)
+  await fnWrapper(fetchMeals, handleError)
 })
 
+/**
+ * Selects the meal to add new food items to.
+ *
+ * @param {string} type - the type of meal, for example breakfast, lunch, snack2 
+ */
 function selectMeal(type) {
   currentMeal.value = meals.value[type]
 
@@ -62,6 +60,7 @@ async function setItem(food) {
     weight: food.weight,
     unit: food.unit
   }
+
   if (!currentMeal.value.id) {
     const meal = await mealService.post({
       date: currentDate.value,
@@ -95,8 +94,8 @@ async function removeFoodItem({ foodId, type }) {
   meal.foodItems = meal.foodItems.filter((item) => item.id !== foodId)
 }
 
-async function updFoodItem({ food, type}) {
-  const {id, weight, unit } = food
+async function updFoodItem({ food, type }) {
+  const { id, weight, unit } = food
   const meal = meals.value[type]
   await mealService.updFoodItem(meal.id, { id, weight, unit })
   const foodItem = meal.foodItems.find((item) => item.id === id)
@@ -118,13 +117,13 @@ const data = computed(() => {
 
   for (const meal of Object.values(meals.value)) {
     for (const foodItem of meal.foodItems) {
-      totals.kcal += Math.round(foodItem.kcal_100g / 100 * foodItem.weight)
-      for (const nutrient of Object.keys(totals)) {
-        if (nutrient === 'kcal') {
-          continue
-        }
-        totals[nutrient] += Math.round(foodItem.macros_100g[nutrient] / 100 * foodItem.weight)
-      }
+      const foodNutrients = weightedNutrients(foodItem.weight, {
+        ...foodItem.macros_100g,
+        kcal: foodItem.kcal_100g
+      })
+      Object.keys(totals).forEach(key => {
+        totals[key] += foodNutrients[key] || 0
+      })
     }
   }
 
@@ -135,7 +134,8 @@ const data = computed(() => {
 
 <template>
   <main>
-    <DateChanger :date="currentDate" @update="(newDate) => { currentDate = newDate; fetchMeals() }" />
+    <DateChanger :date="currentDate"
+      @update="(newDate) => { currentDate = newDate; fnWrapper(fetchMeals, handleError) }" />
     <Toolbar>
       <template #start>
       </template>
@@ -148,8 +148,11 @@ const data = computed(() => {
       </template>
     </Toolbar>
 
-    <MealList :key="currentDate" :meals="meals" @add-food="selectMeal" @delete="(data) => reqServer(removeFoodItem, [data])" @update="(data) => reqServer(updFoodItem, [data])" />
+    <MealList :key="currentDate" :meals="meals" @add-food="selectMeal"
+      @delete="(data) => fnWrapper(removeFoodItem, handleError, data)"
+      @update="(data) => fnWrapper(updFoodItem, handleError, data)" />
 
-    <ProductList v-model:visible="visible" :meal="currentMeal" @add-food="(data) => reqServer(setItem, [data])" />
+    <ProductList v-model:visible="visible" :meal="currentMeal"
+      @add-food="(data) => fnWrapper(setItem, handleError, data)" />
   </main>
 </template>

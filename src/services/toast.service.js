@@ -1,46 +1,36 @@
 
 export const createToastService = (toast) => ({
-  alertSuccess (summary, detail) {
+  alert(summary, detail, config) {
     toast.add({
-      severity: 'success',
       summary: summary,
       detail: detail,
       life: 3000,
       sticky: false,
       closable: true,
+      ...config
+    })
+  },
+  alertSuccess(summary, detail) {
+    this.alert(summary, detail, {
+      severity: 'success',
       icon: 'pi pi-check'
     })
   },
-  alertError (summary, detail) {
-    toast.add({
+  alertError(summary, detail) {
+    this.alert(summary, detail, {
       severity: 'error',
-      summary: summary,
-      detail: detail,
-      life: 3000,
-      sticky: false,
-      closable: true,
       icon: 'pi pi-times'
     })
   },
-  alertWarn (summary, detail) {
-    toast.add({
+  alertWarn(summary, detail) {
+    this.alert(summary, detail, {
       severity: 'warn',
-      summary: summary,
-      detail: detail,
-      life: 3000,
-      sticky: false,
-      closable: true,
       icon: 'pi pi-exclamation-triangle'
     })
   },
-  alertInfo (summary, detail) {
-    toast.add({
+  alertInfo(summary, detail) {
+    this.alert(summary, detail, {
       severity: 'info',
-      summary: summary,
-      detail: detail,
-      life: 3000,
-      sticky: false,
-      closable: true,
       icon: 'pi pi-info-circle'
     })
   }
