@@ -53,6 +53,43 @@ function selectMeal(type) {
   visible.value = true
 }
 
+async function newMeal (item, prelItem) {
+  const temp = meals.value[currentMeal.value.type]
+  const newMeal = {
+      date: currentDate.value,
+      type: currentMeal.value.type,
+      foodItems: [item]
+    }
+    // optimistic update
+    meals.value[currentMeal.value.type] = {
+      ...newMeal,
+      id: 'prel',
+      foodItems: [prelItem]
+    }
+  try {
+    const meal = await mealService.post(newMeal)
+    currentMeal.value = meal
+    meals.value[currentMeal.value.type] = meal
+  } catch (error) {
+    // reverse update if error
+    meals.value[currentMeal.value.type] = temp
+    handleError(error)
+  }
+}
+
+async function addFoodItem (item, prelItem) {
+  try {
+    // optimistic update
+    currentMeal.value.foodItems.push(prelItem)
+    const newId = await mealService.addFoodItem(currentMeal.value.id, item)
+    prelItem.id = newId
+  } catch (error) {
+    // reverse update if error
+    currentMeal.value.foodItems.pop()
+    handleError(error)
+  }
+}
+
 
 async function setItem(food) {
   const item = {
@@ -61,19 +98,15 @@ async function setItem(food) {
     unit: food.unit
   }
 
-  if (!currentMeal.value.id) {
-    const meal = await mealService.post({
-      date: currentDate.value,
-      type: currentMeal.value.type,
-      foodItems: [item]
-    })
-    currentMeal.value = meal
-    meals.value[currentMeal.value.type] = meal
-  } else {
-    const newId = await mealService.addFoodItem(currentMeal.value.id, item)
-    food.id = newId
+  const prelItem = {
+    ...food,
+    id: 'prel'
+  }
 
-    currentMeal.value.foodItems.push(food)
+  if (!currentMeal.value.id) {
+    await newMeal(item, prelItem)
+  } else {
+    await addFoodItem(item, prelItem)
   }
 }
 

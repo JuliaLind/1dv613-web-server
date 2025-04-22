@@ -127,7 +127,7 @@ export class MealService {
    * @param {string} foodItem.weight - the weight of the food item
    * @param {string} foodItem.unit - the unit of the food item
    *
-   * @returns {string} - the id of the food item
+   * @returns {Promise<string>} - the id of the food item
    */
   async addFoodItem(mealId, foodItem) {
     const path = `/meals/${mealId}/add`
