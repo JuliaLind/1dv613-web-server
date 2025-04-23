@@ -30,6 +30,8 @@ export function matchPasswords(password, confirmPassword) {
  * @param {Date} minDate - the min date to be considered valid
  */
 export function validateBirthDate(birthDate, minDate) {
+  console.log('birthDate', birthDate)
+  console.log('minDate', minDate)
   if (!birthDate || birthDate > minDate) {
     throw new Error('You must be at least 18 years old to create an account')
   }

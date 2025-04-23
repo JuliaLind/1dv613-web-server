@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test:unit": "vitest run --coverage",
     "prepare": "cypress install",
-    "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
+    "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e && nyc report --report-dir=coverage/e2e --reporter=text-summary''",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
@@ -28,6 +28,7 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.14.0",
     "@eslint/js": "^9.22.0",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vitest/coverage-v8": "^3.1.1",
@@ -40,9 +41,11 @@
     "eslint-plugin-vue": "~10.0.0",
     "globals": "^16.0.0",
     "jsdom": "^26.0.0",
+    "nyc": "^17.1.0",
     "prettier": "3.5.3",
     "start-server-and-test": "^2.0.11",
     "vite": "^6.2.4",
+    "vite-plugin-istanbul": "^7.0.0",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vitest": "^3.1.1"
   }

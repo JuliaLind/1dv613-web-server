@@ -1,4 +1,5 @@
 <script setup>
+import { subYears, format } from 'date-fns'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
@@ -14,6 +15,8 @@ const authService = new AuthService()
 const router = useRouter()
 const toastService = createToastService(toast)
 
+const today = new Date()
+const minDate = subYears(today, 18)
 
 const form = ref({
   birthDate: '',
@@ -22,8 +25,7 @@ const form = ref({
   confirmPassword: ''
 })
 
-const minDate = new Date()
-minDate.setFullYear(minDate.getFullYear() - 18)
+
 
 
 /**
@@ -36,7 +38,7 @@ minDate.setFullYear(minDate.getFullYear() - 18)
 async function handleSubmit(event) {
   event.preventDefault()
 
-  const { birthDate, email, password, confirmPassword } = form
+  const { birthDate, email, password, confirmPassword } = form.value
 
   try {
     validateBirthDate(birthDate, minDate)
@@ -79,7 +81,7 @@ async function handleSubmit(event) {
 
 
     <FloatLabel variant="on">
-      <Password v-model="form.confirmPassword" toggleMask :invalid="!confirmPassword || confirmPassword !== password" />
+      <Password v-model="form.confirmPassword" toggleMask />
       <label for="on_label">Confirm Password</label>
     </FloatLabel>
 

@@ -75,17 +75,22 @@ export class MealService {
     const data = await this.request({ path })
 
     const types = ['breakfast', 'snack1', 'lunch', 'snack2', 'dinner', 'snack3']
+    const meals = {}
 
     for (const type of types) {
-      if (!data[type]) {
-        data[type] = {
-          id: null,
-          type,
-          foodItems: []
-        }
+      // reassign to new object to ensure the key order
+      if (data[type]) {
+        meals[type] = data[type]
+        continue
+      }
+      // Initialize the meal with empty values
+      meals[type] = {
+        id: null,
+        type,
+        foodItems: []
       }
     }
-    return data
+    return meals
   }
 
   /**
