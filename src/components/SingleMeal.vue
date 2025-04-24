@@ -2,35 +2,43 @@
 import { defineProps, computed } from 'vue'
 import MealItem from '@/components/MealItem.vue'
 import { weightedValue } from '@/helpers/nutrients'
+import { useMealStore } from '@/stores/meal.js'
 
+const store = useMealStore()
 
 const props = defineProps({
-  id: {
-    type: String,
-    required: false
-  },
   type: {
     type: String,
     required: true
   },
-  foodItems: {
-    type: Array,
-    required: false,
-    default: () => []
-  }
 })
+
+const data = computed(() => {
+  return store.meals[props.type]
+})
+
 
 const kcal = computed(() => {
   let totalKcal = 0
-  for (const food of props.foodItems) {
+  for (const food of data.value.foodItems) {
     totalKcal += weightedValue(food.weight, food.kcal_100g)
   }
   return totalKcal
 })
 
 let name = props.type
-if (props.type.startsWith('s')) {
+if (name.startsWith('s')) {
   name = 'Snacks'
+}
+
+const emit = defineEmits(['delete', 'error', 'select'])
+
+async function delItem(id) {
+  try {
+    await store.delItem(id, props.type)
+  } catch (error) {
+    emit('error', error)
+  }
 }
 
 
@@ -43,12 +51,12 @@ if (props.type.startsWith('s')) {
       <span class="text-slate-500 font-bold text-m">{{ kcal }} kcal</span>
     </header>
     <div class="flex flex-col gap-1 mt-2">
-      <MealItem v-for="food in foodItems" :key="food.id" :food="food" @delete="$emit('delete', food.id)"
-        @update="$emit('update', food)" />
+      <MealItem v-for="food in data.foodItems" :key="food.id" :mealId="data.id" :food="food"
+        @delete="delItem(food.id)" />
     </div>
-    <footer class="flex justify-end">
+    <footer class=" flex justify-end">
       <Button class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Add food'" icon="pi pi-plus"
-        @click="$emit('add-food')" />
+        @click="$emit('select')" />
     </footer>
   </div>
 </template>

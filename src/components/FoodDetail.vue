@@ -5,7 +5,7 @@ import { weightedValue } from '@/helpers/nutrients'
 const { info } = defineProps({
   info: {
     type: Object,
-    required: false,
+    required: true,
   }
 })
 
