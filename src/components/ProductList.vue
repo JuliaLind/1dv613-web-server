@@ -58,10 +58,16 @@ async function search() {
 async function getFiltered() {
   const data = await foodService.search(query.value, page)
   page = data.page + 1
-  if (data.to === data.total || data.foodItems.length === 0) {
-    fetchMore.value = false
-  }
+  hasMore(data)
   return data.foodItems
+}
+
+function hasMore(data) {
+  if (data.total > data.to) {
+    fetchMore.value = true
+    return
+  }
+  fetchMore.value = false
 }
 
 /**
@@ -75,9 +81,7 @@ async function getUnfiltered() {
 
   page = data.page + 1
 
-  if (data.to === data.total || data.foodItems.length === 0) {
-    fetchMore.value = false
-  }
+  hasMore(data)
 
   return data.foodItems
 }
@@ -139,7 +143,7 @@ onMounted(async () => {
       </AccordionPanel>
     </Accordion>
     <div class="flex justify-center">
-      <Button label="Load more" @click="loadMore" text class="mt-1" />
+      <Button v-show="fetchMore" label="Load more" @click="loadMore" text class="mt-1" />
     </div>
   </Drawer>
 </template>

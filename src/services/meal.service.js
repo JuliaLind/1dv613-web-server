@@ -64,8 +64,7 @@ export class MealService {
   }
 
   /**
-   * Fetches all meals for the given date.
-   * Missing meals are initialized with empty values.
+   * Fetches all registered meals for the given date.
    *
    * @param {string} date - the date to get the meals for
    * @returns {Promise<object>} - the meals for the given date

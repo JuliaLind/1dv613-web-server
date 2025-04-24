@@ -5,21 +5,20 @@ import { useMealStore } from '@/stores/meal.js'
 import SingleMeal from '@/components/SingleMeal.vue'
 
 const store = useMealStore()
-
 const visible = ref(false)
-
 const emit = defineEmits(['error'])
 
-function handleError(error) {
-  emit('error', error)
-}
 
-
+/**
+ * Adds a food item to the selected meal.
+ *
+ * @param {object} food - the food item to add to the meal 
+ */
 async function setItem(food) {
   try {
     await store.setItem(food)
   } catch (error) {
-    handleError(error)
+    emit('error', error)
   }
 }
 

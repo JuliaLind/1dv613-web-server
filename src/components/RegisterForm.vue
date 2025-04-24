@@ -26,8 +26,6 @@ const form = ref({
 })
 
 
-
-
 /**
  * Handle form submission.
  *

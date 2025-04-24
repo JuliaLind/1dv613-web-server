@@ -24,8 +24,13 @@ const props = defineProps({
   }
 })
 
+/**
+ * Handles errors by checking the status code.
+ * If the status code is 401, it redirects to the login page.
+ *
+ * @param {Error} error - the error object 
+ */
 function handleError(error) {
-  console.log(error)
   if (error.status === 401) {
     router.push('/login')
     toastService.alertError('Session expired', 'Please login again')
@@ -34,14 +39,12 @@ function handleError(error) {
   toastService.alertError('Something went wrong', 'Please try again later')
 }
 
-
+/**
+ * Updates the wright and unit of the food item.
+ */
 async function updFoodItem() {
   const { id, weight, unit } = props.food
-  // const meal = meals[type]
   await mealService.updFoodItem(props.mealId, { id, weight, unit })
-  // const foodItem = meal.foodItems.find((item) => item.id === id)
-  // foodItem.weight = weight
-  // foodItem.unit = unit
 }
 
 
@@ -49,16 +52,19 @@ async function updFoodItem() {
 const kcal = computed(() => {
   return weightedValue(props.food.weight, props.food.kcal_100g)
 })
-// weightedValue(props.food.weight, props.food.kcal_100g)
-
 const edit = ref(false)
 const menu = ref()
 
+/**
+ * Toggles the menu with edit and delete options.
+ *
+ * @param {PointerEvent} event - click event 
+ */
 function toggleMenu(event) {
   menu.value.toggle(event)
 }
 
-defineEmits(['delete', 'update'])
+defineEmits(['delete'])
 
 </script>
 

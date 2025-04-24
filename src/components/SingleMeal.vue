@@ -33,6 +33,11 @@ if (name.startsWith('s')) {
 
 const emit = defineEmits(['delete', 'error', 'select'])
 
+/**
+ * Deletes a food item from the meal.
+ *
+ * @param {string} id - the id of the food item to delete
+ */
 async function delItem(id) {
   try {
     await store.delItem(id, props.type)

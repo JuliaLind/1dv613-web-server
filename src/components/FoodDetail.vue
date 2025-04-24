@@ -10,7 +10,6 @@ const { info } = defineProps({
 })
 
 const food = ref(info)
-
 const weightOptions = [{ name: 'g', code: 'g' }]
 
 
