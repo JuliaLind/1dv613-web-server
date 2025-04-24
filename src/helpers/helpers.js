@@ -1,5 +1,5 @@
 /**
- * Csalls and async function and handles the error
+ * Calls and async function and handles the error
  * by calling the errorHandler function.
  *
  * @param {Function} fn - any async function

@@ -1,5 +1,5 @@
 <script setup>
-import { subYears, format } from 'date-fns'
+import { subYears } from 'date-fns'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'

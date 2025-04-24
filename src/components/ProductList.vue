@@ -6,6 +6,7 @@ import { createToastService } from '@/services/toast.service'
 import ProductBody from '@/components/ProductBody.vue'
 import ProductHeader from '@/components/ProductHeader.vue'
 
+
 const toast = useToast()
 const toastService = createToastService(toast)
 
@@ -132,7 +133,8 @@ onMounted(async () => {
             :kcal_100g="product.kcal_100g" />
         </AccordionHeader>
         <AccordionContent>
-          <ProductBody :ean="product.ean" @add-food="(data) => $emit('add-food', data)" />
+          <!-- <ProductBody :food="product" @add-food="(data) => $emit('add-food', data)" /> -->
+          <ProductBody :food="product" @add-food="(data) => $emit('add-food', data)" />
         </AccordionContent>
       </AccordionPanel>
     </Accordion>

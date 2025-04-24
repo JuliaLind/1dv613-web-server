@@ -1,17 +1,55 @@
 <script setup>
-import { defineProps, ref, defineEmits } from 'vue'
+import { defineProps, ref, defineEmits, computed } from 'vue'
 import FoodDetail from '@/components/FoodDetail.vue'
 import { weightedValue } from '@/helpers/nutrients'
+import { fnWrapper } from '@/helpers/helpers'
+import { MealService } from '@/services/meal.service.js'
+import { useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
+import { createToastService } from '@/services/toast.service'
 
-const { food } = defineProps({
+const router = useRouter()
+const toast = useToast()
+const toastService = createToastService(toast)
+const mealService = new MealService()
+
+const props = defineProps({
   food: {
     type: Object,
     required: true
+  },
+  mealId: {
+    type: String,
+    required: true,
   }
 })
 
+function handleError(error) {
+  console.log(error)
+  if (error.status === 401) {
+    router.push('/login')
+    toastService.alertError('Session expired', 'Please login again')
+    return
+  }
+  toastService.alertError('Something went wrong', 'Please try again later')
+}
 
-const kcal = weightedValue(food.weight, food.kcal_100g)
+
+async function updFoodItem() {
+  const { id, weight, unit } = props.food
+  // const meal = meals[type]
+  await mealService.updFoodItem(props.mealId, { id, weight, unit })
+  // const foodItem = meal.foodItems.find((item) => item.id === id)
+  // foodItem.weight = weight
+  // foodItem.unit = unit
+}
+
+
+
+const kcal = computed(() => {
+  return weightedValue(props.food.weight, props.food.kcal_100g)
+})
+// weightedValue(props.food.weight, props.food.kcal_100g)
 
 const edit = ref(false)
 const menu = ref()
@@ -47,7 +85,7 @@ defineEmits(['delete', 'update'])
     </OverlayPanel>
   </div>
 
-  <FoodDetail v-if="edit" :info="food" @done="$emit('update', food); edit = false" />
+  <FoodDetail v-if="edit" :info="food" @done="fnWrapper(updFoodItem, handleError); edit = false" />
 </template>
 
 <style scoped></style>
