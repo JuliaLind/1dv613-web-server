@@ -44,29 +44,17 @@ export const useMealStore = defineStore('meal', () => {
   function setDate(date) {
     currentDate.value = date
   }
-
-  // function getMealByType(type) {
-  //   return computed(() => {
-  //     return meals.value[type]
-  //   })
-  // }
-
   function selectMeal(type) {
     currentMeal.value = meals.value[type]
   }
 
   async function newMeal(item, prelItem) {
-    // const temp = meals.value[currentMeal.value.type]
     const newMeal = {
       date: currentDate.value,
       type: currentMeal.value.type,
       foodItems: [item]
     }
-    // optimistic update
-    // meals.value[currentMeal.value.type] = {
-    //   ...temp,
-    //   foodItems: [prelItem]
-    // }
+
     meals.value[currentMeal.value.type].foodItems.push(prelItem)
 
     try {
@@ -89,7 +77,6 @@ export const useMealStore = defineStore('meal', () => {
     } catch (error) {
       // reverse update if error
       currentMeal.value.foodItems.pop()
-      // handleError(error)
       throw error
     }
   }
@@ -183,7 +170,6 @@ export const useMealStore = defineStore('meal', () => {
   return {
     meals,
     setMeals,
-    // getMealByType,
     currentDate,
     setDate,
     currentMeal,
