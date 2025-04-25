@@ -7,6 +7,11 @@ import { AuthService } from './auth.service.js'
 export class MealService {
   #authService
 
+  /**
+   * Created a new instance of the MealService.
+   *
+   * @param {AuthService} authService - the authentication service
+   */
   constructor(authService = new AuthService()) {
     this.#authService = authService
   }
@@ -22,14 +27,7 @@ export class MealService {
    * @returns {Promise<any>} - the response from the server
    */
   async request(params) {
-    // TODO: check token exp and refresh token before fetch to data server
-    let res = await this.fetch(params)
-
-    if (res.status === 401) {
-      await this.#authService.refresh()
-
-      res = await this.fetch(params)
-    }
+    const res = await this.fetch(params)
 
     if (!res.ok || res.status === 204) {
       return undefined
@@ -49,11 +47,7 @@ export class MealService {
    * @returns {Promise<Response>} - the response from the server
    */
   async fetch({ path, method = 'GET', body = undefined }) {
-    const accessToken = localStorage.getItem('accessToken')
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    }
+    const headers = await this.#authService.getHeaders()
 
     const response = await fetch(`${dataUrl}${path}`, {
       method,
@@ -148,5 +142,4 @@ export class MealService {
     const path = `/meals/${mealId}/upd`
     await this.request({ path, method: 'PATCH', body: foodItem })
   }
-
 }
