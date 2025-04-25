@@ -22,6 +22,7 @@ export class MealService {
    * @returns {Promise<any>} - the response from the server
    */
   async request(params) {
+    // TODO: check token exp and refresh token before fetch to data server
     let res = await this.fetch(params)
 
     if (res.status === 401) {
