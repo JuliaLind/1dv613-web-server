@@ -91,10 +91,14 @@ export class AuthService {
    *
    * @param {object} response - the response from server
    */
-  #isNotOk(response) {
+  async #isOk(response) {
+    const data = await response.json()
+
     if (!response.ok) {
       throw new Error(data.message)
     }
+
+    return data
   }
 
   /**
@@ -106,10 +110,9 @@ export class AuthService {
    */
   async handleRes(response) {
     this.#isUnauthorized(response)
-    this.#isNotOk(response)
 
     try {
-      const data = await response.json()
+      const data = await this.#isOk(response)
 
       return data
     } catch {

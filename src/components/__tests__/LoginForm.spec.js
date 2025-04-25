@@ -1,80 +1,74 @@
-import PrimeVue from 'primevue/config'
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-
-
 import { mount } from '@vue/test-utils'
-import LoginForm from '../LoginForm.vue'
-
+import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
 import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
 
+import LoginForm from '../LoginForm.vue'
 
-
-describe('LoginForm', async () => {
-  const mockRouter = {
-    push: vi.fn()
-  }
-
-  const router = createRouter({
-    history: createWebHistory(),
-    routes: [] // or mock routes
-  })
-  await router.isReady()
-
-  beforeEach(() => {
-    vi.mock('@/services/auth.service.js', () => {
+vi.mock('@/services/auth.service.js', () => {
+  return {
+    AuthService: vi.fn().mockImplementation(() => {
       return {
-        AuthService: vi.fn().mockImplementation(() => {
-          return {
-            login: vi.fn().mockResolvedValue({ token: 'mock-token' })
-          }
-        })
+        login: vi.fn().mockResolvedValue({ token: 'mock-token' })
       }
     })
+  }
+})
+
+describe('LoginForm', () => {
+  let router
+
+  beforeEach(async () => {
+    router = createRouter({
+      history: createWebHistory(),
+      routes: []
+    })
+
   })
+
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it('Submit login form, ok', async () => {
+
+  it('submits the login form successfully', async () => {
     const wrapper = mount(LoginForm, {
       global: {
-        mocks: {
-          $router: mockRouter
-        },
-        plugins: [
-          PrimeVue,
-          ToastService
-        ],
+        plugins: [router, PrimeVue, ToastService],
         components: {
           InputText,
           FloatLabel,
           Password,
           Button
         },
-        stubs: { RouterLink: true }
+        stubs: {
+          RouterLink: true
+        }
       }
     })
 
     await nextTick()
 
-    const emailInput = wrapper.find('#email input')
+    const emailInput = wrapper.findComponent({ name: 'InputText' })
 
     const passwordInput = wrapper.find('#password input')
-    const submitButton = wrapper.find('Button[type="submit"]')
+    const submitButton = wrapper.find('button[type="submit"]')
+
     const email = 'julia@email.com'
     const password = 'password123'
+
     await emailInput.setValue(email)
     await passwordInput.setValue(password)
-    submitButton.trigger('submit')
 
-    const { AuthService } = await import('@/services/auth.service.js')
-    expect(AuthService).toHaveBeenCalled()
-    expect(AuthService.mock.instances[0].login).toHaveBeenCalledExactlyOnceWith({ email, password })
+    await submitButton.trigger('submit')
+    const authServiceInstance = wrapper.vm.authService
 
+    expect(authServiceInstance.login).toHaveBeenCalledOnce()
+    expect(authServiceInstance.login).toHaveBeenCalledWith({ email, password })
   })
 })
