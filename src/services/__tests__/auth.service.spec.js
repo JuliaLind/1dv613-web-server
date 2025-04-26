@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
+import { mockFetch } from './helpers.js'
 
 import { AuthService } from '../auth.service.js'
+const authUrl = import.meta.env.VITE_AUTH_URL
 
 describe('Auth service', () => {
   afterEach(() => {
@@ -15,29 +17,37 @@ describe('Auth service', () => {
   }
   const authService = new AuthService()
 
-  it('login, ok', async () => {
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')
-    const originalPost = authService.post
+  describe('login', () => {
+    it('login, ok', async () => {
+      const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')
+      mockFetch(201, tokens)
 
-    // mock the dependencies
-    authService.post = vi.fn().mockResolvedValueOnce(tokens)
+      const credentials = {
+        username: 'julia@email.com',
+        password: 'password123',
+      }
+      await authService.login(credentials)
 
-    const credentials = {
-      username: 'julia@email.com',
-      password: 'password123',
-    }
-    await authService.login(credentials)
+      expect(global.fetch).toHaveBeenCalledExactlyOnceWith(authUrl + '/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(credentials),
+        }
+      )
 
-    expect(authService.post).toHaveBeenCalledExactlyOnceWith('/login', credentials)
-
-    expect(setItemSpy).toHaveBeenCalledTimes(2)
-    expect(setItemSpy).toHaveBeenCalledWith('accessToken', tokens.accessToken)
-    expect(setItemSpy).toHaveBeenCalledWith('refreshToken', tokens.refreshToken)
-    expect(localStorage.getItem('accessToken')).toBe(tokens.accessToken)
-    expect(localStorage.getItem('refreshToken')).toBe(tokens.refreshToken)
-
-    authService.post = originalPost
+      expect(setItemSpy).toHaveBeenCalledTimes(2)
+      expect(setItemSpy).toHaveBeenCalledWith('accessToken', tokens.accessToken)
+      expect(setItemSpy).toHaveBeenCalledWith('refreshToken', tokens.refreshToken)
+      expect(localStorage.getItem('accessToken')).toBe(tokens.accessToken)
+      expect(localStorage.getItem('refreshToken')).toBe(tokens.refreshToken)
+    })
   })
+
+
+
 
   // it('setTokens, ok', () => {
   //   const setItemSpy = vi.spyOn(Storage.prototype, 'setItem')

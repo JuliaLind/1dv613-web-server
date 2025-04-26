@@ -75,7 +75,7 @@ export class AuthService {
   async #isOk(response) {
     const data = await response.json()
 
-    if (!response.ok) {
+    if (response.status >= 400) {
       throw new Error(data.message)
     }
 
@@ -158,12 +158,15 @@ export class AuthService {
    * @param {object} data - The request payload.
    * @returns {Promise<object>} The response data.
    */
-  async post(path, data) {
-    const response = await fetch(authUrl + path, {
-      method: 'POST',
-      headers: this.#contentTypeHeader,
-      body: JSON.stringify(data)
-    })
+  async #post(path, data) {
+    const response = await fetch(
+      authUrl + path,
+      {
+        method: 'POST',
+        headers: this.#contentTypeHeader,
+        body: JSON.stringify(data)
+      }
+    )
     return await this.#handleRes(response)
   }
 
@@ -177,7 +180,7 @@ export class AuthService {
    * @param {string} user.birthdate - The user's birthdate. 
    */
   async register(user) {
-    await this.post('/register', user)
+    await this.#post('/register', user)
   }
 
   /**
@@ -190,7 +193,7 @@ export class AuthService {
    * @throws {Error} If the response is not ok or if JSON parsing fails.
    */
   async login(credentials) {
-    const res = await this.post('/login', credentials)
+    const res = await this.#post('/login', credentials)
     this.#setTokens(res)
   }
 
@@ -215,11 +218,11 @@ export class AuthService {
   }
 
   /**
- * Refreshes the access token using the refresh token.
- *
- * @returns {object} The response data containing the new access token and refresh token.
- * @throws {Error} If the refresh fails.
- */
+   * Refreshes the access token using the refresh token.
+   *
+   * @returns {object} The response data containing the new access token and refresh token.
+   * @throws {Error} If the refresh fails.
+   */
   async logout() {
     try {
       const response = await fetch(
