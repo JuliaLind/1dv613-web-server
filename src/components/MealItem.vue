@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, defineEmits, computed } from 'vue'
+import { ref, computed } from 'vue'
 import FoodDetail from '@/components/FoodDetail.vue'
 import { weightedValue } from '@/helpers/nutrients'
 import { fnWrapper } from '@/helpers/helpers'

@@ -8,6 +8,7 @@ import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
+import { routes } from '@/router'
 
 import LoginForm from '../LoginForm.vue'
 
@@ -27,7 +28,7 @@ describe('LoginForm', () => {
   beforeEach(async () => {
     router = createRouter({
       history: createWebHistory(),
-      routes: []
+      routes
     })
 
   })

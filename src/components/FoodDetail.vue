@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { weightedValue } from '@/helpers/nutrients'
 
 const { info } = defineProps({

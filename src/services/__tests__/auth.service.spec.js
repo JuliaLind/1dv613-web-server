@@ -22,7 +22,6 @@ describe('Auth service', () => {
     // mock the dependencies
     authService.post = vi.fn().mockResolvedValueOnce(tokens)
 
-
     const credentials = {
       username: 'julia@email.com',
       password: 'password123',
