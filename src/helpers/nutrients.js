@@ -24,3 +24,32 @@ export function weightedNutrients(weight = 0, nutrients = {}) {
   return weightedNutrients
 }
 
+/**
+ * 
+ * @param {object} meal the meal object containing food items
+ * @param {object} totals - associative array
+ * of nutrient names and their values
+ * @returns {object} the totals object with the summed values of the nutrients
+ */
+export function nutrientsPerMeal(meal, totals = {
+  kcal: 0,
+  protein: 0,
+  fat: 0,
+  saturatedFat: 0,
+  carbohydrates: 0,
+  sugars: 0,
+  fiber: 0,
+  salt: 0
+}) {
+  for (const foodItem of meal.foodItems) {
+    const foodNutrients = weightedNutrients(foodItem.weight, {
+      ...foodItem.macros_100g,
+      kcal: foodItem.kcal_100g
+    })
+    Object.keys(totals).forEach(key => {
+      totals[key] += foodNutrients[key] || 0
+    })
+  }
+  return totals
+}
+

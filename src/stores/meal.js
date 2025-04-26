@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { MealService } from '@/services/meal.service'
-import { weightedNutrients } from '@/helpers/nutrients'
+import { nutrientsPerMeal } from '@/helpers/nutrients'
 import { format } from 'date-fns'
 
 
@@ -25,9 +25,13 @@ export const useMealStore = defineStore('meal', () => {
   })
 
   const currentDate = ref(format(new Date(), 'yyyy-MM-dd'))
-
   const currentMeal = ref(null)
 
+  /**
+   * Fetches meals for the current date and sets them in the store.
+   * If the meal is not found, it initializes it with empty values.
+   *
+   */
   async function setMeals() {
     const data = await mealService.index(currentDate.value)
 
@@ -41,13 +45,30 @@ export const useMealStore = defineStore('meal', () => {
     }
   }
 
+  /**
+   * Sets the date.
+   *
+   * @param {string} date - the new date
+   */
   function setDate(date) {
     currentDate.value = date
   }
+
+  /**
+   * Selects a meal type and sets it as the current meal.
+   *
+   * @param {string} type - type of meal
+   */
   function selectMeal(type) {
     currentMeal.value = meals.value[type]
   }
 
+  /**
+   * Creates a new meal using optimistic update.
+   *
+   * @param {object} item - the item to send to server
+   * @param {object} prelItem - the item to be displayed in the UI
+   */
   async function newMeal(item, prelItem) {
     const newMeal = {
       date: currentDate.value,
@@ -68,6 +89,12 @@ export const useMealStore = defineStore('meal', () => {
     }
   }
 
+  /**
+   * Add a food item to the current meal using optimistic update.
+   *
+   * @param {object} item - the item to send to server
+   * @param {object} prelItem - the item to be displayed in the UI
+   */
   async function addFoodItem(item, prelItem) {
     try {
       // optimistic update
@@ -83,32 +110,19 @@ export const useMealStore = defineStore('meal', () => {
 
 
   const data = computed(() => {
-    let totals = {
-      kcal: 0,
-      protein: 0,
-      fat: 0,
-      saturatedFat: 0,
-      carbohydrates: 0,
-      sugars: 0,
-      fiber: 0,
-      salt: 0
-    }
-
+    let totals
     for (const meal of Object.values(meals.value)) {
-      for (const foodItem of meal.foodItems) {
-        const foodNutrients = weightedNutrients(foodItem.weight, {
-          ...foodItem.macros_100g,
-          kcal: foodItem.kcal_100g
-        })
-        Object.keys(totals).forEach(key => {
-          totals[key] += foodNutrients[key] || 0
-        })
-      }
+      totals = nutrientsPerMeal(meal, totals)
     }
 
     return totals
   })
 
+  /**
+   * Adds a food item to the current meal.
+   *
+   * @param {object} food - a food item to be added to the meal
+   */
   async function setItem(food) {
     const item = {
       ean: food.ean,
@@ -128,12 +142,18 @@ export const useMealStore = defineStore('meal', () => {
     }
   }
 
+  /**
+   * Deletes a meal using optimistic update.
+   *
+   * @param {string} type - the type of the meal to delete
+   */
   async function delMeal(type) {
     const meal = meals.value[type]
     const temp = {
       ...meal
     }
     meals.value[type] = dummyMeal(type)
+
     try {
       await mealService.del(meal.id)
     } catch (error) {
@@ -151,12 +171,13 @@ export const useMealStore = defineStore('meal', () => {
   async function delItem(itemId, type) {
     const meal = meals.value[type]
     if (meal.foodItems.length === 1) {
-      delMeal(type)
+      await delMeal(type)
       return
     }
 
     const temp = [...meal.foodItems]
     meal.foodItems = meal.foodItems.filter((item) => item.id !== itemId)
+
     try {
       await mealService.delFoodItem(meal.id, itemId)
     } catch (error) {

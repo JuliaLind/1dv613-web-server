@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import MealItem from '@/components/MealItem.vue'
-import { weightedValue } from '@/helpers/nutrients'
+import { nutrientsPerMeal } from '@/helpers/nutrients'
 import { useMealStore } from '@/stores/meal.js'
 
 const store = useMealStore()
@@ -17,14 +17,10 @@ const data = computed(() => {
   return store.meals[props.type]
 })
 
-
-const kcal = computed(() => {
-  let totalKcal = 0
-  for (const food of data.value.foodItems) {
-    totalKcal += weightedValue(food.weight, food.kcal_100g)
-  }
-  return totalKcal
+const nutrients = computed(() => {
+  return nutrientsPerMeal(data.value)
 })
+
 
 let name = props.type
 if (name.startsWith('s')) {
@@ -46,14 +42,13 @@ async function delItem(id) {
   }
 }
 
-
 </script>
 
 <template>
   <div class="bg-white rounded-l shadow-md p-4">
     <header class="flex items-center justify-between">
       <h2 class="text-l font-bold capitalize">{{ name }}</h2>
-      <span class="text-slate-500 font-bold text-m">{{ kcal }} kcal</span>
+      <span class="text-slate-500 font-bold text-m">{{ nutrients.kcal }} kcal</span>
     </header>
     <div class="flex flex-col gap-1 mt-2">
       <MealItem v-for="food in data.foodItems" :key="food.id" :mealId="data.id" :food="food"
