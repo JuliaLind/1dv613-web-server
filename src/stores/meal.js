@@ -69,14 +69,12 @@ export const useMealStore = defineStore('meal', () => {
    * @param {object} item - the item to send to server
    * @param {object} prelItem - the item to be displayed in the UI
    */
-  async function newMeal(item, prelItem) {
+  async function newMeal(item) {
     const newMeal = {
       date: currentDate.value,
       type: currentMeal.value.type,
       foodItems: [item]
     }
-
-    meals.value[currentMeal.value.type].foodItems.push(prelItem)
 
     try {
       const meal = await mealService.post(newMeal)
@@ -84,7 +82,7 @@ export const useMealStore = defineStore('meal', () => {
       meals.value[currentMeal.value.type] = meal
     } catch (error) {
       // reverse update if error
-      meals.value[currentMeal.value.type].foodItems.pop()
+      currentMeal.value.foodItems.pop()
       throw error
     }
   }
@@ -95,12 +93,9 @@ export const useMealStore = defineStore('meal', () => {
    * @param {object} item - the item to send to server
    * @param {object} prelItem - the item to be displayed in the UI
    */
-  async function addFoodItem(item, prelItem) {
+  async function addFoodItem(item) {
     try {
-      // optimistic update
-      currentMeal.value.foodItems.push(prelItem)
-      const newId = await mealService.addFoodItem(currentMeal.value.id, item)
-      prelItem.id = newId
+      return await mealService.addFoodItem(currentMeal.value.id, item)
     } catch (error) {
       // reverse update if error
       currentMeal.value.foodItems.pop()
@@ -135,10 +130,12 @@ export const useMealStore = defineStore('meal', () => {
       id: 'prel'
     }
 
+    currentMeal.value.foodItems.push(prelItem)
+
     if (!currentMeal.value.id) {
-      await newMeal(item, prelItem)
+      await newMeal(item)
     } else {
-      await addFoodItem(item, prelItem)
+      prelItem.id = await addFoodItem(item)
     }
   }
 
@@ -149,15 +146,12 @@ export const useMealStore = defineStore('meal', () => {
    */
   async function delMeal(type) {
     const meal = meals.value[type]
-    const temp = {
-      ...meal
-    }
     meals.value[type] = dummyMeal(type)
 
     try {
       await mealService.del(meal.id)
     } catch (error) {
-      meals[type] = temp
+      meals[type] = meal
       throw error
     }
   }
