@@ -36,7 +36,7 @@ function selectMeal(type) {
 </script>
 
 <template>
-  <div v-if="store.meals" id="meal-list" class="flex flex-col gap-4 mt-4">
+  <div v-if="store.meals" id="meal-list" class="flex flex-col gap-2">
     <SingleMeal v-for="(meal, type) in store.meals" :key="type" :type="type" @select="selectMeal(type)"
       @delete="store.delMeal(type)" @error="$emit('error')" />
   </div>

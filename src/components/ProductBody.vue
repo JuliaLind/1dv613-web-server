@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, computed } from 'vue'
+import { computed } from 'vue'
 import FoodDetail from '@/components/FoodDetail.vue'
 
 const props = defineProps({

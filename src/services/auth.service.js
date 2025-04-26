@@ -9,6 +9,10 @@ const authUrl = import.meta.env.VITE_AUTH_URL
  * Service for handling authentication requests.
  */
 export class AuthService {
+  #contentTypeHeader = {
+    'Content-Type': 'application/json',
+  }
+
   /**
    * 
    * @param {object} token - json web token 
@@ -30,47 +34,24 @@ export class AuthService {
    * @param {object} token - json web token
    * @returns {object} - the header template where the bearer token is set
    */
-  #getHeaderTempl(token) {
+  #getAuthHeader(token) {
     return {
-      'Content-Type': 'application/json',
+      ...this.#contentTypeHeader,
       Authorization: `Bearer ${token}`,
     }
   }
 
-  /**
-   * Returns the headers for a request with the current access token.
-   * Refreshes the token if it's less than 10 seconds to expiration.
-   *
-   * @returns {object} headers for a request containing the bearer token
-   */
-  async getHeaders() {
-    const token = localStorage.getItem('accessToken')
+  #getRefreshConf() {
+    const token = localStorage.getItem('refreshToken')
 
-    if (this.#isExpiring(token)) {
-      await this.refresh()
+    if (!token) {
+      throw new Error('No refresh token found')
     }
 
-    return this.#getHeaderTempl(token)
-  }
-
-
-  /**
-   * Sends a POST request containing a body
-   * to the authentication server.
-   *
-   * @param {string} path - The endpoint path.
-   * @param {object} data - The request payload.
-   * @returns {Promise<object>} The response data.
-   */
-  async post(path, data) {
-    const response = await fetch(authUrl + path, {
+    return {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    })
-    return await this.handleRes(response)
+      headers: this.#getAuthHeader(token),
+    }
   }
 
   /**
@@ -108,7 +89,7 @@ export class AuthService {
    * @returns the parsed JSON data if the response is ok, otherwise throws an error.
    * @throws {Error} If the response is not ok or if JSON parsing fails.
    */
-  async handleRes(response) {
+  async #handleRes(response) {
     this.#isUnauthorized(response)
 
     try {
@@ -118,6 +99,72 @@ export class AuthService {
     } catch {
       throw new Error('Something went wrong')
     }
+  }
+
+  /**
+   * Handles errors that occur during authentication requests.
+   *
+   * @param {object} error - The error object.
+   * @throws {Error} If the error status is 401, clears tokens and throws an error.
+   */
+  #handleError(error) {
+    if (error.status === 401) {
+      this.#clearTokens()
+    }
+    throw new Error(error.message)
+  }
+
+  /**
+   * Stores the access and refresh tokens in local storage.
+   *
+   * @param {object} tokens - access and refresh tokens.
+   * @param {string} tokens.accessToken - The access token.
+   * @param {string} tokens.refreshToken - The refresh token.
+   */
+  #setTokens(tokens) {
+    localStorage.setItem('accessToken', tokens.accessToken)
+    localStorage.setItem('refreshToken', tokens.refreshToken)
+  }
+
+  /**
+   * Clears the access and refresh tokens from local storage.
+   */
+  #clearTokens() {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+  }
+
+  /**
+   * Returns the headers for a request with the current access token.
+   * Refreshes the token if it's less than 10 seconds to expiration.
+   *
+   * @returns {object} headers for a request containing the bearer token
+   */
+  async getHeaders() {
+    const token = localStorage.getItem('accessToken')
+
+    if (this.#isExpiring(token)) {
+      await this.refresh()
+    }
+
+    return this.#getAuthHeader(token)
+  }
+
+  /**
+   * Sends a POST request containing a body
+   * to the authentication server.
+   *
+   * @param {string} path - The endpoint path.
+   * @param {object} data - The request payload.
+   * @returns {Promise<object>} The response data.
+   */
+  async post(path, data) {
+    const response = await fetch(authUrl + path, {
+      method: 'POST',
+      headers: this.#contentTypeHeader,
+      body: JSON.stringify(data)
+    })
+    return await this.#handleRes(response)
   }
 
   /**
@@ -148,39 +195,6 @@ export class AuthService {
   }
 
   /**
-   * Stores the access and refresh tokens in local storage.
-   *
-   * @param {object} tokens - access and refresh tokens.
-   * @param {string} tokens.accessToken - The access token.
-   * @param {string} tokens.refreshToken - The refresh token.
-   */
-  #setTokens(tokens) {
-    localStorage.setItem('accessToken', tokens.accessToken)
-    localStorage.setItem('refreshToken', tokens.refreshToken)
-  }
-
-  /**
-   * Clears the access and refresh tokens from local storage.
-   */
-  clearTokens() {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-  }
-
-  /**
-   * Returns the headers for a request with the current refresh token.
-   */
-  #getRefreshHeaders() {
-    const token = localStorage.getItem('refreshToken')
-
-    if (!token) {
-      throw new Error('No refresh token found')
-    }
-
-    return this.#getHeaderTempl(token)
-  }
-
-  /**
    * Refreshes the access token using the refresh token.
    *
    * @returns {object} The response data containing the new access token and refresh token.
@@ -188,18 +202,36 @@ export class AuthService {
    */
   async refresh() {
     try {
-      const response = await fetch(authUrl + '/refresh', {
-        method: 'POST',
-        headers: this.#getRefreshHeaders(),
-      })
+      const response = await fetch(
+        authUrl + '/refresh',
+        this.#getRefreshConf()
+      )
 
-      const res = await this.handleRes(response)
+      const res = await this.#handleRes(response)
       this.#setTokens(res)
     } catch (error) {
-      if (error.status === 401) {
-        this.clearTokens()
+      this.#handleError(error)
+    }
+  }
+
+  /**
+ * Refreshes the access token using the refresh token.
+ *
+ * @returns {object} The response data containing the new access token and refresh token.
+ * @throws {Error} If the refresh fails.
+ */
+  async logout() {
+    try {
+      const response = await fetch(
+        authUrl + '/logout',
+        this.#getRefreshConf()
+      )
+
+      if ([204, 401].includes(response.status)) {
+        this.#clearTokens()
       }
-      throw new Error(error.message)
+    } catch (error) {
+      this.#handleError(error)
     }
   }
 }

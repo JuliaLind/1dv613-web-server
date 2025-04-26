@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, computed } from 'vue'
+import { computed } from 'vue'
 import MealItem from '@/components/MealItem.vue'
 import { weightedValue } from '@/helpers/nutrients'
 import { useMealStore } from '@/stores/meal.js'
@@ -60,8 +60,7 @@ async function delItem(id) {
         @delete="delItem(food.id)" />
     </div>
     <footer class=" flex justify-end">
-      <Button class="p-button-text text-xl text-slate-800 primary-color" :aria-label="'Add food'" icon="pi pi-plus"
-        @click="$emit('select')" />
+      <Button class="p-button-text primary-color" :aria-label="'Add food'" icon="pi pi-plus" @click="$emit('select')" />
     </footer>
   </div>
 </template>

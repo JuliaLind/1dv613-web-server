@@ -62,10 +62,11 @@ async function handleSubmit(event) {
 <template>
   <form @submit="handleSubmit" class="flex flex-col gap-4 p-6 bg-white max-w-md w-full mx-auto">
     <FloatLabel variant="on">
-      <DatePicker id="birthDate" v-model="form.birthDate" showIcon :showOnFocus="false" dateFormat="yy-mm-dd"
-        required />
+      <input type="date" id="birthDate" v-model="form.birthDate"
+        class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-filled" />
       <label for="birthDate">Date of birth</label>
     </FloatLabel>
+
 
     <FloatLabel variant="on">
       <InputText id="email" type="email" v-model="form.email" required />
