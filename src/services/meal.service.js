@@ -1,42 +1,24 @@
 const dataUrl = import.meta.env.VITE_DATA_URL
 import { AuthService } from './auth.service.js'
+import { FetchService } from './fetch.service.js'
 
 /**
  * Service for handling foods related data.
  */
 export class MealService {
   #authService
+  #fetchService
 
   /**
    * Created a new instance of the MealService.
    *
    * @param {AuthService} authService - the authentication service
    */
-  constructor(authService = new AuthService()) {
+  constructor(authService = new AuthService(), fetchService = new FetchService(dataUrl)) {
     this.#authService = authService
+    this.#fetchService = fetchService
   }
 
-  /**
-   * Makes a request to the server and handles
-   * the reseponse. If the response is 401, it refreshes the token and tries one more time.
-   *
-   * @param {object} params - the parameters for the request
-   * @param {string} params.path - the path to the resource
-   * @param {string} params.method - the HTTP method to be used
-   * @param {object} params.body - the body of the request
-   * @returns {Promise<any>} - the response from the server
-   */
-  async request(params) {
-    const res = await this.fetch(params)
-
-    if (!res.ok || res.status === 204) {
-      return undefined
-    }
-
-    const data = await res.json()
-
-    return data
-  }
 
   /**
    * Makes a fetch request to the server and returns the response.
@@ -46,16 +28,16 @@ export class MealService {
    * @param {object} body - the body of the request
    * @returns {Promise<Response>} - the response from the server
    */
-  async fetch({ path, method = 'GET', body = undefined }) {
+  async request({ path, method = 'GET', body = undefined }) {
     const headers = await this.#authService.getHeaders()
 
-    const response = await fetch(`${dataUrl}${path}`, {
+    const response = await this.#fetchService.request({
+      path,
       method,
       headers,
-      body: body ? JSON.stringify(body) : undefined,
+      body,
     })
-
-    return response
+    return await this.#fetchService.handleResponse(response)
   }
 
   /**

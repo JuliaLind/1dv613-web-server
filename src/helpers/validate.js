@@ -26,13 +26,11 @@ export function matchPasswords(password, confirmPassword) {
 /**
  * The date must be earlier or equal to the min date.
  *
- * @param {Date} birthDate - the birth date to be validated
- * @param {Date} minDate - the min date to be considered valid
+ * @param {Date|string} birthDate - the birth date to be validated
+ * @param {Date|string} minDate - the min date to be considered valid
  */
 export function validateBirthDate(birthDate, minDate) {
-  console.log('birthDate', birthDate)
-  console.log('minDate', minDate)
-  if (!birthDate || birthDate > minDate) {
+  if (!birthDate || new Date(birthDate) > new Date(minDate)) {
     throw new Error('You must be at least 18 years old to create an account')
   }
 }
@@ -43,8 +41,8 @@ export function validateBirthDate(birthDate, minDate) {
  * @param {string} password - the password to be validated 
  */
 export function validatePassword(password) {
-  if (!password || password.length < 8) {
-    throw new Error('Validation error', 'Password must be at least 8 characters long')
+  if (password.trim().length < 8) {
+    throw new Error('Password must be at least 8 characters long')
   }
 }
 
@@ -58,7 +56,7 @@ export function validatePassword(password) {
 export function validateMandatory(fields) {
   for (const [key, value] of Object.entries(fields)) {
     if (!value) {
-      throw new Error(`Validation error: ${key} is required`)
+      throw new Error(`The ${key} field is mandatory`)
     }
   }
 }

@@ -1,6 +1,5 @@
-import { jwtDecode } from "jwt-decode"
-
-import { getUnixTime } from 'date-fns'
+import { TokenService } from "@/services/token.service"
+import { FetchService } from "@/services/fetch.service"
 
 const authUrl = import.meta.env.VITE_AUTH_URL
 
@@ -9,129 +8,22 @@ const authUrl = import.meta.env.VITE_AUTH_URL
  * Service for handling authentication requests.
  */
 export class AuthService {
-  #contentTypeHeader = {
-    'Content-Type': 'application/json',
+  #tokenService
+  #fetchService
+
+  constructor(tokenService = new TokenService(), fetchService = new FetchService(authUrl)) {
+    this.#tokenService = tokenService
+    this.#fetchService = fetchService
   }
 
   /**
-   * 
-   * @param {object} token - json web token 
-   * @param {number} seconds - minimum number fo seconds until expiration
-   * @returns {boolean} - true if the token is expiring within the provided seconds,
-   * otherwise false
-   */
-  #isExpiring(token, seconds = 10) {
-    // no error-catching, let propagate
-    const payload = jwtDecode(token)
-    const now = getUnixTime(new Date())
-
-    return payload.exp <= now + seconds
-  }
-
-  /**
-   * Returns the header template for a request with the provided token.
+   * Returns the configuration for the refresh post request.
    *
-   * @param {object} token - json web token
-   * @returns {object} - the header template where the bearer token is set
+   * @returns {object} - the configuration for the refresh request
    */
-  #getAuthHeader(token) {
-    return {
-      ...this.#contentTypeHeader,
-      Authorization: `Bearer ${token}`,
-    }
-  }
-
-  #getRefreshConf() {
-    const token = localStorage.getItem('refreshToken')
-
-    if (!token) {
-      throw new Error('No refresh token found')
-    }
-
-    return {
-      method: 'POST',
-      headers: this.#getAuthHeader(token),
-    }
-  }
-
-  /**
-   * Throws an error if the response status is 401.
-   *
-   * @param {object} response - response from the server
-   */
-  #isUnauthorized(response) {
-    if (response.status === 401) {
-      const error = new Error('Unauthorized')
-      error.status = 401
-      throw error
-    }
-  }
-
-  /**
-   * Throws an error if the response status is not ok.
-   *
-   * @param {object} response - the response from server
-   */
-  async #isOk(response) {
-    const data = await response.json()
-
-    if (response.status >= 400) {
-      throw new Error(data.message)
-    }
-
-    return data
-  }
-
-  /**
-   * Handles the response from a fetch request.
-   *
-   * @param {object} response - The response object from the fetch request.
-   * @returns the parsed JSON data if the response is ok, otherwise throws an error.
-   * @throws {Error} If the response is not ok or if JSON parsing fails.
-   */
-  async #handleRes(response) {
-    this.#isUnauthorized(response)
-
-    try {
-      const data = await this.#isOk(response)
-
-      return data
-    } catch {
-      throw new Error('Something went wrong')
-    }
-  }
-
-  /**
-   * Handles errors that occur during authentication requests.
-   *
-   * @param {object} error - The error object.
-   * @throws {Error} If the error status is 401, clears tokens and throws an error.
-   */
-  #handleError(error) {
-    if (error.status === 401) {
-      this.#clearTokens()
-    }
-    throw new Error(error.message)
-  }
-
-  /**
-   * Stores the access and refresh tokens in local storage.
-   *
-   * @param {object} tokens - access and refresh tokens.
-   * @param {string} tokens.accessToken - The access token.
-   * @param {string} tokens.refreshToken - The refresh token.
-   */
-  #setTokens(tokens) {
-    localStorage.setItem('accessToken', tokens.accessToken)
-    localStorage.setItem('refreshToken', tokens.refreshToken)
-  }
-
-  /**
-   * Clears the access and refresh tokens from local storage.
-   */
-  #clearTokens() {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
+  #getRefreshHeaders() {
+    const token = this.#tokenService.getRefreshToken()
+    return this.#tokenService.getAuthHeader(token)
   }
 
   /**
@@ -141,33 +33,23 @@ export class AuthService {
    * @returns {object} headers for a request containing the bearer token
    */
   async getHeaders() {
-    const token = localStorage.getItem('accessToken')
+    let token
 
-    if (this.#isExpiring(token)) {
+    try {
+      token = this.#tokenService.getAccessToken()
+    } catch (error) {
+      // only case - no access token was found in local storage
+      if (error.status !== 401) {
+        throw error
+      }
+
+      // if this throws error, let propagate
       await this.refresh()
+      token = this.#tokenService.getAccessToken()
+
     }
 
-    return this.#getAuthHeader(token)
-  }
-
-  /**
-   * Sends a POST request containing a body
-   * to the authentication server.
-   *
-   * @param {string} path - The endpoint path.
-   * @param {object} data - The request payload.
-   * @returns {Promise<object>} The response data.
-   */
-  async #post(path, data) {
-    const response = await fetch(
-      authUrl + path,
-      {
-        method: 'POST',
-        headers: this.#contentTypeHeader,
-        body: JSON.stringify(data)
-      }
-    )
-    return await this.#handleRes(response)
+    return this.#tokenService.getAuthHeader(token)
   }
 
   /**
@@ -180,21 +62,46 @@ export class AuthService {
    * @param {string} user.birthdate - The user's birthdate. 
    */
   async register(user) {
-    await this.#post('/register', user)
+    const res = await this.#fetchService.request(
+      {
+        path: '/register',
+        body: user,
+      }
+    )
+    return await this.#fetchService.handleResponse(res)
   }
 
   /**
    * Logs in the user.
    *
    * @param {object} credentials - The credentials object containing login details.
-   * @param {string} credentials.username - The user's username.
    * @returns {object} The response data containing the access token and refresh token.
    * @throws {Error} If the login fails.
-   * @throws {Error} If the response is not ok or if JSON parsing fails.
    */
   async login(credentials) {
-    const res = await this.#post('/login', credentials)
-    this.#setTokens(res)
+    let res = await this.#fetchService.request({
+      path: '/login',
+      body: credentials
+    })
+
+    res = await this.#fetchService.handleResponse(res)
+    this.#tokenService.setTokens(res)
+  }
+
+  /**
+   * Deletes the user account.
+   *
+   * @param {object} credentials - associative
+   * array with email and password
+   */
+  async deleteAccount(credentials) {
+    let res = await this.#fetchService.request({
+      path: '/',
+      method: 'DELETE',
+      body: credentials,
+    })
+
+    this.#tokenService.isLoggedOut(res.status, [204])
   }
 
   /**
@@ -205,15 +112,16 @@ export class AuthService {
    */
   async refresh() {
     try {
-      const response = await fetch(
-        authUrl + '/refresh',
-        this.#getRefreshConf()
+      let res = await this.#fetchService.request(
+        {
+          path: '/refresh',
+          headers: this.#getRefreshHeaders()
+        }
       )
-
-      const res = await this.#handleRes(response)
-      this.#setTokens(res)
+      res = await this.#fetchService.handleResponse(res)
+      this.#tokenService.setTokens(res)
     } catch (error) {
-      this.#handleError(error)
+      this.#tokenService.handleError(error)
     }
   }
 
@@ -224,17 +132,13 @@ export class AuthService {
    * @throws {Error} If the refresh fails.
    */
   async logout() {
-    try {
-      const response = await fetch(
-        authUrl + '/logout',
-        this.#getRefreshConf()
-      )
-
-      if ([204, 401].includes(response.status)) {
-        this.#clearTokens()
+    const response = await this.#fetchService.request(
+      {
+        path: '/logout',
+        headers: this.#getRefreshHeaders()
       }
-    } catch (error) {
-      this.#handleError(error)
-    }
+    )
+
+    this.#tokenService.isLoggedOut(response.status)
   }
 }
