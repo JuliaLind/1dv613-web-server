@@ -1,24 +1,41 @@
-import { fileURLToPath } from 'node:url'
-import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
-import viteConfig from './vite.config'
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig, configDefaults } from 'vitest/config'
+import vue from '@vitejs/plugin-vue'
+import istanbul from 'vite-plugin-istanbul'
 
-export default mergeConfig(
-  viteConfig,
-  defineConfig({
-    test: {
-      coverage: {
-        provider: 'v8',
-        reporter: ['text', 'html'],
-        reportsDirectory: './coverage',
-        include: ['src/**/*.{vue,js}'],
-        exclude: ['src/main.js', 'src/colors.js',
-          'src/router/index.js', 'src/services/__tests__/helpers.js',
-        ],
-        all: true
-      },
-      environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/**'],
-      root: fileURLToPath(new URL('./', import.meta.url)),
+export default defineConfig({
+  plugins: [
+    vue(),
+    istanbul({
+      include: 'src/**/*',
+      exclude: ['node_modules', '**/__tests__/**'],
+      extension: ['.js', '.vue'],
+      cypress: true,
+      requireEnv: false
+    })
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     },
-  }),
-)
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    coverage: {
+      provider: 'v8', // use v8 (faster and better)
+      reporter: ['text', 'html'],
+      reportsDirectory: './coverage',
+      include: ['src/**/*.{vue,js}'],
+      exclude: [
+        'src/main.js',
+        'src/colors.js',
+        'src/router/index.js',
+        'src/services/__tests__/helpers.js',
+      ],
+      all: true
+    },
+    exclude: [...configDefaults.exclude, 'e2e/**'],
+    root: fileURLToPath(new URL('./', import.meta.url)),
+  },
+})

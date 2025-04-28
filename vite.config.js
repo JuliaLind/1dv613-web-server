@@ -7,7 +7,8 @@ import istanbul from 'vite-plugin-istanbul'
 import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/slimdreams/' : '/',
   plugins: [
     vue(),
     vueDevTools(),
@@ -25,4 +26,5 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-})
+}))
+
