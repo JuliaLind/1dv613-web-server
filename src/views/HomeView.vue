@@ -11,6 +11,7 @@ import { fnWrapper } from '@/helpers/helpers'
 import { useMealStore } from '@/stores/meal.js'
 import FooterPartial from './FooterPartial.vue'
 
+
 const store = useMealStore()
 const router = useRouter()
 const toast = useToast()

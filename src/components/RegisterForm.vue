@@ -80,8 +80,8 @@ async function handleSubmit(event) {
 
 
     <FloatLabel variant="on">
-      <Password v-model="form.confirmPassword" toggleMask />
-      <label for="on_label">Confirm Password</label>
+      <Password v-model="form.confirmPassword" toggleMask id="confirmPassword" />
+      <label for="confirmPassword">Confirm Password</label>
     </FloatLabel>
 
     <Button type="submit" label="Submit" size="large" class="text-base font-medium tracking-wide px-6 py-3" />

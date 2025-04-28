@@ -43,9 +43,10 @@ const data = computed(() => {
 
     <footer class="flex justify-end mt-4">
       <div class="flex items-center justify-between gap-1">
-        <InputNumber v-model="food.weight" inputId="integeronly" :min="0" :max="5000"
+        <InputNumber v-model="food.weight" inputId="integeronly" id="weight" :min="0" :max="5000"
           @input="e => food.weight = e.value" fluid class="basis-full" />
-        <Select v-model="food.unit" :options="weightOptions" optionValue="code" optionLabel="name" class="basis-10" />
+        <Select v-model="food.unit" id="unit" :options="weightOptions" optionValue="code" optionLabel="name"
+          class="basis-10" />
         <Button @click="$emit('done', food)" class="basis-30" :aria-label="'Add'" icon="pi pi-check" fluid />
 
       </div>

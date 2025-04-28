@@ -50,9 +50,11 @@ function update(date) {
 
 <template>
   <div id="date-picker" class="flex items-center justify-center gap-4">
-    <Button @click="prev" class="p-button-text primary-color" :aria-label="'Previous date'" icon="pi pi-chevron-left" />
-    <span>{{ weekday }}</span>
-    <span>{{ formattedDate }}</span>
-    <Button @click="next" class="p-button-text primary-color" :aria-label="'Next date'" icon="pi pi-chevron-right" />
+    <Button @click="prev" id="prev" class="p-button-text primary-color" :aria-label="'Previous date'"
+      icon="pi pi-chevron-left" />
+    <span id="weekday">{{ weekday }}</span>
+    <span id="date">{{ formattedDate }}</span>
+    <Button @click="next" id="next" class="p-button-text primary-color" :aria-label="'Next date'"
+      icon="pi pi-chevron-right" />
   </div>
 </template>

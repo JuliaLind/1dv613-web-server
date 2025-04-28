@@ -10,6 +10,10 @@ export default mergeConfig(
         provider: 'v8',
         reporter: ['text', 'html'],
         reportsDirectory: './coverage',
+        include: ['src/**/*.{vue,js}'],
+        exclude: ['src/main.js', 'src/colors.js',
+          'src/router/index.js', 'src/services/__tests__/helpers.js',
+        ],
         all: true
       },
       environment: 'jsdom',
