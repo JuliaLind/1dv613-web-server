@@ -36,12 +36,7 @@ export const useMealStore = defineStore('meal', () => {
     const data = await mealService.index(currentDate.value)
 
     for (const type of Object.keys(meals.value)) {
-      if (data[type]) {
-        meals.value[type] = data[type]
-        continue
-      }
-      // Initialize the meal with empty values
-      meals.value[type] = dummyMeal(type)
+      meals.value[type] = data[type] ?? dummyMeal(type)
     }
   }
 
