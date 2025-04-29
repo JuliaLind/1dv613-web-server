@@ -107,7 +107,6 @@ export class TokenService {
   * @throws {Error} If the error status is 401, clears tokens and throws an error.
   */
   handleError(error) {
-    console.log('Error in token service:', error)
     if (error.status === 401) {
       this.clearTokens()
     }
