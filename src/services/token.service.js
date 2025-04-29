@@ -61,7 +61,15 @@ export class TokenService {
    * @returns {string} - access token
    */
   getAccessToken() {
-    return this.#getToken('accessToken')
+    const token = this.#getToken('accessToken')
+
+    if (this.isExpiring(token)) {
+      const err = new Error('Token is expiring')
+      err.status = 401
+      throw err
+    }
+
+    return token
   }
 
   /**
@@ -99,6 +107,7 @@ export class TokenService {
   * @throws {Error} If the error status is 401, clears tokens and throws an error.
   */
   handleError(error) {
+    console.log('Error in token service:', error)
     if (error.status === 401) {
       this.clearTokens()
     }
