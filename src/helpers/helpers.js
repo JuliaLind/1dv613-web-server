@@ -7,7 +7,7 @@
  * @param {Function} errorHandler - function to handle the error
  * @returns {Promise<any>} - the result of the function
  */
-export async function fnWrapper(fn, errorHandler, ...args) {
+export async function tryCatch(fn, errorHandler, ...args) {
   try {
     return await fn(...args)
   } catch (error) {

@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import FoodDetail from '@/components/FoodDetail.vue'
 import { weightedValue } from '@/helpers/nutrients'
-import { fnWrapper } from '@/helpers/helpers'
+import { tryCatch } from '@/helpers/helpers'
 import { MealService } from '@/services/meal.service.js'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
@@ -40,10 +40,11 @@ function handleError(error) {
 }
 
 /**
- * Updates the wright and unit of the food item.
+ * Updates the weight and unit of the food item.
  */
 async function updFoodItem() {
   const { id, weight, unit } = props.food
+
   await mealService.updFoodItem(props.mealId, { id, weight, unit })
 }
 
@@ -91,7 +92,7 @@ defineEmits(['delete'])
     </OverlayPanel>
   </div>
 
-  <FoodDetail v-if="edit" :info="food" @done="fnWrapper(updFoodItem, handleError); edit = false" />
+  <FoodDetail v-if="edit" :info="food" @done="tryCatch(updFoodItem, handleError); edit = false" />
 </template>
 
 <style scoped></style>

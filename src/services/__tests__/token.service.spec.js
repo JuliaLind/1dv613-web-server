@@ -41,6 +41,7 @@ describe('Token service', () => {
     it('ok, should return access token from local storage', () => {
       const sut = new TokenService()
       Storage.prototype.getItem = vi.fn(() => tokens.accessToken)
+      sut.isExpiring = vi.fn(() => false)
 
       const accessToken = sut.getAccessToken()
 
@@ -53,6 +54,16 @@ describe('Token service', () => {
       Storage.prototype.getItem = vi.fn(() => null)
 
       expect(() => sut.getAccessToken()).toThrow('No token found')
+
+      expect(Storage.prototype.getItem).toHaveBeenCalledExactlyOnceWith('accessToken')
+    })
+
+    it('not ok, access token expired, should throw error', () => {
+      const sut = new TokenService()
+      Storage.prototype.getItem = vi.fn(() => 'thisIsAnExpiredToken')
+      sut.isExpiring = vi.fn(() => true)
+
+      expect(() => sut.getAccessToken()).toThrow('Token is expiring')
 
       expect(Storage.prototype.getItem).toHaveBeenCalledExactlyOnceWith('accessToken')
     })
