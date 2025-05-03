@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  vue-web:
+    build:
+      context: .
+    restart: always
+    ports:
+      - 8080:80
+    networks:
+      - network-web
+
+networks:
+  network-web:
