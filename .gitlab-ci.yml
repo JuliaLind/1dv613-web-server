@@ -8,7 +8,7 @@ lint:
   stage: lint
   image: node:20
   script:
-    - set -e # set -e means stop the script on the first error
+    - set -e
     - npm ci
     - npm run lint
 
@@ -16,7 +16,7 @@ unit_tests:
   stage: unit
   image: node:20
   variables:
-    CYPRESS_INSTALL_BINARY: 0 # prevent cypress from being installed for unittests
+    CYPRESS_INSTALL_BINARY: 0  # Prevent Cypress from installing during unit stage
   script:
     - set -e
     - npm ci
@@ -26,12 +26,14 @@ e2e_tests:
   stage: e2e
   image: cypress/browsers:node-22.15.0-chrome-135.0.7049.114-1-ff-137.0.2-edge-135.0.3179.85-1
   services:
-    - mongo:7.0.4
+    - name: mongo:7.0.4
+      alias: mongo
   variables:
     MONGO_INITDB_ROOT_USERNAME: root
     MONGO_INITDB_ROOT_PASSWORD: password
   before_script:
     - set -e
+
     - apt-get update && apt-get install -y curl gnupg
     - curl -fsSL https://pgp.mongodb.com/server-7.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
     - echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
@@ -40,6 +42,7 @@ e2e_tests:
     - rm -rf ../auth-server ../data-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/auth-server.git ../auth-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/data-server.git ../data-server
+
 
     - cd ../auth-server
     - echo "$TEST_PRIVATE_PEM" > test_private.pem
@@ -63,7 +66,11 @@ e2e_tests:
       npm run dev &
 
     - sleep 5
-    - mongoimport --uri="mongodb://mongo:27017/data_test" --collection=fooditems --file=../data-server/data/clean.json --jsonArray
+    - mongoimport \
+        --uri="mongodb://mongo:27017/data_test" \
+        --collection=fooditems \
+        --file=../data-server/data/clean.json \
+        --jsonArray
 
     - cd ../web-server
     - npm ci
