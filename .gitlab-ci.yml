@@ -31,50 +31,44 @@ test:e2e:
     - name: mongo:7.0.4
       alias: mongo
   script:
-    - |
-      #!/bin/sh
+    - sh -c '
+        git clone https://gitlab.lnu.se/1dv613/student/jl225vf/auth-server.git ../auth-server
+        git clone https://gitlab.lnu.se/1dv613/student/jl225vf/data-server.git ../data-server
 
-      # Clone and start auth-server
-      git clone https://gitlab.lnu.se/1dv613/student/jl225vf/auth-server.git ../auth-server
-      cd ../auth-server
-      echo "$TEST_PRIVATE_PEM" > test_private.pem
-      echo "$TEST_PUBLIC_PEM" > test_public.pem
-      npm ci
-      DB_CONNECTION_STRING='mongodb://mongo:27017/auth_test' \
-      ACCESS_TOKEN_PRIVATE_KEY_PATH='./test_private.pem' \
-      ACCESS_TOKEN_PUBLIC_KEY_PATH='./test_public.pem' \
-      ACCESS_TOKEN_LIFE='2h' \
-      REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY" \
-      REFRESH_TOKEN_LIFE='2d' \
-      PORT=5053 \
-      npm run dev &
-      
-      # Clone and start data-server
-      cd ../web-server
-      git clone https://gitlab.lnu.se/1dv613/student/jl225vf/data-server.git ../data-server
-      cd ../data-server
-      echo "$TEST_PUBLIC_PEM" > public.pem
-      npm ci
-      DB_CONNECTION_STRING='mongodb://mongo:27017/data_test' \
-      AUTH_TOKEN_SECRET_PATH='./public.pem' \
-      PORT=5054 \
-      npm run dev &
+        cd ../auth-server
+        echo "$TEST_PRIVATE_PEM" > test_private.pem
+        echo "$TEST_PUBLIC_PEM" > test_public.pem
+        npm ci
+        DB_CONNECTION_STRING="mongodb://mongo:27017/auth_test" \
+        ACCESS_TOKEN_PRIVATE_KEY_PATH="./test_private.pem" \
+        ACCESS_TOKEN_PUBLIC_KEY_PATH="./test_public.pem" \
+        ACCESS_TOKEN_LIFE="2h" \
+        REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY" \
+        REFRESH_TOKEN_LIFE="2d" \
+        PORT=5053 \
+        npm run dev &
 
-      # Seed database using mongoimport (much simpler)
-      cd ../web-server
-      apt-get update && apt-get install -y mongodb-clients
-      mongoimport --uri="mongodb://mongo:27017/data" \
-        --collection=fooditems \
-        --file=../data-server/data/clean.json \
-        --jsonArray
+        cd ../data-server
+        echo "$TEST_PUBLIC_PEM" > public.pem
+        npm ci
+        DB_CONNECTION_STRING="mongodb://mongo:27017/data_test" \
+        AUTH_TOKEN_SECRET_PATH="./public.pem" \
+        PORT=5054 \
+        npm run dev &
 
-      # Start Vue frontend dev server
-      npm ci
-      npm run dev -- --port 4173 &
-      sleep 10
+        cd ../web-server
+        apt-get update && apt-get install -y mongodb-clients
+        mongoimport --uri="mongodb://mongo:27017/data" \
+          --collection=fooditems \
+          --file=../data-server/data/clean.json \
+          --jsonArray
 
-      # Run Cypress tests
-      npx cypress run --e2e
+        npm ci
+        npm run dev -- --port 4173 &
+        sleep 10
+
+        npx cypress run --e2e
+      '
 
   artifacts:
     when: always
