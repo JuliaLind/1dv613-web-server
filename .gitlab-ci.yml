@@ -12,59 +12,57 @@ variables:
 
 lint:
   stage: lint
-  image: node:20
+  image: node:20-bullseye
   script:
     - npm ci
     - npm run lint
 
 test:unit:
   stage: test:unit
-  image: node:20
+  image: node:20-bullseye
   script:
     - npm ci
     - npm run test:unit
 
 test:e2e:
   stage: test:e2e
-  image: node:20
+  image: node:20-bullseye
   services:
     - name: mongo:7.0.4
       alias: mongo
   script:
     - npm ci
     - npx cypress install
-    - >
-      sh -c 'set -e && \
-      git clone https://gitlab.lnu.se/1dv613/student/jl225vf/auth-server.git ../auth-server && \
-      git clone https://gitlab.lnu.se/1dv613/student/jl225vf/data-server.git ../data-server && \
-      cd ../auth-server && \
-      echo "$TEST_PRIVATE_PEM" > test_private.pem && \
-      echo "$TEST_PUBLIC_PEM" > test_public.pem && \
-      npm ci && \
-      DB_CONNECTION_STRING="mongodb://mongo:27017/auth_test" \
+    - git clone https://gitlab.lnu.se/1dv613/student/jl225vf/auth-server.git ../auth-server
+    - git clone https://gitlab.lnu.se/1dv613/student/jl225vf/data-server.git ../data-server
+    - cd ../auth-server
+    - echo "$TEST_PRIVATE_PEM" > test_private.pem
+    - echo "$TEST_PUBLIC_PEM" > test_public.pem
+    - npm ci
+    - DB_CONNECTION_STRING="mongodb://mongo:27017/auth_test" \
       ACCESS_TOKEN_PRIVATE_KEY_PATH="./test_private.pem" \
       ACCESS_TOKEN_PUBLIC_KEY_PATH="./test_public.pem" \
       ACCESS_TOKEN_LIFE="2h" \
       REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY" \
       REFRESH_TOKEN_LIFE="2d" \
       PORT=5053 \
-      npm run dev & \
-      cd ../data-server && \
-      echo "$TEST_PUBLIC_PEM" > public.pem && \
-      npm ci && \
-      DB_CONNECTION_STRING="mongodb://mongo:27017/data_test" \
+      npm run dev &
+    - cd ../data-server
+    - echo "$TEST_PUBLIC_PEM" > public.pem
+    - npm ci
+    - DB_CONNECTION_STRING="mongodb://mongo:27017/data_test" \
       AUTH_TOKEN_SECRET_PATH="./public.pem" \
       PORT=5054 \
-      npm run dev & \
-      cd ../web-server && \
-      apt-get update && apt-get install -y mongodb-clients && \
-      mongoimport --uri="mongodb://mongo:27017/data" \
+      npm run dev &
+    - cd ../web-server
+    - apt-get update && apt-get install -y mongodb-clients
+    - mongoimport --uri="mongodb://mongo:27017/data" \
         --collection=fooditems \
         --file=../data-server/data/clean.json \
-        --jsonArray && \
-      npm run dev -- --port 4173 & \
-      sleep 10 && \
-      npx cypress run --e2e'
+        --jsonArray
+    - npm run dev -- --port 4173 &
+    - sleep 10
+    - npx cypress run --e2e
   artifacts:
     when: always
     paths:
@@ -74,7 +72,7 @@ test:e2e:
 
 build:
   stage: build
-  image: node:20
+  image: node:20-bullseye
   script:
     - npm ci
     - npm run build
