@@ -22,7 +22,7 @@ unit_tests:
 
 e2e_tests:
   stage: e2e
-  image: cypress/browsers:node-20.5.1-chrome120-ff119
+  image: cypress/browsers:node-20.8.1-chrome120-ff119
   services:
     - mongo:7.0.4
   variables:
