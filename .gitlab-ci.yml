@@ -1,41 +1,41 @@
 stages:
   - lint
-  - test:unit
-  - test:e2e
+  - unit
+  - e2e
   - build
-
-variables:
-  VITE_AUTH_URL: "http://localhost:5053"
-  VITE_DATA_URL: "http://localhost:5054"
-  CYPRESS_baseUrl: "http://localhost:4173"
-  NODE_ENV: test
 
 lint:
   stage: lint
   image: node:20
   script:
+    - set -e # set -e means stop the script on the first error
     - npm ci
     - npm run lint
 
-test:unit:
-  stage: test:unit
+unit_tests:
+  stage: unit
   image: node:20
   script:
+    - set -e
     - npm ci
     - npm run test:unit
 
-test:e2e:
-  stage: test:e2e
-  image: node:20
+e2e_tests:
+  stage: e2e
+  image: cypress/browsers:node-20.10.0-chrome120-ff119-edge
   services:
-    - name: mongo:7.0.4
-      alias: mongo
-  script:
-    - npm ci
-    - npx cypress install
+    - mongo:7.0.4
+  variables:
+    MONGO_INITDB_ROOT_USERNAME: root
+    MONGO_INITDB_ROOT_PASSWORD: password
+  before_script:
+    - set -e
+    - apt-get update && apt-get install -y curl gnupg mongodb-database-tools
+
     - rm -rf ../auth-server ../data-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/auth-server.git ../auth-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/data-server.git ../data-server
+
     - cd ../auth-server
     - echo "$TEST_PRIVATE_PEM" > test_private.pem
     - echo "$TEST_PUBLIC_PEM" > test_public.pem
@@ -48,6 +48,7 @@ test:e2e:
       REFRESH_TOKEN_LIFE="2d" \
       PORT=5053 \
       npm run dev &
+
     - cd ../data-server
     - echo "$TEST_PUBLIC_PEM" > public.pem
     - npm ci
@@ -55,18 +56,21 @@ test:e2e:
       AUTH_TOKEN_SECRET_PATH="./public.pem" \
       PORT=5054 \
       npm run dev &
+
+    - sleep 5
+    - mongoimport --uri="mongodb://mongo:27017/data_test" --collection=fooditems --file=../data-server/data/clean.json --jsonArray
+
     - cd ../web-server
-    - apt-get update && apt-get install -y \
-        curl gnupg \
-        libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 \
-        libasound2 libxtst6 xauth xvfb
-    - curl -fsSL https://pgp.mongodb.com/server-7.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
-    - echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-    - apt-get update && apt-get install -y mongodb-database-tools
-    - mongoimport --uri="mongodb://mongo:27017/data" --collection=fooditems --file=../data-server/data/clean.json --jsonArray
-    - npm run dev -- --port 4173 &
+    - npm ci
+    - VITE_AUTH_URL="http://localhost:5053/api/v1" \
+      VITE_DATA_URL="http://localhost:5054/api/v1" \
+      npm run dev -- --port 4173 &
     - sleep 10
+
+  script:
+    - set -e
     - npx cypress run --e2e
+
   artifacts:
     when: always
     paths:
@@ -78,5 +82,6 @@ build:
   stage: build
   image: node:20
   script:
+    - set -e
     - npm ci
     - npm run build
