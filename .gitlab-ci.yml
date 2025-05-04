@@ -26,11 +26,13 @@ test:unit:
 
 test:e2e:
   stage: test:e2e
-  image: cypress/included:14.2.1
+  image: node:20
   services:
     - name: mongo:7.0.4
       alias: mongo
   script:
+    - npm ci
+    - npx cypress install
     - >
       sh -c 'set -e && \
       git clone https://gitlab.lnu.se/1dv613/student/jl225vf/auth-server.git ../auth-server && \
@@ -60,11 +62,9 @@ test:e2e:
         --collection=fooditems \
         --file=../data-server/data/clean.json \
         --jsonArray && \
-      npm ci && \
       npm run dev -- --port 4173 & \
       sleep 10 && \
       npx cypress run --e2e'
-
   artifacts:
     when: always
     paths:
