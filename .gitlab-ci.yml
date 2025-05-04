@@ -35,7 +35,6 @@ test:e2e:
     - npx cypress install
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/auth-server.git ../auth-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/data-server.git ../data-server
-
     - cd ../auth-server
     - echo "$TEST_PRIVATE_PEM" > test_private.pem
     - echo "$TEST_PUBLIC_PEM" > test_public.pem
@@ -56,7 +55,10 @@ test:e2e:
       PORT=5054 \
       npm run dev &
     - cd ../web-server
-    - apt-get update && apt-get install -y mongodb-clients
+    - apt-get update && apt-get install -y curl gnupg
+    - curl -fsSL https://pgp.mongodb.com/server-7.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+    - echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian bullseye/mongodb-org/7.0 main" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+    - apt-get update && apt-get install -y mongodb-org-shell
     - mongoimport --uri="mongodb://mongo:27017/data" \
         --collection=fooditems \
         --file=../data-server/data/clean.json \
@@ -73,7 +75,7 @@ test:e2e:
 
 build:
   stage: build
-  image: node:20-bullseye
+  image: node:20
   script:
     - npm ci
     - npm run build
