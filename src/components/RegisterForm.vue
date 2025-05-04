@@ -86,7 +86,10 @@ async function handleSubmit(event) {
 
     <Button type="submit" label="Submit" size="large" class="text-base font-medium tracking-wide px-6 py-3" />
     <p>
-      Already have an account? <a href="/login">Login</a>
+      Already have an account? 
+      <RouterLink to="/login" class="text-primary-color underline">
+      Login
+    </RouterLink>
     </p>
     <p>
       By registering, you agree to our
