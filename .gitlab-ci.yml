@@ -15,6 +15,8 @@ lint:
 unit_tests:
   stage: unit
   image: node:20
+  variables:
+    CYPRESS_INSTALL_BINARY: 0 # prevent cypress from being installed for unittests
   script:
     - set -e
     - npm ci
