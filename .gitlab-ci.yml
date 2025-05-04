@@ -33,6 +33,7 @@ test:e2e:
   script:
     - npm ci
     - npx cypress install
+    - rm -rf ../auth-server ../data-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/auth-server.git ../auth-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/data-server.git ../data-server
     - cd ../auth-server
