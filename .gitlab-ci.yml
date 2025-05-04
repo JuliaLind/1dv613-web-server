@@ -27,6 +27,7 @@ test:unit:
 test:e2e:
   stage: test:e2e
   image: cypress/included:14.2.1
+  entrypoint: [ "sh", "-c" ]
   services:
     - name: mongo:7.0.4
       alias: mongo
