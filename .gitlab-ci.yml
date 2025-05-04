@@ -16,7 +16,7 @@ unit_tests:
   stage: unit
   image: node:20
   variables:
-    CYPRESS_INSTALL_BINARY: 0  # Prevent Cypress from installing during unit stage
+    CYPRESS_INSTALL_BINARY: 0
   script:
     - set -e
     - npm ci
@@ -33,7 +33,6 @@ e2e_tests:
     MONGO_INITDB_ROOT_PASSWORD: password
   before_script:
     - set -e
-
     - apt-get update && apt-get install -y curl gnupg
     - curl -fsSL https://pgp.mongodb.com/server-7.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
     - echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
@@ -43,40 +42,35 @@ e2e_tests:
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/auth-server.git ../auth-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/data-server.git ../data-server
 
-
     - cd ../auth-server
     - echo "$TEST_PRIVATE_PEM" > test_private.pem
     - echo "$TEST_PUBLIC_PEM" > test_public.pem
     - npm ci
-    - DB_CONNECTION_STRING="mongodb://mongo:27017/auth_test" \
-      ACCESS_TOKEN_PRIVATE_KEY_PATH="./test_private.pem" \
-      ACCESS_TOKEN_PUBLIC_KEY_PATH="./test_public.pem" \
-      ACCESS_TOKEN_LIFE="2h" \
-      REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY" \
-      REFRESH_TOKEN_LIFE="2d" \
-      PORT=5053 \
-      npm run dev &
+    - export DB_CONNECTION_STRING="mongodb://mongo:27017/auth_test"
+    - export ACCESS_TOKEN_PRIVATE_KEY_PATH="./test_private.pem"
+    - export ACCESS_TOKEN_PUBLIC_KEY_PATH="./test_public.pem"
+    - export ACCESS_TOKEN_LIFE="2h"
+    - export REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY"
+    - export REFRESH_TOKEN_LIFE="2d"
+    - export PORT=5053
+    - npm run dev &
 
     - cd ../data-server
     - echo "$TEST_PUBLIC_PEM" > public.pem
     - npm ci
-    - DB_CONNECTION_STRING="mongodb://mongo:27017/data_test" \
-      AUTH_TOKEN_SECRET_PATH="./public.pem" \
-      PORT=5054 \
-      npm run dev &
+    - export DB_CONNECTION_STRING="mongodb://mongo:27017/data_test"
+    - export AUTH_TOKEN_SECRET_PATH="./public.pem"
+    - export PORT=5054
+    - npm run dev &
 
     - sleep 5
-    - mongoimport \
-        --uri="mongodb://mongo:27017/data_test" \
-        --collection=fooditems \
-        --file=../data-server/data/clean.json \
-        --jsonArray
+    - mongoimport --uri="mongodb://root:password@mongo:27017/data_test" --collection=fooditems --file=../data-server/data/clean.json --jsonArray --authenticationDatabase admin
 
     - cd ../web-server
     - npm ci
-    - VITE_AUTH_URL="http://localhost:5053/api/v1" \
-      VITE_DATA_URL="http://localhost:5054/api/v1" \
-      npm run dev -- --port 4173 &
+    - export VITE_AUTH_URL="http://localhost:5053/api/v1"
+    - export VITE_DATA_URL="http://localhost:5054/api/v1"
+    - npm run dev -- --port 4173 &
     - sleep 10
 
   script:
