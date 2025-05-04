@@ -1,10 +1,14 @@
 stages:
   - lint
   - test:unit
+  - test:e2e
   - build
 
 variables:
-  VITE_AUTH_URL: "http://localhost:8080"
+  VITE_AUTH_URL: "http://localhost:5053"
+  VITE_DATA_URL: "http://localhost:5054"
+  CYPRESS_baseUrl: "http://localhost:4173"
+  NODE_ENV: test
 
 lint:
   stage: lint
@@ -19,6 +23,64 @@ test:unit:
   script:
     - npm ci
     - npm run test:unit
+
+test:e2e:
+  stage: test:e2e
+  image: cypress/included:14.2.1
+  services:
+    - name: mongo:7.0.4
+      alias: mongo
+  script:
+    # Clone and start auth-server, manually set the env variables
+    - git clone https://gitlab.lnu.se/1dv613/student/jl225vf/auth-server.git ../auth-server
+    - cd ../auth-server
+    - echo "$TEST_PRIVATE_PEM" > test_private.pem
+    - echo "$TEST_PUBLIC_PEM" > test_public.pem
+    - npm ci
+    - DB_CONNECTION_STRING='mongodb://mongo:27017/auth_test' \
+      ACCESS_TOKEN_PRIVATE_KEY_PATH='./test_private.pem' \
+      ACCESS_TOKEN_PUBLIC_KEY_PATH='./test_public.pem' \
+      ACCESS_TOKEN_LIFE='2h' \
+      REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY" \
+      REFRESH_TOKEN_LIFE='2d' \
+      PORT=5053 \
+      npm run dev &
+    - cd ../web-server
+
+    # Clone and start data-server.
+    # Manually set the env variables and seed the database
+    - git clone https://gitlab.lnu.se/1dv613/student/jl225vf/data-server.git ../data-server
+    - cd ../data-server
+    - echo "$TEST_PUBLIC_PEM" > public.pem
+    - npm ci
+    - DB_CONNECTION_STRING='mongodb://mongo:27017/data_test' \
+      AUTH_TOKEN_SECRET_PATH='./public.pem' \
+      PORT=5054 \
+      npm run dev &
+    - cd ../web-server
+
+    # Install mongosh and seed real data into the 'data' database
+    - apt-get update && apt-get install -y curl gnupg
+    - curl -fsSL https://pgp.mongodb.com/server-7.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+    - echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian bullseye/mongodb-org/7.0 main" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+    - apt-get update && apt-get install -y mongodb-mongosh
+    - mongosh "mongodb://mongo:27017/data" ../data-server/data/seed.js
+
+    # Start frontend dev server and wait some time
+    # before running tests
+    - npm ci
+    - npm run dev -- --port 4173 &
+    - sleep 10
+
+    # Run Cypress tests
+    - npx cypress run --e2e
+
+  artifacts:
+    when: always
+    paths:
+      - cypress/screenshots
+      - cypress/videos
+      - coverage/e2e
 
 build:
   stage: build
