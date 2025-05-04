@@ -33,8 +33,8 @@ test:e2e:
   script:
     - npm ci
     - npx cypress install
-    - git clone https://gitlab.lnu.se/1dv613/student/jl225vf/auth-server.git ../auth-server
-    - git clone https://gitlab.lnu.se/1dv613/student/jl225vf/data-server.git ../data-server
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/auth-server.git ../auth-server
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/data-server.git ../data-server
     - cd ../auth-server
     - echo "$TEST_PRIVATE_PEM" > test_private.pem
     - echo "$TEST_PUBLIC_PEM" > test_public.pem
