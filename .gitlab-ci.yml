@@ -12,21 +12,21 @@ variables:
 
 lint:
   stage: lint
-  image: node:20-bullseye
+  image: node:20
   script:
     - npm ci
     - npm run lint
 
 test:unit:
   stage: test:unit
-  image: node:20-bullseye
+  image: node:20
   script:
     - npm ci
     - npm run test:unit
 
 test:e2e:
   stage: test:e2e
-  image: node:20-bullseye
+  image: node:20
   services:
     - name: mongo:7.0.4
       alias: mongo
