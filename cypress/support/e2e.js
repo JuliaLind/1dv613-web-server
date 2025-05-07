@@ -21,3 +21,21 @@ import './commands'
 
 import '@cypress/code-coverage/support'
 
+before(function () {
+  cy.fixture('user.json').then((user) => {
+    cy.createUser(user)
+  })
+})
+
+after(function () {
+  cy.fixture('user.json').then((user) => {
+    const data = {
+      email: user.email,
+      password: user.password
+    }
+
+    cy.deleteUserData(data)
+    cy.deleteUser(data)
+  })
+})
+

@@ -23,3 +23,53 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('createUser', ({ email, birthDate, password }) => {
+  cy.request('POST', `${Cypress.env('VITE_AUTH_URL')}/register`, {
+    email,
+    birthDate,
+    password
+  })
+})
+
+Cypress.Commands.add('deleteUser', ({ email, password }) => {
+  cy.request('DELETE', `${Cypress.env('VITE_AUTH_URL')}/`, {
+    email,
+    password
+  })
+})
+
+Cypress.Commands.add('deleteUserData', ({ email, password }) => {
+  return cy.request('POST', `${Cypress.env('VITE_AUTH_URL')}/login`, {
+    email,
+    password
+  }).then((response) => {
+    const accessToken = response.body.accessToken
+
+    return cy.request({
+      method: 'DELETE',
+      url: `${Cypress.env('VITE_DATA_URL')}/user`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+  })
+})
+
+Cypress.Commands.add('login', ({ email, password }) => {
+  return cy.request('POST', `${Cypress.env('VITE_AUTH_URL')}/login`, {
+    email,
+    password
+  }).then((response) => {
+    const { refreshToken, accessToken } = response.body
+
+    return cy.visit('/', {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('accessToken', accessToken)
+        win.localStorage.setItem('refeshToken', refreshToken)
+      }
+    }).then(() => {
+      return { accessToken, refreshToken }
+    })
+  })
+})
