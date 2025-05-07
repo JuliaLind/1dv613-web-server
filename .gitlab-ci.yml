@@ -51,6 +51,8 @@ e2e_tests:
     - export ACCESS_TOKEN_PRIVATE_KEY_PATH="$CI_PROJECT_DIR/../auth-server/test_private.pem"
     - export ACCESS_TOKEN_LIFE="2h"
     - export REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY"
+    - echo "[DEBUG] TEST_REFRESH_TOKEN_KEY length ${#TEST_REFRESH_TOKEN_KEY}"
+    - echo "[DEBUG] REFRESH_TOKEN_KEY length ${#REFRESH_TOKEN_KEY}"
     - export REFRESH_TOKEN_LIFE="2d"
     - export PORT=5053
     - npm run dev:ci > auth.log 2>&1 &
