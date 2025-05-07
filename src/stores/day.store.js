@@ -1,43 +1,38 @@
-import { ref, computed } from 'vue'
+import { ref, computed, reactive, toRaw } from 'vue'
 import { defineStore } from 'pinia'
 import { MealService } from '@/services/meal.service'
-import { nutrientsPerMeal } from '@/helpers/nutrients'
 import { format } from 'date-fns'
+import { Meal } from '@/models/Meal'
+import { Food } from '@/models/Food'
 
 
 const mealService = new MealService()
 
-export const useMealStore = defineStore('meal', () => {
-  function dummyMeal(type) {
-    return {
-      id: '',
-      type,
-      foodItems: []
-    }
-  }
-  const meals = ref({
-    breakfast: dummyMeal('breakfast'),
-    snack1: dummyMeal('snack1'),
-    lunch: dummyMeal('lunch'),
-    snack2: dummyMeal('snack2'),
-    dinner: dummyMeal('dinner'),
-    snack3: dummyMeal('snack3')
-  })
-
+export const useDayStore = defineStore('meal', () => {
+  const meals = reactive(Meal.newSet())
   const currentDate = ref(format(new Date(), 'yyyy-MM-dd'))
-  const currentMeal = ref(null)
+  let selected = null
+
+  /**
+   * Updates the meals in the store with the data from the server.
+   *
+   * @param {object} data - the data from
+   * the server response containing the registered meals.
+   *
+   */
+  function update(data) {
+    Meal.updFromData(meals, data)
+  }
 
   /**
    * Fetches meals for the current date and sets them in the store.
-   * If the meal is not found, it initializes it with empty values.
+   * Placeholders are created for the meals that are not registered.
    *
    */
-  async function setMeals() {
+  async function fetchMeals() {
     const data = await mealService.index(currentDate.value)
 
-    for (const type of Object.keys(meals.value)) {
-      meals.value[type] = data[type] ?? dummyMeal(type)
-    }
+    update(data)
   }
 
   /**
@@ -50,12 +45,12 @@ export const useMealStore = defineStore('meal', () => {
   }
 
   /**
-   * Selects a meal type and sets it as the current meal.
+   * Selects a meal fod adding food items.
    *
    * @param {string} type - type of meal
    */
   function selectMeal(type) {
-    currentMeal.value = meals.value[type]
+    selected = meals[type]
   }
 
   /**
@@ -67,17 +62,17 @@ export const useMealStore = defineStore('meal', () => {
   async function newMeal(item) {
     const newMeal = {
       date: currentDate.value,
-      type: currentMeal.value.type,
+      type: selected.type,
       foodItems: [item]
     }
 
     try {
-      const meal = await mealService.post(newMeal)
-      currentMeal.value = meal
-      meals.value[currentMeal.value.type] = meal
+      const data = await mealService.post(newMeal)
+
+      selected.init(data)
     } catch (error) {
       // reverse update if error
-      currentMeal.value.foodItems.pop()
+      selected.reset()
       throw error
     }
   }
@@ -90,47 +85,69 @@ export const useMealStore = defineStore('meal', () => {
    */
   async function addFoodItem(item) {
     try {
-      return await mealService.addFoodItem(currentMeal.value.id, item)
+      return await mealService.addFoodItem(selected.id, item)
     } catch (error) {
       // reverse update if error
-      currentMeal.value.foodItems.pop()
+      selected.reset()
       throw error
     }
   }
 
+  function findMealById(id) {
+    return Object.values(meals).find(m => m.id === id)
+  }
 
-  const data = computed(() => {
-    let totals
-    for (const meal of Object.values(meals.value)) {
-      totals = nutrientsPerMeal(meal, totals)
+  const kcal = computed(() => {
+    let total = 0
+    for (const meal of Object.values(meals)) {
+      total += meal.kcal
     }
-
-    return totals
+    return total
   })
+
+  async function updMealItem(mealId, data) {
+    const meal = findMealById(mealId)
+    const { id, weight, unit } = data
+    const item = toRaw(meal.findItemById(id))
+
+    const initialWeight = item.weight.value
+    const initialUnit = item.unit.value
+    item.weight.value = weight
+    item.unit.value = unit
+
+
+
+
+    try {
+      await mealService.updFoodItem(mealId, { id, weight, unit })
+    } catch (error) {
+      item.weight.value = initialWeight
+      item.unit.value = initialUnit
+      throw error
+    }
+  }
+
 
   /**
    * Adds a food item to the current meal.
    *
    * @param {object} food - a food item to be added to the meal
    */
-  async function setItem(food) {
+  async function addToSelected(food) {
     const item = {
       ean: food.ean,
       weight: food.weight,
       unit: food.unit
     }
 
-    const prelItem = {
-      ...food,
-      id: 'prel'
-    }
+    const newItem = new Food(food)
 
-    currentMeal.value.foodItems.push(prelItem)
+    selected.addFoodItem(newItem)
 
-    if (!currentMeal.value.id) {
+    if (!selected.isRegistered()) {
       await newMeal(item)
     } else {
-      prelItem.id = await addFoodItem(item)
+      newItem.id = await addFoodItem(item)
     }
   }
 
@@ -140,8 +157,8 @@ export const useMealStore = defineStore('meal', () => {
    * @param {string} type - the type of the meal to delete
    */
   async function delMeal(type) {
-    const meal = meals.value[type]
-    meals.value[type] = dummyMeal(type)
+    const meal = meals[type]
+    meals[type] = new Meal(type)
 
     try {
       await mealService.del(meal.id)
@@ -158,14 +175,14 @@ export const useMealStore = defineStore('meal', () => {
    * @param {string} id - id of the food item to delete 
    */
   async function delItem(itemId, type) {
-    const meal = meals.value[type]
-    if (meal.foodItems.length === 1) {
+    const meal = meals[type]
+    if (meal.hasOneItem()) {
       await delMeal(type)
       return
     }
 
     const temp = [...meal.foodItems]
-    meal.foodItems = meal.foodItems.filter((item) => item.id !== itemId)
+    meal.delFoodItem(itemId)
 
     try {
       await mealService.delFoodItem(meal.id, itemId)
@@ -180,14 +197,13 @@ export const useMealStore = defineStore('meal', () => {
 
   return {
     meals,
-    setMeals,
+    fetchMeals,
     currentDate,
     setDate,
-    currentMeal,
     selectMeal,
-    data,
-    setItem,
-    delMeal,
-    delItem
+    kcal,
+    addToSelected,
+    delItem,
+    updMealItem
   }
 })

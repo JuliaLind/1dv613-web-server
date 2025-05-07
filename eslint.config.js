@@ -30,16 +30,19 @@ export default defineConfig([
     files: ['**/*.{vue,js}'],
     rules: {
       'vue/multi-word-component-names': ['error', {
-        ignores: ['Button', 'Form', 'Password', 'Select', 'Drawer', 'Accordion', 'Column', 'Toolbar'
-        ]
+        ignores: ['Button', 'Form', 'Password', 'Select', 'Drawer', 'Accordion', 'Column', 'Toolbar']
       }],
-      'vue/no-reserved-component-names': 'off'
+      'vue/no-reserved-component-names': 'off',
     }
   },
-
   {
-    ...pluginVitest.configs.recommended,
+    name: 'app/vitest',
     files: ['src/**/__tests__/*'],
+    ...pluginVitest.configs.recommended,
+    rules: {
+      ...pluginVitest.configs.recommended.rules,
+      'vitest/no-commented-out-tests': 'off',
+    },
   },
 
   {
@@ -49,5 +52,6 @@ export default defineConfig([
       'cypress/support/**/*.{js,ts,jsx,tsx}'
     ],
   },
+
   skipFormatting,
 ])

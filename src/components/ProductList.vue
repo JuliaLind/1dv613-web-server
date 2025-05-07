@@ -5,31 +5,23 @@ import { FoodService } from '@/services/food.service'
 import { createToastService } from '@/services/toast.service'
 import ProductBody from '@/components/ProductBody.vue'
 import ProductHeader from '@/components/ProductHeader.vue'
+import { FoodList } from '@/models/FoodList.js'
+import { tryCatch } from '@/helpers/helpers'
 
 
 const toast = useToast()
 const toastService = createToastService(toast)
-
 const visible = ref(false)
+const foodList = new FoodList()
 
-/**
- * Makes a request to the server and creates a toast message in case of an error.
- *
- * @param {function} func - The function to be executed
- * @param {Array} params - The parameters to be passed to the function 
- */
-async function reqServer(func, params = []) {
-  try {
-    return await func(...params)
-  } catch (error) {
-    toastService.alertError('Something went wrong', error.message)
-  }
+const handleError = (error) => {
+  toastService.alertError('Something went wrong', error.message)
 }
+
 
 const foodService = new FoodService()
 let page = 1
 const fetchMore = ref(true)
-const products = ref([])
 const query = ref('')
 
 /**
@@ -38,15 +30,14 @@ const query = ref('')
 async function fetchProducts() {
   const data = await getUnfiltered()
 
-  products.value = [...products.value, ...data]
+  foodList.addItems(data)
 }
 
 /**
  * Searches for products based on the query.
  */
 async function search() {
-  const data = await getFiltered()
-  products.value = [...products.value, ...data]
+  foodList.addItems(await getFiltered())
 }
 
 /**
@@ -62,6 +53,11 @@ async function getFiltered() {
   return data.foodItems
 }
 
+/**
+ * Checks if there are more products to load.
+ *
+ * @param {object} data - associative array returned from the server 
+ */
 function hasMore(data) {
   if (data.total > data.to) {
     fetchMore.value = true
@@ -93,9 +89,9 @@ async function getUnfiltered() {
  */
 async function loadMore() {
   if (query.value.length > 0) {
-    await reqServer(search)
+    await tryCatch(search, handleError)
   } else {
-    await reqServer(fetchProducts)
+    await tryCatch(fetchProducts, handleError)
   }
 }
 
@@ -106,17 +102,19 @@ async function loadMore() {
  */
 async function onInput() {
   page = 1
+  let data
 
   if (query.value.length > 0) {
-    products.value = await reqServer(getFiltered)
-    return
+    data = await tryCatch(getFiltered, handleError)
+  } else {
+    data = await tryCatch(getUnfiltered, handleError)
   }
-  products.value = await reqServer(getUnfiltered)
+  foodList.setItems(data)
 }
 
 
 onMounted(async () => {
-  await reqServer(fetchProducts)
+  await tryCatch(fetchProducts, handleError)
 })
 
 
@@ -131,13 +129,12 @@ onMounted(async () => {
       </IconField>
     </template>
     <Accordion value="0">
-      <AccordionPanel v-for="product in products" :key="product.ean" :value="product.ean">
+      <AccordionPanel v-for="product in foodList.items.value" :key="product.ean" :value="product.ean">
         <AccordionHeader>
-          <ProductHeader :name="product.name" :img="product.img?.sm" :brand="product.brand"
+          <ProductHeader :name="product.name" :img="product.imgUrl" :brand="product.brand"
             :kcal_100g="product.kcal_100g" />
         </AccordionHeader>
         <AccordionContent>
-          <!-- <ProductBody :food="product" @add-food="(data) => $emit('add-food', data)" /> -->
           <ProductBody :food="product" @add-food="(data) => $emit('add-food', data)" />
         </AccordionContent>
       </AccordionPanel>

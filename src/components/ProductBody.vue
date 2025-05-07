@@ -1,27 +1,19 @@
 <script setup>
-import { computed } from 'vue'
 import FoodDetail from '@/components/FoodDetail.vue'
+import { Food } from '@/models/Food.js'
 
-const props = defineProps({
+
+const { food } = defineProps({
   food: {
-    type: Object,
+    type: Food,
     required: true
   }
 })
 
-const food = computed(() => {
-  return {
-    ...props.food,
-    weight: 100,
-    unit: 'g'
-  }
-})
-
-
 </script>
 
 <template>
-  <FoodDetail :info="food" @done="(foodInfo) => { $emit('add-food', foodInfo) }" />
+  <FoodDetail :food="food" @done="foodInfo => $emit('add-food', foodInfo)" />
 </template>
 
 <style scoped></style>
