@@ -71,7 +71,8 @@ e2e_tests:
     - export VITE_AUTH_URL="http://localhost:5053/api/v1"
     - export VITE_DATA_URL="http://localhost:5054/api/v1"
     - npm run dev -- --port 4173 &
-    - sleep 10
+    - npx wait-on http://localhost:4173 http://localhost:5053/api/v1 http://localhost:5054/api/v1
+
 
   script:
     - set -e
