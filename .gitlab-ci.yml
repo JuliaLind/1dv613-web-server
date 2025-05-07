@@ -55,7 +55,7 @@ e2e_tests:
     - export REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY"
     - export REFRESH_TOKEN_LIFE="2d"
     - export PORT=5053
-    - npm run dev > auth.log 2>&1 &
+    - npm run dev:ci > auth.log 2>&1 &
     - sleep 5
     - echo "=== Auth Server Logs (initial) ===" && cat auth.log
 
@@ -65,7 +65,7 @@ e2e_tests:
     - export DB_CONNECTION_STRING="mongodb://mongo:27017/data_test"
     - export AUTH_TOKEN_SECRET_PATH="./public.pem"
     - export PORT=5054
-    - npm run dev > data.log 2>&1 &
+    - npm run dev:ci > data.log 2>&1 &
     - sleep 5
     - echo "=== Data Server Logs (initial) ===" && cat data.log
 
