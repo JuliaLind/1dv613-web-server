@@ -56,6 +56,8 @@ e2e_tests:
     - export REFRESH_TOKEN_LIFE="2d"
     - export PORT=5053
     - npm run dev > auth.log 2>&1 &
+    - sleep 5
+    - echo "=== Auth Server Logs (initial) ===" && cat auth.log
 
     - cd ../data-server
     - echo "$TEST_PUBLIC_PEM" > public.pem
@@ -64,6 +66,8 @@ e2e_tests:
     - export AUTH_TOKEN_SECRET_PATH="./public.pem"
     - export PORT=5054
     - npm run dev > data.log 2>&1 &
+    - sleep 5
+    - echo "=== Data Server Logs (initial) ===" && cat data.log
 
     - cd ../web-server
     - npm ci
@@ -71,7 +75,7 @@ e2e_tests:
     - export VITE_DATA_URL="http://localhost:5054/api/v1"
     - npm run dev -- --port 4173 > vite.log 2>&1 &
 
-    - npx wait-on --timeout 60000 http://localhost:4173 http://localhost:5053/api/v1 http://localhost:5054/api/v1
+    - npx wait-on --timeout 90000 http://localhost:4173 http://localhost:5053/api/v1 http://localhost:5054/api/v1
 
     - echo "=== Auth Server Logs ===" && tail -n 20 ../auth-server/auth.log || true
     - echo "=== Data Server Logs ===" && tail -n 20 ../data-server/data.log || true
