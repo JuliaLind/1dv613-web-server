@@ -38,6 +38,8 @@ e2e_tests:
     - echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
     - apt-get update && apt-get install -y mongodb-database-tools
 
+    - npm install -g wait-on
+
     - rm -rf ../auth-server ../data-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/auth-server.git ../auth-server
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lnu.se/1dv613/student/jl225vf/projects/data-server.git ../data-server
@@ -53,7 +55,7 @@ e2e_tests:
     - export REFRESH_TOKEN_KEY="$TEST_REFRESH_TOKEN_KEY"
     - export REFRESH_TOKEN_LIFE="2d"
     - export PORT=5053
-    - npm run dev &
+    - npm run dev > auth.log 2>&1 &
 
     - cd ../data-server
     - echo "$TEST_PUBLIC_PEM" > public.pem
@@ -61,18 +63,21 @@ e2e_tests:
     - export DB_CONNECTION_STRING="mongodb://mongo:27017/data_test"
     - export AUTH_TOKEN_SECRET_PATH="./public.pem"
     - export PORT=5054
-    - npm run dev &
-
-    - sleep 5
-    - mongoimport --uri="mongodb://root:password@mongo:27017/data_test" --collection=fooditems --file=../data-server/data/clean.json --jsonArray --authenticationDatabase admin
+    - npm run dev > data.log 2>&1 &
 
     - cd ../web-server
     - npm ci
     - export VITE_AUTH_URL="http://localhost:5053/api/v1"
     - export VITE_DATA_URL="http://localhost:5054/api/v1"
-    - npm run dev -- --port 4173 &
-    - npx wait-on http://localhost:4173 http://localhost:5053/api/v1 http://localhost:5054/api/v1
+    - npm run dev -- --port 4173 > vite.log 2>&1 &
 
+    - npx wait-on --timeout 60000 http://localhost:4173 http://localhost:5053/api/v1 http://localhost:5054/api/v1
+
+    - echo "=== Auth Server Logs ===" && tail -n 20 ../auth-server/auth.log || true
+    - echo "=== Data Server Logs ===" && tail -n 20 ../data-server/data.log || true
+    - echo "=== Vite Logs ===" && tail -n 20 vite.log || true
+
+    - mongoimport --uri="mongodb://root:password@mongo:27017/data_test" --collection=fooditems --file=../data-server/data/clean.json --jsonArray --authenticationDatabase admin
 
   script:
     - set -e
