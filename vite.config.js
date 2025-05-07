@@ -26,5 +26,8 @@ export default defineConfig(({ command }) => ({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    host: '0.0.0.0' // added to work with wait-on and Cypress
+  }
 }))
 
