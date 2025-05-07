@@ -1,3 +1,5 @@
+import { isRef, unref } from 'vue'
+
 /**
  * Calls and async function and handles the error
  * by calling the errorHandler function.
@@ -13,4 +15,8 @@ export async function tryCatch(fn, errorHandler, ...args) {
   } catch (error) {
     errorHandler(error)
   }
+}
+
+export function unwrap(value) {
+  return isRef(value) ? unref(value) : value
 }

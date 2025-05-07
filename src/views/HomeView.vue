@@ -8,11 +8,11 @@ import MealList from '@/components/MealList.vue'
 import DateChanger from '@/components/DateChanger.vue'
 import { createToastService } from '@/services/toast.service'
 import { tryCatch } from '@/helpers/helpers'
-import { useMealStore } from '@/stores/meal.js'
+import { useDayStore } from '@/stores/day.store.js'
 import FooterPartial from './FooterPartial.vue'
 
 
-const store = useMealStore()
+const store = useDayStore()
 const router = useRouter()
 const toast = useToast()
 const toastService = createToastService(toast)
@@ -29,7 +29,7 @@ function handleError(error) {
 
 
 onMounted(async () => {
-  await tryCatch(store.setMeals, handleError)
+  await tryCatch(store.fetchMeals, handleError)
 })
 
 </script>
@@ -37,7 +37,7 @@ onMounted(async () => {
 <template>
   <main class="grid-layout">
     <DateChanger :date="store.currentDate"
-      @update="(newDate) => { store.setDate(newDate); tryCatch(store.setMeals, handleError) }" class="p-4" />
+      @update="(newDate) => { store.setDate(newDate); tryCatch(store.fetchMeals, handleError) }" class="p-4" />
     <div class="pl-4 pr-4">
       <Toolbar>
         <template #start>
@@ -47,7 +47,7 @@ onMounted(async () => {
         </template>
 
         <template #end>
-          <span class="text-xs">{{ store.data.kcal }} kcal</span>
+          <span class="text-xs">{{ store.kcal }} kcal</span>
         </template>
       </Toolbar>
     </div>

@@ -1,44 +1,55 @@
 <script setup>
 import { ref } from 'vue'
 import ProductList from '@/components/ProductList.vue'
-import { useMealStore } from '@/stores/meal.js'
+import { useDayStore } from '@/stores/day.store.js'
 import SingleMeal from '@/components/SingleMeal.vue'
+import { Meal } from '@/models/Meal.js'
 
-const store = useMealStore()
+const store = useDayStore()
 const visible = ref(false)
 const emit = defineEmits(['error'])
 
+function handleError(error) {
+  console.log(error)
+  emit('error', error)
+}
 
 /**
  * Adds a food item to the selected meal.
  *
  * @param {object} food - the food item to add to the meal 
  */
-async function setItem(food) {
+async function addToSelected(food) {
   try {
-    await store.setItem(food)
+    await store.addToSelected(food)
   } catch (error) {
-    emit('error', error)
+    handleError(error)
   }
 }
 
 
 /**
- * Selects the meal to add new food items to.
+ * Deletes a food item from the meal.
  *
- * @param {string} type - the type of meal, for example breakfast, lunch, snack2 
+ * @param {string} id - the id of the food item to delete
+ * @param {string} type - the type of the meal
  */
-function selectMeal(type) {
-  store.selectMeal(type)
-  visible.value = true
+async function delItem(id, type) {
+  try {
+    await store.delItem(id, type)
+  } catch (error) {
+    handleError(error)
+  }
 }
+
 
 </script>
 
 <template>
   <div v-if="store.meals" id="meal-list" class="flex flex-col gap-2">
-    <SingleMeal v-for="(meal, type) in store.meals" :key="type" :type="type" @select="selectMeal(type)"
-      @delete="store.delMeal(type)" @error="$emit('error')" />
+    <SingleMeal v-for="type in Object.keys(Meal.TYPES)" :key="type" :type="type"
+      @select="store.selectMeal(type); visible = true" @delete="foodId => delItem(foodId, type)"
+      @error="$emit('error')" />
   </div>
-  <ProductList v-model:visible="visible" @add-food="setItem" />
+  <ProductList v-model:visible="visible" @add-food="addToSelected" />
 </template>

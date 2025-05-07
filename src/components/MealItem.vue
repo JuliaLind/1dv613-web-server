@@ -1,21 +1,23 @@
 <script setup>
 import { ref, computed } from 'vue'
 import FoodDetail from '@/components/FoodDetail.vue'
-import { weightedValue } from '@/helpers/nutrients'
 import { tryCatch } from '@/helpers/helpers'
-import { MealService } from '@/services/meal.service.js'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { createToastService } from '@/services/toast.service'
+import { Food } from '@/models/Food.js'
+import { useDayStore } from '@/stores/day.store.js'
+
+const store = useDayStore()
+
 
 const router = useRouter()
 const toast = useToast()
 const toastService = createToastService(toast)
-const mealService = new MealService()
 
 const props = defineProps({
   food: {
-    type: Object,
+    type: Food,
     required: true
   },
   mealId: {
@@ -24,6 +26,12 @@ const props = defineProps({
   }
 })
 
+const food = computed(() => {
+  return props.food
+})
+const edit = ref(false)
+const menu = ref()
+
 /**
  * Handles errors by checking the status code.
  * If the status code is 401, it redirects to the login page.
@@ -31,6 +39,7 @@ const props = defineProps({
  * @param {Error} error - the error object 
  */
 function handleError(error) {
+  console.log(error)
   if (error.status === 401) {
     router.push('/login')
     toastService.alertError('Session expired', 'Please login again')
@@ -39,22 +48,17 @@ function handleError(error) {
   toastService.alertError('Something went wrong', 'Please try again later')
 }
 
+
+
 /**
  * Updates the weight and unit of the food item.
  */
-async function updFoodItem() {
-  const { id, weight, unit } = props.food
+async function upd(data) {
+  edit.value = false
 
-  await mealService.updFoodItem(props.mealId, { id, weight, unit })
+  await store.updMealItem(props.mealId, data)
 }
 
-
-
-const kcal = computed(() => {
-  return weightedValue(props.food.weight, props.food.kcal_100g)
-})
-const edit = ref(false)
-const menu = ref()
 
 /**
  * Toggles the menu with edit and delete options.
@@ -71,14 +75,14 @@ defineEmits(['delete'])
 
 <template>
   <div class="w-full text-left flex flex-row gap-4 relative">
-    <img v-if="food.img?.sm" :src="food.img.sm" :alt="food.name" class="w-10 h-10 object-cover rounded-sm" />
+    <img v-if="food.imgUrl" :src="food.imgUrl" :alt="food.name" class="w-10 h-10 object-cover rounded-sm" />
 
     <div class="flex flex-col w-full">
       <span class="font-semibold text-sm capitalize">
-        {{ food.name }}, {{ food.brand ?? '' }}
+        {{ food.name }}, {{ food.brand }}
       </span>
       <span class="text-sm">
-        {{ food.weight }} {{ food.unit }} = {{ kcal }} kcal
+        {{ food.weight }} {{ food.unit }} = {{ food.kcal }} kcal
       </span>
     </div>
 
@@ -92,7 +96,7 @@ defineEmits(['delete'])
     </OverlayPanel>
   </div>
 
-  <FoodDetail v-if="edit" :info="food" @done="tryCatch(updFoodItem, handleError); edit = false" />
+  <FoodDetail v-if="edit" :food="food" @done="(data) => tryCatch(upd, handleError, data)" />
 </template>
 
 <style scoped></style>

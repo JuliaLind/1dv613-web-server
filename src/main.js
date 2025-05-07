@@ -30,8 +30,8 @@ import AccordionPanel from 'primevue/accordionpanel'
 import AccordionHeader from 'primevue/accordionheader'
 import AccordionContent from 'primevue/accordioncontent'
 
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
+// import DataTable from 'primevue/datatable'
+// import Column from 'primevue/column'
 
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
@@ -67,8 +67,8 @@ app.component('Accordion', Accordion)
 app.component('AccordionPanel', AccordionPanel)
 app.component('AccordionHeader', AccordionHeader)
 app.component('AccordionContent', AccordionContent)
-app.component('DataTable', DataTable)
-app.component('Column', Column)
+// app.component('DataTable', DataTable)
+// app.component('Column', Column)
 app.component('IconField', IconField)
 app.component('InputIcon', InputIcon)
 
