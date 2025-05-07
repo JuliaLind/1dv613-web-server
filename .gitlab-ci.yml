@@ -47,6 +47,10 @@ e2e_tests:
     - cd ../auth-server
     - echo "$TEST_PRIVATE_PEM" > test_private.pem
     - echo "$TEST_PUBLIC_PEM" > test_public.pem
+    - echo "DEBUG - Contents of test_private.pem"
+    - cat test_private.pem
+    - echo "DEBUG - test_private.pem exists"
+    - ls -l test_private.pem
     - npm ci
     - export DB_CONNECTION_STRING="mongodb://root:password@mongo:27017/auth_test?authSource=admin"
     - export ACCESS_TOKEN_PRIVATE_KEY_PATH="./test_private.pem"
