@@ -126,6 +126,20 @@ export class AuthService {
   }
 
   /**
+   * 
+   * @returns { number} the age of the user from the access token payload
+   * @throws {Error} If the token is not found or invalid.
+   */
+  getPayload() {
+    try {
+      return this.#tokenService.getPayload()
+    } catch (error) {
+      error.status = 401
+      throw error
+    }
+  }
+
+  /**
    * Refreshes the access token using the refresh token.
    *
    * @returns {object} The response data containing the new access token and refresh token.

@@ -1,18 +1,14 @@
 <script setup>
 import { ref } from 'vue'
-import ProductList from '@/components/ProductList.vue'
+import ProductList from '@/components/home/productlist/ProductList.vue'
 import { useDayStore } from '@/stores/day.store.js'
-import SingleMeal from '@/components/SingleMeal.vue'
+import SingleMeal from '@/components/home/meallist/SingleMeal.vue'
 import { Meal } from '@/models/Meal.js'
 
 const store = useDayStore()
 const visible = ref(false)
 const emit = defineEmits(['error'])
 
-function handleError(error) {
-  console.log(error)
-  emit('error', error)
-}
 
 /**
  * Adds a food item to the selected meal.
@@ -23,7 +19,7 @@ async function addToSelected(food) {
   try {
     await store.addToSelected(food)
   } catch (error) {
-    handleError(error)
+    emit('error', error)
   }
 }
 
@@ -38,7 +34,7 @@ async function delItem(id, type) {
   try {
     await store.delItem(id, type)
   } catch (error) {
-    handleError(error)
+    emit('error', error)
   }
 }
 
@@ -48,8 +44,7 @@ async function delItem(id, type) {
 <template>
   <div v-if="store.meals" id="meal-list" class="flex flex-col gap-2">
     <SingleMeal v-for="type in Object.keys(Meal.TYPES)" :key="type" :type="type"
-      @select="store.selectMeal(type); visible = true" @delete="foodId => delItem(foodId, type)"
-      @error="$emit('error')" />
+      @select="store.selectMeal(type); visible = true" @delete="foodId => delItem(foodId, type)" />
   </div>
   <ProductList v-model:visible="visible" @add-food="addToSelected" />
 </template>

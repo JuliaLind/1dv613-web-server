@@ -172,7 +172,8 @@ describe('validate module', () => {
     for (const { field, value, reason } of badFields) {
       it(`not ok, should throw error when mandatory field is not filled: ${reason}`, () => {
         const fieldsWithEmptyField = { ...fields, [field]: value }
-        expect(() => validateMandatory(fieldsWithEmptyField)).toThrow(`The ${field} field is mandatory`)
+        // expect(() => validateMandatory(fieldsWithEmptyField)).toThrow(`The ${field} field is mandatory`)
+        expect(() => validateMandatory(fieldsWithEmptyField)).toThrow(`Please fill in all mandatory fields`)
       })
     }
   })

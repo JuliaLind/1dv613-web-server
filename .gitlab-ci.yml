@@ -11,6 +11,7 @@ lint:
     - set -e
     - npm ci
     - npm run lint
+  when: always
 
 unit_tests:
   stage: unit
@@ -21,6 +22,7 @@ unit_tests:
     - set -e
     - npm ci
     - npm run test:unit
+  when: always
 
 e2e_tests:
   stage: e2e
@@ -84,6 +86,7 @@ e2e_tests:
   script:
     - set -e
     - npx cypress run --e2e
+  when: always
 
   artifacts:
     when: always
@@ -99,3 +102,4 @@ build:
     - set -e
     - npm ci
     - npm run build
+  when: always

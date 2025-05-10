@@ -1,5 +1,4 @@
-// tailwind.config.js
-import { primary } from './src/colors'
+import { primary } from './src/config/colors'
 
 export default {
   theme: {

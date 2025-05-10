@@ -8,8 +8,9 @@ import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
+import Fluid from 'primevue/fluid'
 
-import RegisterForm from '../RegisterForm.vue'
+import RegisterForm from '../register/RegisterForm.vue'
 
 vi.mock('@/services/auth.service.js', () => {
   return {
@@ -65,7 +66,8 @@ describe('RegisterForm', () => {
           InputText,
           FloatLabel,
           Password,
-          Button
+          Button,
+          Fluid
         },
         stubs: {
           RouterLink: true

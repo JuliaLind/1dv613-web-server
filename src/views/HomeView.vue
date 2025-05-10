@@ -1,60 +1,69 @@
 <script setup>
 import { onMounted } from 'vue'
-
-import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
-import MealList from '@/components/MealList.vue'
+import MealList from '@/components/home/meallist/MealList.vue'
 
-import DateChanger from '@/components/DateChanger.vue'
+import DateChanger from '@/components/home/DateChanger.vue'
 import { createToastService } from '@/services/toast.service'
-import { tryCatch } from '@/helpers/helpers'
+import { handleError } from '@/helpers/helpers'
 import { useDayStore } from '@/stores/day.store.js'
 import FooterPartial from './FooterPartial.vue'
+import { useUserStore } from '@/stores/user.store.js'
+import HeaderDisplay from '@/components/home/HeaderDisplay.vue'
 
 
-const store = useDayStore()
-const router = useRouter()
+const dayStore = useDayStore()
+const userStore = useUserStore()
 const toast = useToast()
 const toastService = createToastService(toast)
 
-
-function handleError(error) {
-  if (error.status === 401) {
-    router.push('/login')
-    toastService.alertError('Session expired', 'Please login again')
-    return
+async function fetchUserData() {
+  try {
+    await userStore.fetchUserData()
+  } catch (error) {
+    if (error.status === 404) {
+      toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience')
+      return
+      // TODO should filling out the form be mandatory?
+    }
+    throw error
   }
-  toastService.alertError('Something went wrong', 'Please try again later')
+}
+
+async function init() {
+  try {
+    await dayStore.fetchMeals()
+    await fetchUserData()
+  } catch (error) {
+    handleError(error, toast)
+  }
+}
+
+async function changeDate(newDate) {
+  try {
+    dayStore.setDate(newDate)
+    await dayStore.fetchMeals()
+    userStore.setDate(newDate)
+  } catch (error) {
+    handleError(error, toast)
+  }
 }
 
 
 onMounted(async () => {
-  await tryCatch(store.fetchMeals, handleError)
+  await init()
 })
 
 </script>
 
 <template>
   <main class="grid-layout">
-    <DateChanger :date="store.currentDate"
-      @update="(newDate) => { store.setDate(newDate); tryCatch(store.fetchMeals, handleError) }" class="p-4" />
-    <div class="pl-4 pr-4">
-      <Toolbar>
-        <template #start>
-        </template>
+    <DateChanger :date="dayStore.selectedDate" @update="changeDate" class="p-4" />
 
-        <template #center>
-        </template>
-
-        <template #end>
-          <span class="text-xs">{{ store.kcal }} kcal</span>
-        </template>
-      </Toolbar>
-    </div>
+    <HeaderDisplay />
 
     <div class="scroll-container p-4">
-
-      <MealList :key="store.currentDate" @error="handleError" />
+      <MealList :key="dayStore.selectedDate" />
     </div>
     <FooterPartial />
   </main>

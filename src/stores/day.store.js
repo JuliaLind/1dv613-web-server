@@ -8,9 +8,9 @@ import { Food } from '@/models/Food'
 
 const mealService = new MealService()
 
-export const useDayStore = defineStore('meal', () => {
+export const useDayStore = defineStore('day', () => {
   const meals = reactive(Meal.newSet())
-  const currentDate = ref(format(new Date(), 'yyyy-MM-dd'))
+  const selectedDate = ref(format(new Date(), 'yyyy-MM-dd'))
   let selected = null
 
   /**
@@ -25,12 +25,12 @@ export const useDayStore = defineStore('meal', () => {
   }
 
   /**
-   * Fetches meals for the current date and sets them in the store.
+   * Fetches meals for the selected date and sets them in the store.
    * Placeholders are created for the meals that are not registered.
    *
    */
   async function fetchMeals() {
-    const data = await mealService.index(currentDate.value)
+    const data = await mealService.index(selectedDate.value)
 
     update(data)
   }
@@ -41,7 +41,7 @@ export const useDayStore = defineStore('meal', () => {
    * @param {string} date - the new date
    */
   function setDate(date) {
-    currentDate.value = date
+    selectedDate.value = date
   }
 
   /**
@@ -61,7 +61,7 @@ export const useDayStore = defineStore('meal', () => {
    */
   async function newMeal(item) {
     const newMeal = {
-      date: currentDate.value,
+      date: selectedDate.value,
       type: selected.type,
       foodItems: [item]
     }
@@ -198,7 +198,7 @@ export const useDayStore = defineStore('meal', () => {
   return {
     meals,
     fetchMeals,
-    currentDate,
+    selectedDate,
     setDate,
     selectMeal,
     kcal,

@@ -39,16 +39,19 @@ async function handleSubmit(event) {
 
 <template>
   <form @submit="handleSubmit" class="flex flex-col gap-4 p-6 bg-white max-w-md w-full mx-auto">
+    <Fluid>
+      <div class="flex flex-col gap-2">
+        <FloatLabel variant="on">
+          <InputText id="email" v-model="form.email" />
+          <label for="email">Email</label>
+        </FloatLabel>
 
-    <FloatLabel variant="on">
-      <InputText id="email" v-model="form.email" />
-      <label for="email">Email</label>
-    </FloatLabel>
-
-    <FloatLabel variant="on">
-      <Password id="password" v-model="form.password" toggleMask required maxlength="255" />
-      <label for="password">Password</label>
-    </FloatLabel>
+        <FloatLabel variant="on">
+          <Password id="password" v-model="form.password" toggleMask required maxlength="255" />
+          <label for="password">Password</label>
+        </FloatLabel>
+      </div>
+    </Fluid>
 
     <Button type="submit" label="Login" size="large" />
   </form>
