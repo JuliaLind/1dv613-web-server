@@ -1,5 +1,5 @@
 <script setup>
-import FoodDetail from '@/components/FoodDetail.vue'
+import FoodDetail from '@/components/home/shared/FoodDetail.vue'
 import { Food } from '@/models/Food.js'
 
 

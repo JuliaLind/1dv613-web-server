@@ -56,6 +56,18 @@ export class TokenService {
   }
 
   /**
+   * Returns the payload of the access token.
+   *
+   * @param {object} token - json web token 
+   * @returns {object} - decoded token payload
+   * @throws {Error} - if no token is found
+   */
+  getPayload() {
+    const token = this.#getToken('accessToken')
+    return jwtDecode(token)
+  }
+
+  /**
    * Returns the access token from local storage.
    *
    * @returns {string} - access token
@@ -110,6 +122,6 @@ export class TokenService {
     if (error.status === 401) {
       this.clearTokens()
     }
-    throw new Error(error.message)
+    throw error
   }
 }

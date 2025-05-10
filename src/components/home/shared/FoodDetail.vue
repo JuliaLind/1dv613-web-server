@@ -15,13 +15,13 @@ const food = props.food.clone()
 <template>
   <div v-if="food" class="bg-white rounded-lg shadow-md p-4 mb-4">
     <header class="flex justify-end mt-1">
-      <div class="flex items-center justify-between gap-1">
+      <form class="flex items-center justify-between gap-1">
         <InputNumber v-model="food.weight" inputId="integeronly" id="weight" :min="0" :max="5000"
           @input="e => food.weight.value = e.value" fluid class="basis-full" />
         <Select v-model="food.unit" id="unit" :options="Food.UNITS" optionValue="code" optionLabel="name"
           @change="e => food.unit.value = e.value" class="basis-10" />
         <Button @click="$emit('done', food.toData())" class="basis-30" :aria-label="'Add'" icon="pi pi-check" fluid />
-      </div>
+      </form>
     </header>
 
     <table class="mt-4 min-w-full text-xs text-left border border-gray-200 rounded shadow-sm overflow-hidden">

@@ -46,6 +46,15 @@ export function validatePassword(password) {
   }
 }
 
+export function isFilled(fields) {
+  for (const key of Object.keys(fields)) {
+    if ([undefined, null, ''].includes(fields[key])) {
+      return false
+    }
+  }
+  return true
+}
+
 
 /**
  * Checks that all mandatory fields are filled.
@@ -54,9 +63,7 @@ export function validatePassword(password) {
  * @param {object} fields - associative array of field names and values
  */
 export function validateMandatory(fields) {
-  for (const [key, value] of Object.entries(fields)) {
-    if (!value) {
-      throw new Error(`The ${key} field is mandatory`)
-    }
+  if (!isFilled(fields)) {
+    throw new Error(`Please fill in all mandatory fields`)
   }
 }

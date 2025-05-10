@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import PrimeVue from 'primevue/config'
 import Button from 'primevue/button'
 
-import DateChanger from '../DateChanger.vue'
+import DateChanger from '../home/DateChanger.vue'
 
 describe('DateChanger', () => {
   let wrapper

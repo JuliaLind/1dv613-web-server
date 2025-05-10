@@ -6,39 +6,34 @@ import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import { definePreset } from '@primeuix/themes'
 import Aura from '@primeuix/themes/aura'
-import { primary } from './colors'
-
-
-
-
+import { primary } from './config/colors'
+import Fluid from 'primevue/fluid'
+import ConfirmPopup from 'primevue/confirmpopup'
+import ConfirmationService from 'primevue/confirmationservice'
 import App from './App.vue'
 import router from './router'
-
 import Button from "primevue/button"
 import Password from 'primevue/password'
 import FloatLabel from 'primevue/floatlabel'
 import { Form } from '@primevue/forms'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
-
 import ToastService from 'primevue/toastservice'
 import Select from 'primevue/select'
 import Drawer from 'primevue/drawer'
-
 import Accordion from 'primevue/accordion'
 import AccordionPanel from 'primevue/accordionpanel'
 import AccordionHeader from 'primevue/accordionheader'
 import AccordionContent from 'primevue/accordioncontent'
-
-// import DataTable from 'primevue/datatable'
-// import Column from 'primevue/column'
-
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
-
 import Toolbar from 'primevue/toolbar'
-
 import OverlayPanel from 'primevue/overlaypanel'
+
+
+// import RadioButton from 'primevue/radiobutton'
+
+
 const app = createApp(App)
 
 
@@ -67,8 +62,7 @@ app.component('Accordion', Accordion)
 app.component('AccordionPanel', AccordionPanel)
 app.component('AccordionHeader', AccordionHeader)
 app.component('AccordionContent', AccordionContent)
-// app.component('DataTable', DataTable)
-// app.component('Column', Column)
+
 app.component('IconField', IconField)
 app.component('InputIcon', InputIcon)
 
@@ -76,6 +70,10 @@ app.component('Toolbar', Toolbar)
 
 
 app.component('OverlayPanel', OverlayPanel)
+app.component('Fluid', Fluid)
+
+app.component('ConfirmPopup', ConfirmPopup)
+app.use(ConfirmationService)
 
 
 app.use(ToastService)

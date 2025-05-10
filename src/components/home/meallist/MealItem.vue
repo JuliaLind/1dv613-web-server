@@ -1,19 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue'
-import FoodDetail from '@/components/FoodDetail.vue'
-import { tryCatch } from '@/helpers/helpers'
-import { useRouter } from 'vue-router'
+import FoodDetail from '@/components/home/shared/FoodDetail.vue'
+import { handleError } from '@/helpers/helpers'
 import { useToast } from 'primevue/usetoast'
-import { createToastService } from '@/services/toast.service'
 import { Food } from '@/models/Food.js'
 import { useDayStore } from '@/stores/day.store.js'
 
 const store = useDayStore()
-
-
-const router = useRouter()
 const toast = useToast()
-const toastService = createToastService(toast)
 
 const props = defineProps({
   food: {
@@ -32,31 +26,19 @@ const food = computed(() => {
 const edit = ref(false)
 const menu = ref()
 
-/**
- * Handles errors by checking the status code.
- * If the status code is 401, it redirects to the login page.
- *
- * @param {Error} error - the error object 
- */
-function handleError(error) {
-  console.log(error)
-  if (error.status === 401) {
-    router.push('/login')
-    toastService.alertError('Session expired', 'Please login again')
-    return
-  }
-  toastService.alertError('Something went wrong', 'Please try again later')
-}
-
-
 
 /**
  * Updates the weight and unit of the food item.
  */
 async function upd(data) {
+  try {
+    await store.updMealItem(props.mealId, data)
+  } catch (error) {
+    handleError(error, toast)
+  }
   edit.value = false
 
-  await store.updMealItem(props.mealId, data)
+
 }
 
 
@@ -96,7 +78,7 @@ defineEmits(['delete'])
     </OverlayPanel>
   </div>
 
-  <FoodDetail v-if="edit" :food="food" @done="(data) => tryCatch(upd, handleError, data)" />
+  <FoodDetail v-if="edit" :food="food" @done="upd" />
 </template>
 
 <style scoped></style>

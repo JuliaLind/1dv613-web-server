@@ -46,12 +46,21 @@ Cypress.Commands.add('deleteUserData', ({ email, password }) => {
   }).then((response) => {
     const accessToken = response.body.accessToken
 
-    return cy.request({
+    cy.request({
       method: 'DELETE',
       url: `${Cypress.env('VITE_DATA_URL')}/user`,
       headers: {
         Authorization: `Bearer ${accessToken}`
-      }
+      },
+      failOnStatusCode: false
+    })
+    return cy.request({
+      method: 'DELETE',
+      url: `${Cypress.env('VITE_AUTH_URL')}/meals`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      failOnStatusCode: false
     })
   })
 })

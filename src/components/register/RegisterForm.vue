@@ -61,35 +61,39 @@ async function handleSubmit(event) {
 
 <template>
   <form @submit="handleSubmit" class="flex flex-col gap-4 p-6 bg-white max-w-md w-full mx-auto">
-    <FloatLabel variant="on">
-      <input type="date" id="birthDate" v-model="form.birthDate"
-        class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-filled" />
-      <label for="birthDate">Date of birth</label>
-    </FloatLabel>
+    <Fluid>
+      <div class="flex flex-col gap-2">
+        <FloatLabel variant="on">
+          <input type="date" id="birthDate" v-model="form.birthDate"
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-filled" />
+          <label for="birthDate">Date of birth</label>
+        </FloatLabel>
 
 
-    <FloatLabel variant="on">
-      <InputText id="email" type="email" v-model="form.email" required />
-      <label for="email">Email</label>
-    </FloatLabel>
+        <FloatLabel variant="on">
+          <InputText id="email" type="email" v-model="form.email" required />
+          <label for="email">Email</label>
+        </FloatLabel>
 
-    <FloatLabel variant="on">
-      <Password id="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required />
-      <label for="password">Password</label>
-    </FloatLabel>
+        <FloatLabel variant="on">
+          <Password id="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required />
+          <label for="password">Password</label>
+        </FloatLabel>
 
 
-    <FloatLabel variant="on">
-      <Password v-model="form.confirmPassword" toggleMask id="confirmPassword" />
-      <label for="confirmPassword">Confirm Password</label>
-    </FloatLabel>
+        <FloatLabel variant="on">
+          <Password v-model="form.confirmPassword" toggleMask id="confirmPassword" />
+          <label for="confirmPassword">Confirm Password</label>
+        </FloatLabel>
+      </div>
+    </Fluid>
 
     <Button type="submit" label="Submit" size="large" class="text-base font-medium tracking-wide px-6 py-3" />
     <p>
-      Already have an account? 
+      Already have an account?
       <RouterLink to="/login" class="text-primary-color underline">
-      Login
-    </RouterLink>
+        Login
+      </RouterLink>
     </p>
     <p>
       By registering, you agree to our

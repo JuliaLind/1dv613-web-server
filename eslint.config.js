@@ -30,7 +30,7 @@ export default defineConfig([
     files: ['**/*.{vue,js}'],
     rules: {
       'vue/multi-word-component-names': ['error', {
-        ignores: ['Button', 'Form', 'Password', 'Select', 'Drawer', 'Accordion', 'Column', 'Toolbar']
+        ignores: ['Button', 'Form', 'Password', 'Select', 'Drawer', 'Accordion', 'Column', 'Toolbar', 'Fluid']
       }],
       'vue/no-reserved-component-names': 'off',
     }

@@ -8,7 +8,7 @@ import Select from 'primevue/select'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
-import FoodDetail from '../FoodDetail.vue'
+import FoodDetail from '../home/shared/FoodDetail.vue'
 import { Food } from '@/models/Food'
 
 describe('FoodDetail', () => {

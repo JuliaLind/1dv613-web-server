@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import MealItem from '@/components/MealItem.vue'
+import MealItem from '@/components/home/meallist/MealItem.vue'
 import { useDayStore } from '@/stores/day.store.js'
 
 const store = useDayStore()

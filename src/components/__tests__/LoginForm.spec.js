@@ -8,8 +8,9 @@ import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
+import Fluid from 'primevue/fluid'
 
-import LoginForm from '../LoginForm.vue'
+import LoginForm from '../login/LoginForm.vue'
 
 vi.mock('@/services/auth.service.js', () => {
   return {
@@ -58,7 +59,8 @@ describe('LoginForm', () => {
           InputText,
           FloatLabel,
           Password,
-          Button
+          Button,
+          Fluid
         },
         stubs: {
           RouterLink: true
@@ -108,17 +110,18 @@ describe('LoginForm', () => {
     expect(router.push).not.toHaveBeenCalled()
   })
 
+
   const badCredentials = [
     {
       email: 'julia@email.com',
       password: '',
-      errorMessage: 'The password field is mandatory',
+      errorMessage: 'Please fill in all mandatory fields',
       reason: 'password is empty'
     },
     {
       email: '',
       password: 'password123',
-      errorMessage: 'The email field is mandatory',
+      errorMessage: 'Please fill in all mandatory fields',
       reason: 'email is empty'
     }
   ]
