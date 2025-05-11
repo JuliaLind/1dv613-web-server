@@ -129,6 +129,9 @@ build:
     - npm ci
     - npm run build
   when: always
+  artifacts:
+    paths:
+      - dist/
 
 deploy:
   stage: deploy
@@ -137,8 +140,6 @@ deploy:
     url: http://$PRODUCTION_HOST
   before_script:
     - *before_script_ssh_setup
-    - npm ci
-    - npm run build
   variables:
     DOCKER_HOST: ssh://ubuntu@$PRODUCTION_HOST
   script:
