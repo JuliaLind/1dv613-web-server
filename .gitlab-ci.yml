@@ -25,8 +25,8 @@ image: docker:27-cli
 
 stages:
   - lint
-  - unit
-  - e2e
+  - test:unit
+  - test:e2e
   - build
   - deploy
 
@@ -39,8 +39,8 @@ lint:
     - npm run lint
   when: always
 
-unit_tests:
-  stage: unit
+test:unit:
+  stage: test:unit
   image: node:20
   variables:
     CYPRESS_INSTALL_BINARY: 0
@@ -50,8 +50,8 @@ unit_tests:
     - npm run test:unit
   when: always
 
-e2e_tests:
-  stage: e2e
+test:e2e:
+  stage: test:e2e
   image: cypress/browsers:node-22.15.0-chrome-135.0.7049.114-1-ff-137.0.2-edge-135.0.3179.85-1
   services:
     - name: mongo:7.0.4
