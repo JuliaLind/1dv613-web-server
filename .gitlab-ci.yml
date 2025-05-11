@@ -135,7 +135,10 @@ deploy:
   environment:
     name: production
     url: http://$PRODUCTION_HOST
-  before_script: *before_script_ssh_setup
+  before_script:
+    - *before_script_ssh_setup
+    - npm ci
+    - npm run build
   variables:
     DOCKER_HOST: ssh://ubuntu@$PRODUCTION_HOST
   script:
