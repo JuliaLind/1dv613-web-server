@@ -34,7 +34,7 @@ describe('MealService', () => {
     const result = await sut.request({ path })
     expect(fetchService.request).toHaveBeenCalledExactlyOnceWith(
       {
-        path,
+        path: '/meals' + path,
         method: 'GET',
         headers,
         body: undefined
@@ -53,7 +53,7 @@ describe('MealService', () => {
     it('index() ok', async () => {
       const date = '2023-10-10'
       const result = await sut.index('2023-10-10')
-      expect(sut.request).toHaveBeenCalledExactlyOnceWith({ path: `/meals/date/${date}` })
+      expect(sut.request).toHaveBeenCalledExactlyOnceWith({ path: `/date/${date}` })
       expect(result).toEqual(data)
     })
 
@@ -78,7 +78,7 @@ describe('MealService', () => {
       const result = await sut.post(meal)
 
       expect(sut.request).toHaveBeenCalledExactlyOnceWith({
-        path: `/meals`,
+        path: `/`,
         body: meal,
         method: 'POST'
       })
@@ -92,7 +92,7 @@ describe('MealService', () => {
       await sut.del(mealId)
 
       expect(sut.request).toHaveBeenCalledExactlyOnceWith({
-        path: `/meals/${mealId}`,
+        path: `/${mealId}`,
         method: 'DELETE'
       })
     })
@@ -108,7 +108,7 @@ describe('MealService', () => {
       const result = await sut.addFoodItem(mealId, foodItem)
 
       expect(sut.request).toHaveBeenCalledExactlyOnceWith({
-        path: `/meals/${mealId}/add`,
+        path: `/${mealId}/add`,
         method: 'PATCH',
         body: foodItem
       })
@@ -123,7 +123,7 @@ describe('MealService', () => {
       await sut.delFoodItem(mealId, foodItemId)
 
       expect(sut.request).toHaveBeenCalledExactlyOnceWith({
-        path: `/meals/${mealId}/del/${foodItemId}`,
+        path: `/${mealId}/del/${foodItemId}`,
         method: 'PATCH'
       })
     })
@@ -139,7 +139,7 @@ describe('MealService', () => {
       await sut.updFoodItem(mealId, foodItem)
 
       expect(sut.request).toHaveBeenCalledExactlyOnceWith({
-        path: `/meals/${mealId}/upd`,
+        path: `/${mealId}/upd`,
         method: 'PATCH',
         body: foodItem
       })
