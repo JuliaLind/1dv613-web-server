@@ -124,6 +124,9 @@ test:e2e:
 build:
   stage: build
   image: node:20
+  variables:
+    VITE_AUTH_URL: "https://cscloud6-36.lnu.se/auth/api/v1"
+    VITE_DATA_URL: "https://cscloud6-36.lnu.se/data/api/v1"
   script:
     - set -e
     - npm ci
