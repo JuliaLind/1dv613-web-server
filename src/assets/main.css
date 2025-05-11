@@ -1,11 +1,22 @@
 @import "tailwindcss";
 @import 'primeicons/primeicons.css';
+@import './variables.css';
 
-
+/* 
 main {
   max-width: 48em;
 }
 
 h1 {
   color: var(--p-cyan-600);
+} */
+
+.capitalize {
+  text-transform: capitalize;
 }
+
+.w-full {
+  width: 100%;
+}
+
+

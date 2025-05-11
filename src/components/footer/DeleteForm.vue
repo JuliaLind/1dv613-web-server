@@ -20,7 +20,7 @@ const form = ref({
 const proceed = (event) => {
   confirm.require({
     target: event.currentTarget,
-    message: 'Do you really want to delete your profile? This action is irreversible.',
+    message: 'Do you really want to delete your account? This action is irreversible.',
     icon: 'pi pi-info-circle',
     rejectProps: {
       label: 'Cancel',
@@ -35,7 +35,7 @@ const proceed = (event) => {
       try {
         await userStore.deleteProfile(form.value)
         router.push('/login')
-        toastService.alertSuccess('Profile deleted', 'Your profile has been deleted successfully')
+        toastService.alertSuccess('Profile deleted', 'Your account has been deleted successfully')
       } catch (error) {
         toastService.alertError('Deletion failed', error.message)
       }
@@ -45,29 +45,27 @@ const proceed = (event) => {
     }
   })
 }
-
-
 </script>
 
 <template>
   <ConfirmPopup></ConfirmPopup>
 
-  <form class="flex flex-col gap-6 p-6 max-w-md mx-auto bg-white rounded-2xl shadow-md border-t-4 border-red-500 mt-10">
-    <span class="text-xs font-semibold uppercase text-red-500 tracking-wide">Danger zone</span>
+  <form>
+    <span class="danger-zone">Danger zone</span>
 
-    <h2 class="text-xl font-bold text-gray-800">Delete Profile</h2>
+    <h2>Delete Profile</h2>
 
-    <p class="text-sm text-gray-600 leading-relaxed">
-      This action is <span class="font-semibold text-red-600">irreversible</span>.
-      All your data will be permanently deleted.
+    <p>
+      This action is <span class="emphasize-danger">irreversible</span>.
+      Your account with all of your data will be permanently deleted.
     </p>
 
-    <p class="text-sm text-gray-600 leading-relaxed">
+    <p>
       To confirm deletion, please enter your email and password below.
     </p>
 
     <Fluid>
-      <div class="flex flex-col gap-4">
+      <fieldset>
         <FloatLabel variant="on">
           <InputText id="email" v-model="form.email" />
           <label for="email">Email</label>
@@ -77,13 +75,67 @@ const proceed = (event) => {
           <Password id="password" v-model="form.password" toggleMask required maxlength="255" />
           <label for="password">Password</label>
         </FloatLabel>
-      </div>
+      </fieldset>
     </Fluid>
 
-    <Button @click.prevent="proceed" type="submit" label="Delete profile" size="large" severity="danger"
-      class="text-base font-semibold tracking-wide px-6 py-3" />
+    <Button @click.prevent="proceed" type="submit" label="Delete profile" size="large" severity="danger" />
   </form>
 </template>
 
 
-<style scoped></style>
+<style scoped>
+
+h2 {
+  font-size: var(--text-xl);
+  font-weight: var(--bolder);
+  color: var(--grey-800);
+}
+
+Button {
+  font-size: var(--text-base);
+  font-weight: var(--bold);
+  padding: calc(var(--space-std) / 2) var(--space-std);
+  border-radius: var(--rounded);
+}
+
+form {
+  margin-top: var(--space-std);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-std);
+  padding: var(--space-std);
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--white);
+  border-radius: var(--rounded-sm);
+  box-shadow: var(--box-shadow);
+  border-top: 4px solid var(--red-500);
+}
+
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+form p {
+  font-size: var(--text-sm);
+  color: var(--grey-600);
+  line-height: 1.625;
+}
+
+.danger-zone {
+  font-size: var(--text-xs);
+  font-weight: var(--bold);
+  text-transform: uppercase;
+  color: var(--red-500);
+  letter-spacing: 0.05em;
+}
+
+.emphasize-danger {
+  font-weight: var(--bold);
+  color: var(--red-600);
+}
+
+</style>

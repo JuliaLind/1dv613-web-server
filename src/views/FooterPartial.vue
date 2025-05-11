@@ -3,10 +3,10 @@ import { useToast } from "primevue/usetoast"
 import { AuthService } from "@/services/auth.service"
 import { createToastService } from "@/services/toast.service"
 import { useRouter } from "vue-router"
-import UserProfile from '@/components/footer/UserProfile.vue'
 import { useUserStore } from '@/stores/user.store.js'
-// import { computed, ref } from 'vue'
 import { ref } from 'vue'
+import DeleteForm from '@/components/footer/DeleteForm.vue'
+import DataForm from '@/components/footer/DataForm.vue'
 
 const toast = useToast()
 const toastService = createToastService(toast)
@@ -50,9 +50,13 @@ const visible = ref(false)
 </script>
 
 <template>
-  <Drawer v-model:visible="visible" position="bottom" modal
+  <Drawer id="profile" v-model:visible="visible" position="bottom" modal
     class="!h-[96vh] max-h-[96vh] max-w-[768px] rounded-t-2xl shadow-2xl">
-    <UserProfile @close="visible = false" />
+    <template #header>
+      <h2>Your Profile</h2>
+    </template>
+    <DataForm @close="visible = false" />
+    <DeleteForm />
   </Drawer>
   <Toolbar class="w-full justify-between z-10">
 
@@ -72,5 +76,15 @@ const visible = ref(false)
 <style scoped>
 :root {
   --p-icon-size: 3rem;
+}
+
+h2 {
+  font-size: var(--text-xl);
+  font-weight: var(--bold);
+  color: var(--grey-800);
+}
+
+.p-drawer-header {
+  padding: var(--space-xs) !important;
 }
 </style>
