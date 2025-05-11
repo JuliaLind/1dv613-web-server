@@ -1,14 +1,15 @@
 import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { CalcService } from '@/services/calc.service'
-import { parseISO, isToday, format, endOfDay, isBefore, isEqual } from 'date-fns'
+import { isToday, format, endOfDay, isBefore, isEqual } from 'date-fns'
 
 import { UserService } from '@/services/user.service'
 import { isFilled } from '@/helpers/validate'
 
-
+/**
+ * Stores user data and provides methods to manipulate it.
+ */
 export const useUserStore = defineStore('user', () => {
-  // These are stored in the database
   const selectedDate = ref(format(new Date(), 'yyyy-MM-dd'))
 
   const defaultUser = {
@@ -19,20 +20,37 @@ export const useUserStore = defineStore('user', () => {
     activityLevel: CalcService.activityLevelOptions.sedentary.value,
     weeklyChange: null,
     updatedAt: null,
+    history: [],
   }
+
 
   const user = reactive({
     ...defaultUser,
   })
 
+  /**
+   * Current age, is retrieved from the access token that
+   * is regularly exchanged.
+   */
+  const age = computed(() => {
+    const age = userService.getAge()
+
+    return age
+  })
+
   const userService = new UserService()
 
+  /**
+   * Checks if the user has set their data.
+   *
+   * @returns {boolean} - true if all the mandatory fields are filled
+   */
   const isSet = computed(() => {
     return isFilled(user) && age.value
   })
 
   /**
-   * Sets the date.
+   * Sets the selected date.
    *
    * @param {string} date - the new date
    */
@@ -40,43 +58,65 @@ export const useUserStore = defineStore('user', () => {
     selectedDate.value = date
   }
 
+  /**
+   * Checks if the user has updated their data today.
+   *
+   * @returns {boolean} - true if the user has updated their data today
+   */
   const isUpdated = computed(() => {
     if (!this.updatedAt) {
       return true // because the user has not registered their data yet
     }
-    return isToday(parseISO(user.updatedAt))
+    return isToday(new Date(user.updatedAt))
   })
 
-  const age = computed(() => {
-    const age = userService.getAge()
-
-    return age
-  })
-
-  // these are constants for frontend
-
+  /**
+   * The kcal needed to maintain the current weight.
+   *
+   * @returns {number} - the maintenance kcal
+   */
   const maintenanceKcal = computed(() => {
     return CalcService.maintenanceKcal(user.gender,
       age.value,
       user.height,
-      weightOnSelectedDate(),
+      weightOnSelectedDate.value,
       user.activityLevel,
     )
   })
 
+  /**
+   * The estimated date when the user will reach their target weight based on the current weight and weekly change.
+   *
+   * @returns {string} - the target date in 'yyyy-MM-dd' format
+   */
   const targetDate = computed(() => {
     return CalcService.targetDate(
       user.weeklyChange,
       user.targetWeight,
-      weightOnSelectedDate(),
+      weightOnSelectedDate.value,
     )
   })
 
+  /**
+   * The daily kcal limit to reach the target weight based on
+   * selected daily change.
+   *
+   * @returns {number} - the daily kcal limit.
+   */
   const dailyLimit = computed(() => {
-    return CalcService.dailyLimit(user.weeklyChange, user.targetWeight, weightOnSelectedDate(), maintenanceKcal.value)
+    return CalcService.dailyLimit(user.weeklyChange, user.targetWeight, weightOnSelectedDate.value, maintenanceKcal.value)
   })
 
+  /**
+   * The daily macros based on the daily limit.
+   *
+   * @returns {object} - the daily macros
+   * @property {number} protein - the recommended daily protein intake in grams
+   * @property {number} fat - the recommended daily fat intake in grams
+   * @property {number} carbohydrates - the recommended daily carbohydrate intake in grams
+   */
   const dailyMacros = computed(() => {
+    // TODO map to actual macros
     return CalcService.targetMacros(
       dailyLimit.value
     )
@@ -84,25 +124,42 @@ export const useUserStore = defineStore('user', () => {
 
   /**
    * Selects the most recent entry from
-   * the weight history that is before or equal to the chosen date, and returns the weight from the entry.
+   * the weight history that is before or equal to the chosen date, and returns the weight from the entry. If no entry is found, it returns the last entry in the history.
+   *
+   * @returns {number} - the weight on the selected date
    */
-  function weightOnSelectedDate() {
-    const date = endOfDay(parseISO(selectedDate.value))
+  const weightOnSelectedDate = computed(() => {
+    const date = endOfDay(new Date(selectedDate.value))
 
-    const entry = user.history.find(entry =>
-      isBefore(parseISO(entry.effectiveDate), date) ||
-      isEqual(parseISO(entry.effectiveDate), date)
+    let entry = user.history.find(entry =>
+      isBefore(new Date(entry.effectiveDate), date) ||
+      isEqual(new Date(entry.effectiveDate), date)
     )
 
-    return entry?.currentWeight || null
-  }
+    const lastIndex = user.history.length - 1
 
+    if (!entry && lastIndex >= 0) {
+      entry = user.history[lastIndex]
+    }
+
+    return entry?.currentWeight ?? user.currentWeight
+  })
+
+  /**
+   * Fetches the user data from the database and assigns it to the user object.
+   * This is used when the user logs in or when the app is initialized.
+   */
   async function fetchUserData() {
     const data = await userService.get()
 
     Object.assign(user, data)
   }
 
+  /**
+   * Updates the user data in the database and assigns it to the user object.
+   *
+   * @param {object} newData - associative array of the new data 
+   */
   async function updUserData(newData) {
     if (!isSet.value) {
       userService.post(newData)
@@ -110,6 +167,10 @@ export const useUserStore = defineStore('user', () => {
       userService.put(newData)
     }
     Object.assign(user, newData)
+    user.history.unshift({
+      effectiveDate: new Date(),
+      currentWeight: newData.currentWeight,
+    })
     // set today even if no change has been made
     // because this is more to track if the user has reviewed their data
     user.updatedAt = format(new Date(), 'yyyy-MM-dd')
@@ -118,8 +179,8 @@ export const useUserStore = defineStore('user', () => {
   /**
    * Deletes the user data from the database and resets the user object.
    */
-  async function deleteProfile() {
-    await userService.delete()
+  async function deleteProfile(credentials) {
+    await userService.delete(credentials)
     clearUserData()
   }
 
@@ -147,6 +208,7 @@ export const useUserStore = defineStore('user', () => {
     clearUserData,
     deleteProfile,
     age,
-    setDate
+    setDate,
+    weightOnSelectedDate
   }
 })

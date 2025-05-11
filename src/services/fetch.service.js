@@ -15,7 +15,9 @@ export class FetchService {
   async handleResponse(response) {
     let data
 
-    if (response.status === 204) {
+    // 404 is ok, will happen often if user has not registered
+    // data or meals on selected date
+    if ([204, 404].includes(response.status)) {
       return undefined
     }
 

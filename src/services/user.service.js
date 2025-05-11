@@ -1,5 +1,6 @@
 import { AuthService } from './auth.service.js'
 import { FetchService } from './fetch.service.js'
+import { MealService } from './meal.service.js'
 const dataUrl = import.meta.env.VITE_DATA_URL
 
 /**
@@ -96,29 +97,32 @@ export class UserService {
    * dataserver, both personal data and
    * registered meals.
    */
-  async #deleteFromDataServer() {
+  async #deleteFromDataServer(mealService = new MealService(this.#authService, this.#fetchService)) {
     await this.request({ method: 'DELETE' })
-    await this.request({ path: '/meals', method: 'DELETE' })
+    await mealService.deleteAll()
   }
 
 
 
   /**
    * Deletes the user data.
+   *
+   * @param {object} credentials - associative
+   * array with email and password
    */
-  async delete({ email, password }) {
+  async delete(credentials) {
     try {
       await this.#deleteFromDataServer()
     } catch (error) {
       if (error.status === 401) {
         // user does not need to enter credentials again if both
         // access token and refresh token have expired
-        await this.#authService.login({ email, password })
+        await this.#authService.login(credentials)
         await this.#deleteFromDataServer()
       }
     }
 
-    await this.#authService.deleteAccount({ email, password })
+    await this.#authService.deleteAccount(credentials)
 
   }
 }

@@ -32,7 +32,7 @@ export class MealService {
     const headers = await this.#authService.getHeaders()
 
     const response = await this.#fetchService.request({
-      path,
+      path: '/meals' + path,
       method,
       headers,
       body,
@@ -47,8 +47,7 @@ export class MealService {
    * @returns {Promise<object>} - the meals for the given date
    */
   async index(date = new Date()) {
-    const path = `/meals/date/${date}`
-    const data = await this.request({ path })
+    const data = await this.request({ path: `/date/${date}` })
 
     return data
   }
@@ -67,8 +66,7 @@ export class MealService {
    * @returns { object} - the created meal
    */
   async post(meal) {
-    const path = '/meals'
-    const data = await this.request({ path, method: 'POST', body: meal })
+    const data = await this.request({ path: '/', method: 'POST', body: meal })
 
     return data
   }
@@ -79,8 +77,7 @@ export class MealService {
    * @param {string} mealId - the id of the meal to be deleted
    */
   async del(mealId) {
-    const path = `/meals/${mealId}`
-    await this.request({ path, method: 'DELETE' })
+    await this.request({ path: `/${mealId}`, method: 'DELETE' })
   }
 
   /**
@@ -95,8 +92,7 @@ export class MealService {
    * @returns {Promise<string>} - the id of the food item
    */
   async addFoodItem(mealId, foodItem) {
-    const path = `/meals/${mealId}/add`
-    const foodId = await this.request({ path, method: 'PATCH', body: foodItem })
+    const foodId = await this.request({ path: `/${mealId}/add`, method: 'PATCH', body: foodItem })
     return foodId
   }
 
@@ -107,8 +103,7 @@ export class MealService {
    * @param {string} foodItemId - the id of the food item to be removed from the meal
    */
   async delFoodItem(mealId, foodItemId) {
-    const path = `/meals/${mealId}/del/${foodItemId}`
-    await this.request({ path, method: 'PATCH' })
+    await this.request({ path: `/${mealId}/del/${foodItemId}`, method: 'PATCH' })
   }
 
   /**
@@ -121,7 +116,13 @@ export class MealService {
    * @param {string} foodItem.unit - the new unit of the food item
    */
   async updFoodItem(mealId, foodItem) {
-    const path = `/meals/${mealId}/upd`
-    await this.request({ path, method: 'PATCH', body: foodItem })
+    await this.request({ path: `/${mealId}/upd`, method: 'PATCH', body: foodItem })
+  }
+
+  /**
+   * Deletes all meals for the user.
+   */
+  async deleteAll() {
+    await this.request({ path: '/', method: 'DELETE' })
   }
 }

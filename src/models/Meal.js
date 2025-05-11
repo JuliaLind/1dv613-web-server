@@ -114,7 +114,7 @@ export class Meal {
 
   static updFromData(day, data) {
     for (const type in this.TYPES) {
-      day[type] = data[type] ? this.fromData(data[type]) : new Meal(type)
+      day[type] = data?.[type] ? this.fromData(data[type]) : new Meal(type)
     }
   }
 }

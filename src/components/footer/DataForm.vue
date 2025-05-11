@@ -27,10 +27,7 @@ async function saveProfile(event) {
     gender
   } = form.value
 
-  console.log('form.value', form.value)
-  console.log('form', form)
-
-  if(!isFilled(form.value)) {
+  if (!isFilled({ height, currentWeight, targetWeight, activityLevel, weeklyChange, gender })) {
     toastService.alertError('All fields are mandatory')
     return
   }
