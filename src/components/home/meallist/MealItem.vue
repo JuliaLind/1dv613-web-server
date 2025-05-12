@@ -1,10 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue'
-import FoodDetail from '@/components/home/shared/FoodDetail.vue'
 import { handleError } from '@/helpers/helpers'
 import { useToast } from 'primevue/usetoast'
 import { Food } from '@/models/Food.js'
 import { useDayStore } from '@/stores/day.store.js'
+import ProductHeader from '../shared/ProductHeader.vue'
+import ProductBody from '../shared/ProductBody.vue'
 
 const store = useDayStore()
 const toast = useToast()
@@ -56,29 +57,30 @@ defineEmits(['delete'])
 </script>
 
 <template>
-  <div class="w-full text-left flex flex-row gap-4 relative">
-    <img v-if="food.imgUrl" :src="food.imgUrl" :alt="food.name" class="w-10 h-10 object-cover rounded-sm" />
-
-    <div class="flex flex-col w-full">
-      <span class="font-semibold text-sm capitalize">
-        {{ food.name }}, {{ food.brand }}
-      </span>
-      <span class="text-sm">
-        {{ food.weight }} {{ food.unit }} = {{ food.kcal }} kcal
-      </span>
-    </div>
+  <div class="meal-item">
+    <ProductHeader :img="food.imgUrl" :name="food.name" :brand="food.brand" :kcal="food.kcal" :weight="food.weight" />
 
     <Button icon="pi pi-ellipsis-v" @click="toggleMenu($event)" text rounded class="self-start" />
 
     <OverlayPanel ref="menu" :dismissable="true">
-      <div class="flex flex-col gap-2">
+      <div class="btn-container">
         <Button label="Edit" text @click="edit = true; $refs.menu.hide()" />
         <Button label="Delete" text severity="danger" @click="$emit('delete'); $refs.menu.hide()" />
       </div>
     </OverlayPanel>
   </div>
 
-  <FoodDetail v-if="edit" :food="food" @done="upd" />
+  <ProductBody v-if="edit" :food="food" @done="upd" />
 </template>
 
-<style scoped></style>
+<style scoped>
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-m)/2);
+}
+
+.meal-item {
+  display: flex;
+}
+</style>

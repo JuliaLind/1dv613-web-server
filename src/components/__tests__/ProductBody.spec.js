@@ -8,10 +8,11 @@ import Select from 'primevue/select'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
-import FoodDetail from '../home/shared/FoodDetail.vue'
+import ProductBody from '@/components/home/shared/ProductBody.vue'
 import { Food } from '@/models/Food'
 
-describe('FoodDetail', () => {
+
+describe('ProductBody', () => {
   let wrapper
   const ean = '1234567890123'
 
@@ -59,7 +60,7 @@ describe('FoodDetail', () => {
   beforeEach(async () => {
     food = new Food(foodData)
 
-    wrapper = mount(FoodDetail, {
+    wrapper = mount(ProductBody, {
       global: {
         plugins: [PrimeVue],
         components: {
@@ -129,14 +130,14 @@ describe('FoodDetail', () => {
     expect(tr7.text()).toContain(Math.round(30 / 100 * 70))
 
     const weightInput = wrapper.findComponent({ name: 'InputNumber' })
-    expect(weightInput.props('modelValue').value).toBe(70)
+    expect(weightInput.props('modelValue')).toBe(70)
 
 
     const unitSelect = wrapper.findComponent({ name: 'Select' })
 
     console.log(unitSelect.props('options'))
     expect(unitSelect.props('options')).toBe(Food.UNITS)
-    expect(unitSelect.props('modelValue').value).toEqual('g')
+    expect(unitSelect.props('modelValue')).toEqual('g')
   })
 
   it('should update all food details when weight is updated', async () => {

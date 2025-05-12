@@ -9,23 +9,30 @@ const userStore = useUserStore()
 </script>
 
 <template>
-  <div class="pl-4 pr-4">
+  <div id="display">
     <Toolbar>
       <template #start>
       </template>
 
       <template #center>
-        <span class="text-xs">
+        <span>
           weight: {{ userStore.weightOnSelectedDate ?? '?' }} kg
         </span>
       </template>
 
       <template #end>
-        <span class="text-xs">{{ dayStore.kcal }} {{ userStore.isSet ? ' / ' + userStore.dailyLimit : ''
+        <span>{{ dayStore.kcal }} {{ userStore.isSet ? ' / ' + userStore.dailyLimit : ''
           }} kcal</span>
       </template>
     </Toolbar>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#display {
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  font-size: var(--text-xs);
+}
+</style>

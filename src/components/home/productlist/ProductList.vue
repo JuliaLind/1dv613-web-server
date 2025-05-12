@@ -3,8 +3,8 @@ import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { FoodService } from '@/services/food.service'
 import { createToastService } from '@/services/toast.service'
-import ProductBody from '@/components/home/productlist/ProductBody.vue'
-import ProductHeader from '@/components/home/productlist/ProductHeader.vue'
+import ProductBody from '@/components/home/shared/ProductBody.vue'
+import ProductHeader from '@/components/home/shared/ProductHeader.vue'
 import { FoodList } from '@/models/FoodList.js'
 import { tryCatch } from '@/helpers/helpers'
 
@@ -131,16 +131,23 @@ onMounted(async () => {
     <Accordion value="0">
       <AccordionPanel v-for="product in foodList.items.value" :key="product.ean" :value="product.ean">
         <AccordionHeader>
-          <ProductHeader :name="product.name" :img="product.imgUrl" :brand="product.brand"
-            :kcal_100g="product.kcal_100g" />
+          <ProductHeader :name="product.name" :img="product.imgUrl" :brand="product.brand" :kcal="product.kcal_100g"
+            :weight="product.weight" />
         </AccordionHeader>
         <AccordionContent>
-          <ProductBody :food="product" @add-food="(data) => $emit('add-food', data)" />
+          <ProductBody :food="product" @done="(data) => $emit('add-food', data)" />
         </AccordionContent>
       </AccordionPanel>
     </Accordion>
-    <div class="flex justify-center">
+    <footer>
       <Button v-show="fetchMore" label="Load more" @click="loadMore" text class="mt-1" />
-    </div>
+    </footer>
   </Drawer>
 </template>
+
+<style scoped>
+footer {
+  display: flex;
+  justify-content: center;
+}
+</style>

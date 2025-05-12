@@ -50,6 +50,7 @@ const visible = ref(false)
 </script>
 
 <template>
+  <!-- Keep tailwind classes for the Drawer component, for some reason does not work with corresponding vanilla css-->
   <Drawer id="profile" v-model:visible="visible" position="bottom" modal
     class="!h-[96vh] max-h-[96vh] max-w-[768px] rounded-t-2xl shadow-2xl">
     <template #header>
@@ -58,17 +59,18 @@ const visible = ref(false)
     <DataForm @close="visible = false" />
     <DeleteForm />
   </Drawer>
-  <Toolbar class="w-full justify-between z-10">
-
+  <Toolbar id="bottom-nav">
     <template #start>
-      <Button icon="pi pi-user" text class="p-button-text primary-color" @click="visible = true" />
+      <!-- Keep Primevue classes for the button -->
+      <Button id="profile-btn" icon="pi pi-user" text class="p-button-text primary-color" @click="visible = true" />
     </template>
 
     <template #center>
     </template>
 
     <template #end>
-      <Button icon="pi pi-sign-out" text @click="signout" class="p-button-text primary-color" />
+      <!-- Keep Primevue classes for the button -->
+      <Button id="signout-btn" icon="pi pi-sign-out" text @click="signout" class="p-button-text primary-color" />
     </template>
   </Toolbar>
 </template>
@@ -86,5 +88,12 @@ h2 {
 
 .p-drawer-header {
   padding: var(--space-xs) !important;
+}
+
+#bottom-nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
 }
 </style>
