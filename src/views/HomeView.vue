@@ -58,11 +58,11 @@ onMounted(async () => {
 
 <template>
   <main class="grid-layout">
-    <DateChanger :date="dayStore.selectedDate" @update="changeDate" class="p-4" />
+    <DateChanger :date="dayStore.selectedDate" @update="changeDate" />
 
     <HeaderDisplay />
 
-    <div class="scroll-container p-4">
+    <div class="scroll-container">
       <MealList :key="dayStore.selectedDate" />
     </div>
     <FooterPartial />
@@ -79,5 +79,6 @@ onMounted(async () => {
 .scroll-container {
   overflow-y: auto;
   min-height: 0;
+  padding: var(--space-m);
 }
 </style>

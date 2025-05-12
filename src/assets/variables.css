@@ -7,6 +7,8 @@
   --space-xs: 0.25rem;
 
   /* Colors */
+ --light-shadow: rgba(0, 0, 0, 0.1);
+
   --white: #fff;
   --primary-50: #ecfeff;
   --primary-100: #cffafe;
@@ -19,11 +21,14 @@
   --primary-800: #155e75;
   --primary-900: #164e63;
 
+  --grey-50: #f9fafb;
+  --grey-200: #e5e7eb;
   --grey-300: #d1d5db;
   --grey-500: #6b7280;
   --grey-600: #4b5563;
   --grey-700: #4a5568;
   --grey-800: #2d3748;
+
 
   --red-500: #f87171;
   --red-600: #e11d48;
@@ -32,11 +37,13 @@
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
 
 
   --medium: 500;
   --bold: 600;
   --bolder: 700;
+
 
   --rounded: 0.75rem;
   --rounded-sm: 1rem;

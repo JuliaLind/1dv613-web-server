@@ -3,8 +3,22 @@ import RegisterForm from '@/components/register/RegisterForm.vue'
 </script>
 
 <template>
-  <main class="p-4">
-    <h1 class="text-2xl font-semibold text-center primary-color mb-6">Create new account</h1>
+  <main>
+    <h1>Create new account</h1>
     <RegisterForm />
   </main>
 </template>
+
+<style scoped>
+main {
+  padding: var(--space-m);
+}
+
+h1 {
+  font-size: var(--text-2xl);
+  font-weight: var(--bold);
+  color: var(--grey-800);
+  margin-bottom: var(--space-std);
+  text-align: center;
+}
+</style>

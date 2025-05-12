@@ -42,9 +42,17 @@ async function delItem(id, type) {
 </script>
 
 <template>
-  <div v-if="store.meals" id="meal-list" class="flex flex-col gap-2">
+  <div v-if="store.meals" id="meal-list">
     <SingleMeal v-for="type in Object.keys(Meal.TYPES)" :key="type" :type="type"
       @select="store.selectMeal(type); visible = true" @delete="foodId => delItem(foodId, type)" />
   </div>
   <ProductList v-model:visible="visible" @add-food="addToSelected" />
 </template>
+
+<style scoped>
+#meal-list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-m)/2);
+}
+</style>

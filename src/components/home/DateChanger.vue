@@ -49,12 +49,24 @@ function update(date) {
 </script>
 
 <template>
-  <div id="date-picker" class="flex items-center justify-center gap-4">
+  <div id="date-changer">
+    <!-- Keep Primevue classes for the button -->
     <Button @click="prev" id="prev" class="p-button-text primary-color" :aria-label="'Previous date'"
       icon="pi pi-chevron-left" />
     <span id="weekday">{{ weekday }}</span>
     <span id="date">{{ formattedDate }}</span>
+    <!-- Keep Primevue classes for the button -->
     <Button @click="next" id="next" class="p-button-text primary-color" :aria-label="'Next date'"
       icon="pi pi-chevron-right" />
   </div>
 </template>
+
+<style scoped>
+#date-changer {
+  padding: var(--space-m);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-m);
+}
+</style>

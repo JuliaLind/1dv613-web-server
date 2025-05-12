@@ -20,18 +20,48 @@ const meal = computed(() => {
 
 <template>
   <div class="bg-white rounded-l shadow-md p-4">
-    <header class="flex items-center justify-between">
-      <h2 class="text-l font-bold capitalize">{{ meal.getName() }}</h2>
-      <span class="text-slate-500 font-bold text-m">{{ meal.kcal }} kcal</span>
+    <header>
+      <h2>{{ meal.getName() }}</h2>
+      <span class="meal-kcal">{{ meal.kcal }} kcal</span>
     </header>
-    <div class="flex flex-col gap-1 mt-2">
+    <div class="item-container">
       <MealItem v-for="food in meal.foodItems" :key="food.id" :mealId="meal.id" :food="food"
         @delete="$emit('delete', food.id)" />
     </div>
-    <footer class=" flex justify-end">
+    <footer>
       <Button class="p-button-text primary-color" :aria-label="'Add food'" icon="pi pi-plus" @click="$emit('select')" />
     </footer>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h2 {
+  font-size: var(--text-xl);
+  font-weight: var(--bolder);
+  text-transform: capitalize;
+}
+
+.item-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: calc(var(--space-m) / 2);
+}
+
+.meal-kcal {
+  color: var(--grey-500);
+  font-weight: var(--bolder);
+  font-size: var(--text-base);
+}
+
+footer {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>
