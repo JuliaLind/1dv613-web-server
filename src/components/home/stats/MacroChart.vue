@@ -7,9 +7,9 @@ import { chartColors } from '@/config/colors'
 
 const dayStore = useDayStore()
 
-
 const macrosForChart = computed(() => {
   const macros = dayStore.getMacros()
+
   return {
     labels: ['Protein', 'Fat', 'Carbs', 'Fiber'],
     datasets: [
@@ -39,6 +39,8 @@ const macrosForChart = computed(() => {
 .chart-container {
   width: 100%;
   max-width: 22rem;
+  border: 2px solid var(--primaray-500);
+  border-radius: 0.5rem;
 }
 
 </style>

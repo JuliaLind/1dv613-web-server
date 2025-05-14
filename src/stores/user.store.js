@@ -78,9 +78,7 @@ export const useUserStore = defineStore('user', () => {
   const maintenanceKcal = computed(() => {
     return CalcService.maintenanceKcal(
       user.gender,
-      // age.value,
       historyEntry.value.age,
-      // user.height,
       historyEntry.value.height,
       historyEntry.value.currentWeight,
       user.activityLevel,
@@ -96,8 +94,8 @@ export const useUserStore = defineStore('user', () => {
     return CalcService.targetDate(
       user.weeklyChange,
       user.targetWeight,
-      historyEntry.value.currentWeight,
-      new Date(selectedDate.value)
+      user.currentWeight,
+      new Date()
     )
   })
 
@@ -226,7 +224,6 @@ export const useUserStore = defineStore('user', () => {
     age,
     setDate,
     selectedDate,
-    // weightOnSelectedDate
     historyEntry,
   }
 })

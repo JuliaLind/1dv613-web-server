@@ -10,7 +10,6 @@ const userStore = useUserStore()
 
 
 const daysToGoal = computed(() => {
- // TODO add another computed property to check for histoy entry values
   if (!userStore.isSet) {
     return null
   }
