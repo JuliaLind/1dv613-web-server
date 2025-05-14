@@ -10,6 +10,8 @@ const props = defineProps({
 
 const food = props.food.clone()
 
+// TODO replace InputNumber and Select with native HTML elements
+// see if solves problem with foodlist randomly opening
 
 </script>
 
@@ -29,13 +31,13 @@ const food = props.food.clone()
       <thead>
         <tr>
           <th>Nutrient</th>
-          <th class="value">Value</th>
+          <th class="number">Value</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in food.contents.value" :key="item.name">
           <td>{{ item.name }}</td>
-          <td class="value">{{ item.value }}</td>
+          <td class="number">{{ item.value }}</td>
         </tr>
       </tbody>
     </table>
@@ -90,7 +92,7 @@ td {
   color: var(--grey-800);
 }
 
-.value {
+.number {
   text-align: right;
 }
 

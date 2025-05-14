@@ -19,4 +19,10 @@ h1 {
   width: 100%;
 }
 
+.ok {
+  color: var(--green-600) !important;
+}
 
+.not-ok {
+    color: var(--red-500) !important;
+}

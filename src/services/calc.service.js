@@ -118,7 +118,8 @@ export class CalcService {
   }
 
 
-  static targetDate(weeklyChange, targetWeight, currentWeight) {
+
+  static targetDate(weeklyChange, targetWeight, currentWeight, currentDate = new Date()) {
     if (targetWeight > currentWeight) {
       return format(new Date(), 'yyyy-MM-dd')
     }
@@ -127,7 +128,37 @@ export class CalcService {
     const days = Math.abs(deltaWeight / dailyChange)
 
 
-    return format(addDays(new Date(), Math.round(days)), 'yyyy-MM-dd')
+    return format(addDays(currentDate, Math.round(days)), 'yyyy-MM-dd')
+  }
+
+  /**
+   * Calculates target fiber intake based on gender and age.
+   *
+   * @param {string} gender - 'm' or 'f'
+   * @param {number} age - the age of the user
+   */
+  static targetFiber(gender, age) {
+    let fiber
+
+    switch (gender.toLowerCase()) {
+      case 'm':
+        fiber = 38
+        if (age > 50) {
+          fiber = 30
+        }
+        break
+      case 'f':
+        fiber = 25
+        if (age > 50) {
+          fiber = 21
+        }
+        break
+      default:
+        fiber = 0
+        break
+    }
+
+    return fiber
   }
 
   static targetMacros(dailyLimit) {

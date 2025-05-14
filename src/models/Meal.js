@@ -1,6 +1,7 @@
 import { computed, reactive } from "vue"
 import { Food } from "@/models/Food"
 import { unwrap } from "@/helpers/helpers"
+import { addToTotal } from "@/helpers/nutrients"
 
 export class Meal {
   static TYPES = {
@@ -18,10 +19,39 @@ export class Meal {
    * @param {string} type - the type of meal
    */
   constructor(type) {
-    // TODO add validation
-    this.type = type || ''
+    this.setType(type)
     this.foodItems = reactive([])
     this.id = ''
+  }
+
+  /**
+   * Validates and sets the type of meal.
+   *
+   * @param {string} type - the type of meal
+   * @throws {Error} if the type is not valid
+   * @throws {Error} if the type is not provided 
+   */
+  setType(type) {
+    if (!type) {
+      throw new Error('Meal type is required')
+    }
+    if (!Object.keys(Meal.TYPES).includes(type)) {
+      throw new Error(`Invalid meal type: ${type}`)
+    }
+    this.type = type
+  }
+
+  /**
+   * Returns the macros of the meal in grams.
+   *
+   * @returns {object} - the macros of the meal in g
+   */
+  getMacros () {
+    let total
+    for (const foodItem of this.foodItems) {
+      total = addToTotal(total, foodItem.getMacros())
+    }
+    return total
   }
 
   /**
@@ -46,6 +76,11 @@ export class Meal {
     return this.foodItems.length === 1
   }
 
+  /**
+   * Calories in a meal.
+   *
+   * @returns {number} - the total calories in the meal
+   */
   kcal = computed(() => {
     let total = 0
     for (const foodItem of this.foodItems) {
@@ -54,6 +89,11 @@ export class Meal {
     return total
   })
 
+  /**
+   * Returns the name of the meal based on its type.
+   *
+   * @returns {string} - the name of the meal
+   */
   getName() {
     return Meal.TYPES[this.type] || this.type
   }
@@ -63,11 +103,7 @@ export class Meal {
     meal.id = data.id
     meal.type = data.type
 
-    // meal.foodItems = data.foodItems.map(item => new Food(item))
     meal.addFoodItems(data.foodItems)
-    // for (const item of data.foodItems) {
-    //   meal.foodItems.push(new Food(item))
-    // }
     return meal
   }
 
@@ -93,7 +129,6 @@ export class Meal {
     this.id = data.id
     this.foodItems.length = 0
     this.addFoodItems(data.foodItems)
-    // this.foodItems = Food.itemsFromData(data.foodItems)
   }
 
   findItemById(id) {

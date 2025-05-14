@@ -4,6 +4,7 @@ import { MealService } from '@/services/meal.service'
 import { format } from 'date-fns'
 import { Meal } from '@/models/Meal'
 import { Food } from '@/models/Food'
+import { addToTotal } from '@/helpers/nutrients'
 
 
 const mealService = new MealService()
@@ -193,6 +194,20 @@ export const useDayStore = defineStore('day', () => {
 
   }
 
+  /**
+   * Returns the total macros of all meals of the day.
+   *
+   * @returns {object} - the total macros of all meals
+   */
+  function getMacros() {
+    let total
+    for (const meal of Object.values(meals)) {
+      total = addToTotal(total, meal.getMacros())
+    }
+
+    return total
+  }
+
 
 
   return {
@@ -204,6 +219,7 @@ export const useDayStore = defineStore('day', () => {
     kcal,
     addToSelected,
     delItem,
-    updMealItem
+    updMealItem,
+    getMacros
   }
 })

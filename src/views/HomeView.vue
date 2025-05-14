@@ -11,12 +11,24 @@ import FooterPartial from './FooterPartial.vue'
 import { useUserStore } from '@/stores/user.store.js'
 import HeaderDisplay from '@/components/home/HeaderDisplay.vue'
 
+import MacroStats from '@/components/home/stats/StatsOverv.vue'
+
+import Tabs from 'primevue/tabs'
+import TabList from 'primevue/tablist'
+import Tab from 'primevue/tab'
+import TabPanels from 'primevue/tabpanels'
+import TabPanel from 'primevue/tabpanel'
+
 
 const dayStore = useDayStore()
 const userStore = useUserStore()
 const toast = useToast()
 const toastService = createToastService(toast)
 
+/**
+ * Fetches user data from the server
+ * If the user data is not found, it shows an alert to complete the profile
+ */
 async function fetchUserData() {
   try {
     await userStore.fetchUserData()
@@ -30,6 +42,9 @@ async function fetchUserData() {
   }
 }
 
+/**
+ * Fetches the user data and the meals for the current date
+ */
 async function init() {
   try {
     await dayStore.fetchMeals()
@@ -39,16 +54,20 @@ async function init() {
   }
 }
 
+/**
+ * Sets the new date and fetches the meals for that date
+ *
+ * @param {Date} newDate - The new date to set
+ */
 async function changeDate(newDate) {
   try {
     dayStore.setDate(newDate)
-    await dayStore.fetchMeals()
     userStore.setDate(newDate)
+    await dayStore.fetchMeals() // 404 will not throw an error
   } catch (error) {
     handleError(error, toast)
   }
 }
-
 
 onMounted(async () => {
   await init()
@@ -57,28 +76,82 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="grid-layout">
+  <main>
     <DateChanger :date="dayStore.selectedDate" @update="changeDate" />
 
-    <HeaderDisplay />
+    <Tabs value="0" class="tab-view">
+      <TabList>
+        <Tab value="0">Log</Tab>
+        <Tab value="1">Stats</Tab>
+        <Tab value="2">Progress</Tab>
+      </TabList>
 
-    <div class="scroll-container">
-      <MealList :key="dayStore.selectedDate" />
-    </div>
+      <TabPanels>
+        <TabPanel value="0" class="tab-content" id="log-view">
+          <HeaderDisplay class="header"/>
+          <div>
+            <MealList :key="dayStore.selectedDate" />
+          </div>
+        </TabPanel>
+
+        <TabPanel value="1" class="tab-content">
+          <MacroStats />
+        </TabPanel>
+
+        <TabPanel value="2" class="tab-content">
+
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
+
     <FooterPartial />
   </main>
 </template>
 
 <style scoped>
-.grid-layout {
+main {
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  height: 100vh;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh !important;
+}
+
+header {
+  z-index: 10;
+}
+
+
+footer {
+  z-index: 10;
+  margin-top: auto;
+}
+
+.p-tabpanels {
+  overflow-y: auto !important;
+  position: relative;
+  padding: 0;
+}
+
+.p-tablist-tab-list{
+  padding: 0;
+  margin: 0;
+}
+
+.p-tablist-tab-list button {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.tab-view {
+  max-height: 100%;
+  overflow: hidden; 
+}
+
+.header {
+  position: sticky;
+  top: 0;
 }
 
 .scroll-container {
-  overflow-y: auto;
-  min-height: 0;
-  padding: var(--space-m);
+  overflow-y: auto !important;
 }
 </style>

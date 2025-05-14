@@ -27,8 +27,9 @@ import AccordionHeader from 'primevue/accordionheader'
 import AccordionContent from 'primevue/accordioncontent'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
-import Toolbar from 'primevue/toolbar'
 import OverlayPanel from 'primevue/overlaypanel'
+
+
 
 
 // import RadioButton from 'primevue/radiobutton'
@@ -65,8 +66,6 @@ app.component('AccordionContent', AccordionContent)
 
 app.component('IconField', IconField)
 app.component('InputIcon', InputIcon)
-
-app.component('Toolbar', Toolbar)
 
 
 app.component('OverlayPanel', OverlayPanel)

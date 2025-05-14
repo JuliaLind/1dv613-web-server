@@ -7,7 +7,7 @@
   --space-xs: 0.25rem;
 
   /* Colors */
- --light-shadow: rgba(0, 0, 0, 0.1);
+  --light-shadow: rgba(0, 0, 0, 0.1);
 
   --white: #fff;
   --primary-50: #ecfeff;
@@ -29,6 +29,8 @@
   --grey-700: #4a5568;
   --grey-800: #2d3748;
 
+  --green-600: #4caf50;
+
 
   --red-500: #f87171;
   --red-600: #e11d48;
@@ -38,6 +40,8 @@
   --text-base: 1rem;
   --text-xl: 1.25rem;
   --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
 
 
   --medium: 500;

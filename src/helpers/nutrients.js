@@ -24,6 +24,14 @@ export function addToTotal(total = {
   return total
 }
 
+export function getNutrientName(nutrient) {
+  // regex: find capital letter and replace it
+  // with space + the found letter, globally.
+  // then convert to lowercase
+  // example saturatedFat -> saturated fat
+  return nutrient.replace(/([A-Z])/g, ' $1').toLowerCase()
+}
+
 // /**
 //  * 
 //  * @param {number} weight the weight of the food in grams

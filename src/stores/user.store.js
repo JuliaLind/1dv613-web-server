@@ -76,10 +76,13 @@ export const useUserStore = defineStore('user', () => {
    * @returns {number} - the maintenance kcal
    */
   const maintenanceKcal = computed(() => {
-    return CalcService.maintenanceKcal(user.gender,
-      age.value,
-      user.height,
-      weightOnSelectedDate.value,
+    return CalcService.maintenanceKcal(
+      user.gender,
+      // age.value,
+      historyEntry.value.age,
+      // user.height,
+      historyEntry.value.height,
+      historyEntry.value.currentWeight,
       user.activityLevel,
     )
   })
@@ -93,9 +96,11 @@ export const useUserStore = defineStore('user', () => {
     return CalcService.targetDate(
       user.weeklyChange,
       user.targetWeight,
-      weightOnSelectedDate.value,
+      historyEntry.value.currentWeight,
+      new Date(selectedDate.value)
     )
   })
+
 
   /**
    * The daily kcal limit to reach the target weight based on
@@ -104,31 +109,35 @@ export const useUserStore = defineStore('user', () => {
    * @returns {number} - the daily kcal limit.
    */
   const dailyLimit = computed(() => {
-    return CalcService.dailyLimit(user.weeklyChange, user.targetWeight, weightOnSelectedDate.value, maintenanceKcal.value)
+    return CalcService.dailyLimit(user.weeklyChange, user.targetWeight, historyEntry.value.currentWeight, maintenanceKcal.value)
   })
 
   /**
-   * The daily macros based on the daily limit.
+   * The daily macros in g recommended based on the daily limit.
    *
    * @returns {object} - the daily macros
    * @property {number} protein - the recommended daily protein intake in grams
    * @property {number} fat - the recommended daily fat intake in grams
    * @property {number} carbohydrates - the recommended daily carbohydrate intake in grams
    */
-  const dailyMacros = computed(() => {
-    // TODO map to actual macros
-    return CalcService.targetMacros(
-      dailyLimit.value
-    )
-  })
+  function getRecMacros() {
+    if (!isSet.value) {
+      return undefined
+    }
 
-  /**
+    const recommended = CalcService.targetMacros(dailyLimit.value)
+    recommended.fiber = CalcService.targetFiber(user.gender, historyEntry.value.age)
+    return recommended
+  }
+
+
+    /**
    * Selects the most recent entry from
    * the weight history that is before or equal to the chosen date, and returns the weight from the entry. If no entry is found, it returns the last entry in the history.
    *
    * @returns {number} - the weight on the selected date
    */
-  const weightOnSelectedDate = computed(() => {
+  const historyEntry = computed(() => {
     const date = endOfDay(new Date(selectedDate.value))
 
     let entry = user.history.find(entry =>
@@ -142,7 +151,7 @@ export const useUserStore = defineStore('user', () => {
       entry = user.history[lastIndex]
     }
 
-    return entry?.currentWeight ?? user.currentWeight
+    return entry ?? {...user, age: age.value}
   })
 
   /**
@@ -161,6 +170,11 @@ export const useUserStore = defineStore('user', () => {
    * @param {object} newData - associative array of the new data 
    */
   async function updUserData(newData) {
+    const effectiveDate = new Date()
+
+    newData.effectiveDate = effectiveDate
+    newData.age = age.value
+
     if (!isSet.value) {
       userService.post(newData)
     } else {
@@ -168,8 +182,10 @@ export const useUserStore = defineStore('user', () => {
     }
     Object.assign(user, newData)
     user.history.unshift({
-      effectiveDate: new Date(),
+      effectiveDate,
       currentWeight: newData.currentWeight,
+      age: age.value,
+      height: newData.height
     })
     // set today even if no change has been made
     // because this is more to track if the user has reviewed their data
@@ -202,13 +218,15 @@ export const useUserStore = defineStore('user', () => {
     updUserData,
     maintenanceKcal,
     dailyLimit,
-    dailyMacros,
+    getRecMacros,
     isSet,
     isUpdated,
     clearUserData,
     deleteProfile,
     age,
     setDate,
-    weightOnSelectedDate
+    selectedDate,
+    // weightOnSelectedDate
+    historyEntry,
   }
 })
