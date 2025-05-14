@@ -23,6 +23,7 @@ import MacroChart from './MacroChart.vue'
   justify-content: center;
   align-items: flex-start;
   gap: var(--space-m);
+  padding: var(--space-m);
 }
 
 </style>

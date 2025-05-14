@@ -123,7 +123,6 @@ const tableRows = computed(() => {
 
 <style scoped>
 table {
-  margin-top: var(--space-m);
   width: min-content;
   font-size: var(--text-xs);
   border: 1px solid var(--grey-200);

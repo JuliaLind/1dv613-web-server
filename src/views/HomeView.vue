@@ -12,6 +12,7 @@ import { useUserStore } from '@/stores/user.store.js'
 import HeaderDisplay from '@/components/home/HeaderDisplay.vue'
 
 import MacroStats from '@/components/home/stats/StatsOverv.vue'
+import WeightChart from '@/components/home/stats/WeightChart.vue'
 
 import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
@@ -88,7 +89,7 @@ onMounted(async () => {
 
       <TabPanels>
         <TabPanel value="0" class="tab-content" id="log-view">
-          <HeaderDisplay class="header"/>
+          <HeaderDisplay class="header" />
           <div>
             <MealList :key="dayStore.selectedDate" />
           </div>
@@ -99,7 +100,7 @@ onMounted(async () => {
         </TabPanel>
 
         <TabPanel value="2" class="tab-content">
-
+          <WeightChart />
         </TabPanel>
       </TabPanels>
     </Tabs>
@@ -131,7 +132,7 @@ footer {
   padding: 0;
 }
 
-.p-tablist-tab-list{
+.p-tablist-tab-list {
   padding: 0;
   margin: 0;
 }
@@ -143,7 +144,7 @@ footer {
 
 .tab-view {
   max-height: 100%;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .header {
