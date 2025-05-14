@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import { weightedValue } from '@/helpers/nutrients'
+import { weightedValue, getNutrientName } from '@/helpers/nutrients'
 import { unwrap } from '@/helpers/helpers'
 
 export class Food {
@@ -51,17 +51,29 @@ export class Food {
     })
     for (const [nutrient, value] of Object.entries(this.macros_100g)) {
       rows.push({
-        // regex: find capital letter and replace it
-        // with space + the found letter, globally.
-        // then convert to lowercase
-        // example saturatedFat -> saturated fat
-        name: nutrient.replace(/([A-Z])/g, ' $1').toLowerCase(),
+        name: getNutrientName(nutrient),
         value: weightedValue(this.weight.value, value)
       })
     }
     return rows
   }
   )
+
+  getMacros() {
+    const macros = {
+      protein: 0,
+      fat: 0,
+      saturatedFat: 0,
+      carbohydrates: 0,
+      sugars: 0,
+      fiber: 0,
+      salt: 0
+    }
+    for (const [nutrient, value] of Object.entries(this.macros_100g)) {
+      macros[nutrient] = weightedValue(unwrap(this.weight), value)
+    }
+    return macros
+  }
 
   toData() {
     return {

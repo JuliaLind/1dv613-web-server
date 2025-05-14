@@ -113,14 +113,14 @@ const targetDate = computed(() => {
               <div id="height-weight-container">
                 <div class="flex-col">
                   <label for="height">Height (cm)</label>
-                  <InputNumber v-model="form.height" id="height" inputId="height" suffix=" cm" :min="1" :step="1"
+                  <InputNumber v-model="form.height" id="height" inputId="height" suffix=" cm" :maxFractionDigits="1"
                     class="w-full" />
                 </div>
 
                 <div class="flex-col">
                   <label for="current-weight">Current Weight (kg)</label>
                   <InputNumber v-model="form.currentWeight" id="current-weight" inputId="current-weight" suffix=" kg"
-                    :min="1" class="w-full" />
+                    :min="1" class="w-full" :maxFractionDigits="1" />
                 </div>
               </div>
             </Fluid>
@@ -128,11 +128,11 @@ const targetDate = computed(() => {
             <div class="flex-col">
               <label for="target-weight">Target Weight (kg)</label>
               <InputNumber v-model="form.targetWeight" id="target-weight" inputId="target-weight" suffix=" kg" :min="40"
-                class="w-full" />
+                :maxFractionDigits="1" class="w-full" />
             </div>
           </fieldset>
           <div class="right btn-container">
-              <Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('2')" />
+            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('2')" />
           </div>
         </StepPanel>
         <StepPanel v-slot="{ activateCallback }" value="2">
@@ -166,7 +166,7 @@ const targetDate = computed(() => {
           <div class="right left btn-container">
             <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback('1')" />
             <Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('3')" />
-        </div>
+          </div>
         </StepPanel>
         <StepPanel v-slot="{ activateCallback }" value="3">
           <div class="daily-info-container">
@@ -183,9 +183,9 @@ const targetDate = computed(() => {
               <p class="text-sm text-gray-500">You will reach your goal on</p>
               <p class="target-date">{{ targetDate }}</p>
             </div>
-          <!-- Save Button -->
-          <Button class="btn" type="submit" label="Save" size="large" />
-                    </div>
+            <!-- Save Button -->
+            <Button class="btn" type="submit" label="Save" size="large" />
+          </div>
           <div class="btn-container">
             <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback('2')" />
           </div>
@@ -197,17 +197,16 @@ const targetDate = computed(() => {
 
 
 <style scoped>
-
 .btn-container {
   padding-top: var(--space-std);
-    display: flex;
+  display: flex;
 }
 
 .right.btn-container {
   justify-content: flex-end;
 }
 
-.right.left.btn-container{
+.right.left.btn-container {
   justify-content: space-between;
 }
 

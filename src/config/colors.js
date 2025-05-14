@@ -11,3 +11,10 @@ export const primary = {
   900: '#164e63',
   950: '#083344'
 }
+
+export const chartColors = {
+  primary: primary['500'],
+  red: '#e11d48',
+  green: '#4caf50',
+  lightBlue: '#a5f3fc'
+}

@@ -7,6 +7,7 @@ import { useUserStore } from '@/stores/user.store.js'
 import { ref } from 'vue'
 import DeleteForm from '@/components/footer/DeleteForm.vue'
 import DataForm from '@/components/footer/DataForm.vue'
+import Toolbar from 'primevue/toolbar'
 
 const toast = useToast()
 const toastService = createToastService(toast)
