@@ -129,7 +129,7 @@ build:
     VITE_DATA_URL: "https://cscloud6-36.lnu.se/data/api/v1"
   script:
     - set -e
-    - npm ci
+    - npm ci --no-cache
     - npm run build
   when: always
   artifacts:
