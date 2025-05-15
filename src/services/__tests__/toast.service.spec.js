@@ -23,7 +23,6 @@ describe('createToastService', () => {
         summary,
         detail,
         life: 3000,
-        sticky: false,
         closable: true,
         ...config,
       })
