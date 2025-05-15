@@ -4,10 +4,11 @@ import { AuthService } from "@/services/auth.service"
 import { createToastService } from "@/services/toast.service"
 import { useRouter } from "vue-router"
 import { useUserStore } from '@/stores/user.store.js'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import DeleteForm from '@/components/footer/DeleteForm.vue'
 import DataForm from '@/components/footer/DataForm.vue'
 import Toolbar from 'primevue/toolbar'
+import { OverlayBadge } from "primevue"
 
 const toast = useToast()
 const toastService = createToastService(toast)
@@ -32,6 +33,10 @@ async function signout() {
 }
 
 const visible = ref(false)
+
+const updatedToday = computed(() => {
+  return userStore.isSet && (new Date(userStore.user.updatedAt)).getTime() <= (new Date()).getTime()
+})
 
 
 // TODO add badge to user profile icon if user data is not completed or weight has not been updated today
@@ -60,10 +65,13 @@ const visible = ref(false)
     <DataForm @close="visible = false" />
     <DeleteForm />
   </Drawer>
-  <Toolbar id="bottom-nav">
+  <Toolbar id="bottom-nav" >
     <template #start>
       <!-- Keep Primevue classes for the button -->
+       <div class="overlay-container">
       <Button id="profile-btn" icon="pi pi-user" class="p-button-text primary-color nav-btn" @click="visible = true" />
+      <OverlayBadge v-if="!updatedToday" severity="warn"></OverlayBadge>
+      </div>
     </template>
 
     <template #center>
@@ -96,5 +104,22 @@ h2 {
   display: flex;
   justify-content: space-between;
   z-index: 10;
+}
+
+/* Styling for the overlay container */
+.overlay-container {
+  position: relative;
+  padding: 1rem;
+}
+
+/* Styling for the badge */
+.overlay-container .p-overlaybadge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.p-toolbar {
+  padding: 0 !important;
 }
 </style>

@@ -28,20 +28,19 @@ const userStore = useUserStore()
 const toast = useToast()
 const toastService = createToastService(toast)
 
+
 /**
  * Fetches user data from the server
  * If the user data is not found, it shows an alert to complete the profile
  */
 async function fetchUserData() {
-  try {
-    await userStore.fetchUserData()
-  } catch (error) {
-    if (error.status === 404) {
-      toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience')
-      return
-      // TODO should filling out the form be mandatory?
-    }
-    throw error
+  await userStore.fetchUserData()
+  if (!userStore.user.isSet) {
+    toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience', {life: undefined})
+    return
+  }
+  if ((new Date(userStore.user.updatedAt)).getTime() < (new Date()).getTime()) {
+    toastService.alertInfo('Update your weight', 'Update your weight each day to get the most out of the app', {life: undefined})
   }
 }
 

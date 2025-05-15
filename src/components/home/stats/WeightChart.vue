@@ -20,8 +20,12 @@ const { actual, expected, chartTitle } = defineProps({
 })
 
 
+function allSet() {
+  return actual.length > 0 && expected.length > 0
+}
+
 const chartData = computed(() => {
-  if (!actual || !expected) {
+  if (!allSet()) {
     return null
   }
 
@@ -100,6 +104,13 @@ const chartOptions = ref({
 })
 
 const chartContainerStyle = computed(() => {
+  if (!allSet()) {
+    return {
+      width: '100%',
+      maxWidth: 'none',
+      minWidth: '100%',
+    }
+  }
   const daysCount = differenceInCalendarDays(
     new Date(actual[actual.length - 1].date),
     new Date(actual[0].date),

@@ -66,6 +66,9 @@ function getExpectedProgress() {
 
 
   const periodStartEntry = actual.value[0]
+  if (!periodStartEntry) {
+    return []
+  }
   const periodStartDate = new Date(periodStartEntry.date)
   const periodStartWeight = calcExpWeight(periodStartDate)
   const periodEndWeight = calcExpWeight(selectedDate.value)

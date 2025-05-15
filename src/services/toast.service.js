@@ -17,7 +17,7 @@ export const createToastService = (toast) => ({
       summary: summary,
       detail: detail,
       life: 3000,
-      sticky: false,
+      // sticky: false,
       closable: true,
       ...config
     })
@@ -68,10 +68,11 @@ export const createToastService = (toast) => ({
    * @param {string} summary - The summary of the alert (will show in the header as title text).
    * @param {string} detail - The detail of the alert (will show in the body as smaller text).
    */
-  alertInfo(summary, detail) {
+  alertInfo(summary, detail, config = {}) {
     this.alert(summary, detail, {
       severity: 'info',
-      icon: 'pi pi-info-circle'
+      icon: 'pi pi-info-circle',
+      ...config
     })
   }
 })

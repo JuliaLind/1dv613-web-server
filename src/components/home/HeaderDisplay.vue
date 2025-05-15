@@ -71,6 +71,7 @@ const diffWeight = computed(() => {
   margin-bottom: 1rem;
   width: 100%;
   height: fit-content;
+  z-index: 5;
 }
 
 .circle {
