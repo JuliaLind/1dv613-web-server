@@ -33,8 +33,6 @@ async function handleSubmit(event) {
     toastService.alertError('Login failed', error.message)
   }
 }
-
-
 </script>
 
 <template>

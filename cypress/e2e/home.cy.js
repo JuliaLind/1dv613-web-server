@@ -19,7 +19,6 @@ describe('Vist home page authenticated', function () {
         email: user.email,
         password: user.password
       }
-      // cy.wrap(user).as('user')
     })
   })
   beforeEach(() => {
@@ -35,5 +34,14 @@ describe('Vist home page authenticated', function () {
   it('should not redirect authenticated users to /login', function () {
     cy.visit('/')
     cy.url().should('not.include', '/login')
+  })
+
+  it('User has no previous data, toast with message should be displayed', function () {
+    cy.visit('/')
+
+    cy.contains('.p-toast-summary', 'Complete your profile')
+    .should('be.visible')
+    .closest('.p-toast-message')
+    .should('have.class', 'p-toast-message-info')
   })
 })
