@@ -17,7 +17,7 @@ const food = props.food.clone()
   <div v-if="food" class="food-detail">
     <header>
       <form>
-        <input type="number" :id="'weight'" :min="0" :max="5000" v-model="food.weight.value" class="weight" />
+        <input type="number" :id="'weight'" :min="0" v-model="food.weight.value" class="weight" />
         <select v-model="food.unit.value" class="unit">
           <option v-for="unit in Food.UNITS" :key="unit.code" :value="unit.code">
             {{ unit.name }}
@@ -39,7 +39,7 @@ const food = props.food.clone()
       <tbody>
         <tr v-for="item in food.contents.value" :key="item.name">
           <td>{{ item.name }}</td>
-          <td class="number">{{ item.value }}</td>
+          <td class="number">{{ item.value || 0 }}</td>
         </tr>
       </tbody>
     </table>
