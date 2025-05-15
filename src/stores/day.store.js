@@ -143,6 +143,19 @@ export const useDayStore = defineStore('day', () => {
     }
   }
 
+  /**
+   * Returns the total distribution
+   * percentages of the meals that are empty.
+   */
+  const percentToDistr = computed(() => {
+    let percent = 0
+    for (const meal of Object.values(meals)) {
+      if (meal.isEmpty()) {
+        percent += meal.getDistribution()
+      }
+    }
+    return percent
+  })
 
   /**
    * Adds a food item to the current meal.
@@ -237,6 +250,7 @@ export const useDayStore = defineStore('day', () => {
     addToSelected,
     delItem,
     updMealItem,
-    getMacros
+    getMacros,
+    percentToDistr
   }
 })

@@ -65,6 +65,30 @@ Cypress.Commands.add('deleteUserData', ({ email, password }) => {
   })
 })
 
+Cypress.Commands.add('addProfileData', (data, token) => {
+  return cy.request({
+    method: 'POST',
+    url: `${Cypress.env('VITE_DATA_URL')}/user`,
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: data,
+  })
+})
+
+
+Cypress.Commands.add('deleteProfileData', (accessToken) => {
+  return cy.request({
+    method: 'DELETE',
+    url: `${Cypress.env('VITE_DATA_URL')}/user`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    },
+    failOnStatusCode: false
+  })
+})
+
+
 Cypress.Commands.add('login', ({ email, password }) => {
   return cy.request('POST', `${Cypress.env('VITE_AUTH_URL')}/login`, {
     email,

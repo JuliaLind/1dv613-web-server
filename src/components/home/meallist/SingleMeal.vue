@@ -2,8 +2,10 @@
 import { computed } from 'vue'
 import MealItem from '@/components/home/meallist/MealItem.vue'
 import { useDayStore } from '@/stores/day.store.js'
+import { useUserStore } from '@/stores/user.store'
 
-const store = useDayStore()
+const dayStore = useDayStore()
+const userStore = useUserStore()
 
 const props = defineProps({
   type: {
@@ -12,9 +14,29 @@ const props = defineProps({
   },
 })
 
+/**
+ * Calculates the kcalories left to distribute for remaining meals.
+ *
+ * @returns {number} - the kcalories left to distribute in the current day
+ */
+function kcalToDistribute () {
+  return userStore.dailyLimit - dayStore.kcal
+}
+
+
 const meal = computed(() => {
-  return store.meals[props.type]
+  return dayStore.meals[props.type]
 })
+
+/**
+ * Calculates suggested calories for the meal
+ *
+ * @returns {number} - the suggested calories for the meal
+ */
+function calcSuggestedKcal() {
+  const suggested = Math.round(kcalToDistribute() * (meal.value.getDistribution() / dayStore.percentToDistr))
+  return suggested > 0 ? suggested : 0
+}
 
 </script>
 
@@ -27,6 +49,10 @@ const meal = computed(() => {
     <div class="item-container">
       <MealItem v-for="food in meal.foodItems" :key="food.id" :mealId="meal.id" :food="food"
         @delete="$emit('delete', food.id)" />
+      <div v-if="meal.isEmpty() && userStore.isSet" class="text-center text-grey-500">
+        <p class="suggested">Suggested: {{ calcSuggestedKcal() }} kcal</p>
+        </div>
+
     </div>
     <footer>
       <Button class="p-button-text primary-color" :aria-label="'Add food'" icon="pi pi-plus" @click="$emit('select')" />
@@ -63,5 +89,14 @@ h2 {
 footer {
   display: flex;
   justify-content: flex-end;
+}
+
+.suggested {
+  text-align: left;
+  font-size: 1.125rem;
+  color: var(--primary-700);
+  font-weight: 500;
+  margin-top: 0.5rem;
+  margin-left: 0.25rem;
 }
 </style>
