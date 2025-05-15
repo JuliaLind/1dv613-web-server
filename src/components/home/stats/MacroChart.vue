@@ -25,11 +25,22 @@ const macrosForChart = computed(() => {
     ]
   }
 })
+
+function hasAnyMacros() {
+  for (const value of macrosForChart.value.datasets[0].data) {
+    if (value > 0) {
+      return true
+    }
+  }
+  return false
+}
 </script>
 
 
+
+
 <template>
-    <div class="chart-container">
+    <div v-if="hasAnyMacros()" class="chart-container">
       <Chart type="pie" :data="macrosForChart" class="w-full md:w-[30rem]" />
     </div>
 </template>
