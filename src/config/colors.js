@@ -15,6 +15,10 @@ export const primary = {
 export const chartColors = {
   primary: primary['500'],
   red: '#e11d48',
+  redLight: '#f87171', 
   green: '#4caf50',
-  lightBlue: '#a5f3fc'
+  blue: '#60a5fa', 
+  blueLight: '#93c5fd',
+  yellow: '#fbbf24',
+  orange: '#fb923c',
 }

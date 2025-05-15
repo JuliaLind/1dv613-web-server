@@ -11,15 +11,18 @@ const macrosForChart = computed(() => {
   const macros = dayStore.getMacros()
 
   return {
-    labels: ['Protein', 'Fat', 'Carbs', 'Fiber'],
+    labels: ['Protein', 'Fat (excl saturated)', 'Saturated fat', 'Carbs (excl sugar)', 'Sugars', 'Fiber', 'Salts'],
     datasets: [
       {
-        data: [macros.protein, macros.fat, macros.carbohydrates, macros.fiber],
+        data: [macros.protein, macros.fat - macros.saturatedFat, macros.saturatedFat, macros.carbohydrates - macros.sugars, macros.sugars, macros.fiber, macros.salt],
         backgroundColor: [
-          chartColors.primary,
-          chartColors.red,
-          chartColors.green,
-          chartColors.lightBlue
+          chartColors.green,     // Protein
+          chartColors.red,         // Fat (excl saturated)
+          chartColors.redLight,    // Saturated fat
+          chartColors.blue,        // Carbs (excl sugar)
+          chartColors.blueLight,   // Sugars
+          chartColors.yellow,      // Fiber
+          chartColors.orange       // Salt
         ]
       }
     ]
