@@ -35,12 +35,12 @@ const toastService = createToastService(toast)
  */
 async function fetchUserData() {
   await userStore.fetchUserData()
-  if (!userStore.user.isSet) {
-    toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience', {life: undefined})
+  if (!userStore.isSet) {
+    toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience', {life: 5000})
     return
   }
   if ((new Date(userStore.user.updatedAt)).getTime() < (new Date()).getTime()) {
-    toastService.alertInfo('Update your weight', 'Update your weight each day to get the most out of the app', {life: undefined})
+    toastService.alertInfo('Update your weight', 'Update your weight each day to get the most out of the app', {life: 5000})
   }
 }
 
