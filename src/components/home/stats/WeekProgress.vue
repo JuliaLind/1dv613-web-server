@@ -5,26 +5,34 @@ import WeightChart from '@/components/home/stats/WeightChart.vue'
 import { differenceInCalendarDays } from 'date-fns'
 
 
-
-
 const userStore = useUserStore()
 
-  const oneWeekAgo = new Date()
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+const selectedDate = computed(() => {
+  return new Date(userStore.selectedDate)
+}) // end of the 7 day period
 
+const oneWeekAgo = computed(() => {
+  const date = new Date(userStore.selectedDate)
+  date.setDate(date.getDate() - 7) // start of the 7 day period
+
+  return date
+})
+
+/**
+ * Returns the actual progress of the user in the last 7 days
+ * @returns {Array} - An array of objects containing the date and weight, in chronological order earliest first
+ */
 function getActualProgress() {
   if (!userStore.isSet) {
     return []
   }
 
-
-
   const data = userStore.user.history
-  .map(entry => ({
-    date: new Date(entry.effectiveDate).getTime(),
-    weight: entry.currentWeight
-  }))
-  .filter(entry => entry.date >= oneWeekAgo.getTime())
+    .map(entry => ({
+      date: new Date(entry.effectiveDate).getTime(),
+      weight: entry.currentWeight
+    }))
+    .filter(entry => entry.date <= selectedDate.value.getTime() && entry.date >= oneWeekAgo.value.getTime())
 
   const reversedData = data.reverse()
 
@@ -35,24 +43,43 @@ const actual = computed(() => {
   return getActualProgress()
 })
 
+function calcExpWeight(endDate) {
+  const firstEntry = userStore.user.history[userStore.user.history.length - 1]
+  const startWeight = firstEntry.currentWeight
+  const startDate = new Date(firstEntry.effectiveDate)
+  const days = differenceInCalendarDays(endDate, startDate)
+  if (days < 0) {
+    return startWeight
+  }
+  const weightChange = userStore.user.weeklyChange / 7
+  return startWeight - weightChange * days
+}
 
+/**
+ * Returns the expected progress of the user in the last 7 days
+ * @returns {Array} - An array of objects containing the date and weight, in chronological order earliest first
+ */
 function getExpectedProgress() {
   if (!userStore.isSet) {
     return []
   }
 
-  const firstEntry = actual.value[0]
 
-  const expWeightToday = firstEntry.weight - userStore.user.weeklyChange / 7 * differenceInCalendarDays(new Date(), new Date(firstEntry.date))
+  const periodStartEntry = actual.value[0]
+  const periodStartDate = new Date(periodStartEntry.date)
+  const periodStartWeight = calcExpWeight(periodStartDate)
+  const periodEndWeight = calcExpWeight(selectedDate.value)
+
+  // const expWeightToday = firstEntry.weight - userStore.user.weeklyChange / 7 * differenceInCalendarDays(selectedDate.value, new Date(firstEntry.date))
 
   const expected = [
     {
-      date: (new Date(firstEntry.date)).getTime(),
-      weight: firstEntry.weight
+      date: periodStartDate.getTime(),
+      weight: periodStartWeight
     },
     {
-      date: (new Date()).getTime(),
-      weight: expWeightToday
+      date: selectedDate.value.getTime(),
+      weight: periodEndWeight
     }
   ]
 
@@ -65,8 +92,7 @@ function getExpectedProgress() {
 
 
 <template>
-    <WeightChart :actual="actual" :expected="getExpectedProgress()" :chartTitle="'Last 7 days'"/>
+  <WeightChart :actual="actual" :expected="getExpectedProgress()" :chartTitle="'Last 7 days'" />
 
 </template>
-<style scoped>
-</style>
+<style scoped></style>
