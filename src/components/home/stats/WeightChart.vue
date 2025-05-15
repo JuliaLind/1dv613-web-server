@@ -20,6 +20,12 @@ const { actual, expected, chartTitle } = defineProps({
 })
 
 
+/**
+ * Checks if the actual and expected arrays
+ * contains at least one entry each.
+ *
+ * @returns {boolean} - True if both arrays are not empty
+ */
 function allSet() {
   return actual.length > 0 && expected.length > 0
 }

@@ -55,6 +55,8 @@ export class UserService {
 
   /**
    * Gets the user data.
+   *
+   * @returns {Promise<object>} - the user data
    */
   async get() {
     const data = await this.request({})
@@ -96,13 +98,13 @@ export class UserService {
    * Deletes all user's data from the
    * dataserver, both personal data and
    * registered meals.
+   *
+   * @param {MealService} mealService - the meal service to use
    */
   async #deleteFromDataServer(mealService = new MealService(this.#authService, this.#fetchService)) {
     await this.request({ method: 'DELETE' })
     await mealService.deleteAll()
   }
-
-
 
   /**
    * Deletes the user data.
@@ -123,6 +125,5 @@ export class UserService {
     }
 
     await this.#authService.deleteAccount(credentials)
-
   }
 }

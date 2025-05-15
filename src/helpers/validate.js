@@ -1,3 +1,7 @@
+/**
+ * Module containing validation functions for user input.
+ */
+
 import validator from 'validator'
 
 /**
@@ -46,6 +50,12 @@ export function validatePassword(password) {
   }
 }
 
+/**
+ * Checks if all fields contain valid values.
+ *
+ * @param {object} fields - associative array of field names and values
+ * @returns {boolean} true if all fields are filled, false otherwise
+ */
 export function isFilled(fields) {
   for (const key of Object.keys(fields)) {
     if ([undefined, null, ''].includes(fields[key])) {

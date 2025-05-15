@@ -1,6 +1,10 @@
 import { format, addDays } from 'date-fns'
 import { isFilled } from '@/helpers/validate'
 
+/**
+ * Contains methods for calculating the daily kcal intake and other related values.
+ * The calculations are based on the Mifflin-St Jeor (1990) formula.
+ */
 export class CalcService {
   static changeOptions = [
     {
@@ -79,6 +83,11 @@ export class CalcService {
    * Caluclates the daily kcal neccessary to maintain the current weight, based on the Mifflin-St Jeor (1990) formula.
    *
    * @param {Object} params - the user params
+   * @param gender
+   * @param age
+   * @param height
+   * @param weight
+   * @param activityLevel
    * @returns {number} - the maintenance kcal
    */
   static maintenanceKcal(gender, age, height, weight, activityLevel = 'sedentary') {
@@ -103,6 +112,10 @@ export class CalcService {
    * @param {number} params.weeklyChange - the weekly change in kg
    * @param {number} params.targetWeight - the target weight in kg
    * @param {number} params.currentWeight - the current weight in kg
+   * @param weeklyChange
+   * @param targetWeight
+   * @param currentWeight
+   * @param maintenanceKcal
    * @param {number} params.maintenanceKcal - the maintenance kcal
    */
   static dailyLimit(weeklyChange, targetWeight, currentWeight, maintenanceKcal) {
@@ -117,8 +130,15 @@ export class CalcService {
     return Math.round(kcalTarget)
   }
 
-
-
+  /**
+   * Calculated the target date when the user will reach their target weight.
+   *
+   * @param {number} weeklyChange - the absolute value of the weekly change in kg, can be a float
+   * @param {number} targetWeight - the target weight in kg, can be a float
+   * @param {number} currentWeight - the current weight in kg, can be a float
+   * @param  {Date} currentDate - the current date, defaults to today
+   * @returns {string} - the target date in 'yyyy-MM-dd' format
+   */
   static targetDate(weeklyChange, targetWeight, currentWeight, currentDate = new Date()) {
     if (targetWeight > currentWeight) {
       return format(new Date(), 'yyyy-MM-dd')
@@ -136,6 +156,7 @@ export class CalcService {
    *
    * @param {string} gender - 'm' or 'f'
    * @param {number} age - the age of the user
+   * @returns {number} - the target fiber intake in grams
    */
   static targetFiber(gender, age) {
     let fiber
@@ -161,6 +182,12 @@ export class CalcService {
     return fiber
   }
 
+  /**
+   * Calculates the recommended daily macros based on the daily kcal limit.
+   *
+   * @param {number} dailyLimit - the daily kcal limit
+   * @returns {object} - the recommended daily macros
+   */
   static targetMacros(dailyLimit) {
     const { protein, fat, carbohydrates } = CalcService.macros
 
@@ -173,7 +200,10 @@ export class CalcService {
     return {
       protein: proteinGrams,
       fat: fatGrams,
-      carbohydrates: carbsGrams
+      saturatedFat: 0,
+      carbohydrates: carbsGrams,
+      sugars: 0,
+      salt: 0
     }
   }
 }

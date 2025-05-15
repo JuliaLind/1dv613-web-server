@@ -30,6 +30,8 @@ const menu = ref()
 
 /**
  * Updates the weight and unit of the food item.
+ *
+ * @param {object} data - associative array with the new weight and unit
  */
 async function upd(data) {
   try {

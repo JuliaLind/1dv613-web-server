@@ -45,6 +45,8 @@ async function search() {
  * If the page is the last page or there are no more
  * products, it sets fetchMore to false in order to hide
  * the load more button.
+ *
+ * @returns {Promise<Array>} - array of food items
  */
 async function getFiltered() {
   const data = await foodService.search(query.value, page)
@@ -71,6 +73,8 @@ function hasMore(data) {
  * If the page is the last page or there are no more
  * products, it sets fetchMore to false in order to hide
  * the load more button.
+ *
+ * @returns {Promise<Array>} - array of food items
  */
 async function getUnfiltered() {
   const data = await foodService.index(page)

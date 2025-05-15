@@ -1,9 +1,13 @@
 import { jwtDecode } from "jwt-decode"
 import { getUnixTime } from 'date-fns'
 
+/**
+ * Service for managing tokens. Interactis with local storage.
+ */
 export class TokenService {
   /**
-   * 
+   * Checks if the token is expiring within the provided number of seconds.
+   *
    * @param {object} token - json web token 
    * @param {number} seconds - minimum number fo seconds until expiration
    * @returns {boolean} - true if the token is expiring within the provided seconds,
@@ -105,6 +109,13 @@ export class TokenService {
     localStorage.setItem('refreshToken', tokens.refreshToken)
   }
 
+  /**
+   * Creates an authorization header for a request.
+   *
+   * @param {string} token - a jwt token
+   * @returns {object} - the authorization header
+   * @throws {Error} - if no token is found
+   */
   getAuthHeader(token) {
     return {
       Authorization: `Bearer ${token}`,

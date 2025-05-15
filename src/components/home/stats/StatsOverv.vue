@@ -1,9 +1,6 @@
 <script setup>
 import MacroTable from './MacroTable.vue'
 import MacroChart from './MacroChart.vue'
-
-
-
 </script>
 
 

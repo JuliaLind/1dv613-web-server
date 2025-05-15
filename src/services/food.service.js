@@ -7,6 +7,12 @@ const dataUrl = import.meta.env.VITE_DATA_URL
 export class FoodService {
   #fetchService
 
+  /**
+   * Creates a new instance of the FoodService.
+   *
+   * @param {FetchService} fetchService - the fetch service to use
+   * @param {string} dataUrl - the base URL for the food service
+   */
   constructor(fetchService = new FetchService(dataUrl)) {
     this.#fetchService = fetchService
   }
@@ -45,14 +51,4 @@ export class FoodService {
     const data = await this.#fetchService.handleResponse(response)
     return data
   }
-
-  // maybe no need for this at the current, but don't remove yet
-  // async get(ean) {
-  //   const response = await fetch(`${dataUrl}/foods/ean/${ean}`)
-  //   if (!response.ok) {
-  //     throw new Error('Failed to fetch food item')
-  //   }
-  //   const data = await response.json()
-  //   return data
-  // }
 }

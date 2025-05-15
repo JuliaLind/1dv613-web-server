@@ -6,7 +6,8 @@
  */
 export const createToastService = (toast) => ({
   /**
-   * 
+   * Generic alert method to add a message to the toast.
+   *
    * @param {string} summary - The summary of the alert (will show in the header as title text).
    * @param {string} detail - The detail of the alert (will show in the body as smaller text).
    * @param {object} config - associative array with
@@ -67,6 +68,7 @@ export const createToastService = (toast) => ({
    *
    * @param {string} summary - The summary of the alert (will show in the header as title text).
    * @param {string} detail - The detail of the alert (will show in the body as smaller text).
+   * @param config
    */
   alertInfo(summary, detail, config = {}) {
     this.alert(summary, detail, {

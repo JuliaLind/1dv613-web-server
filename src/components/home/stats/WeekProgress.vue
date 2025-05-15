@@ -43,6 +43,14 @@ const actual = computed(() => {
   return getActualProgress()
 })
 
+/**
+ * Calculates the expected weight by the end date,
+ * based on initial weight and weekly change.
+ * If the end date is before the start date, it returns the initial weight.
+ *
+ * @param {Date|string} endDate - The date to calculate the expected weight for
+ * @returns {number} - The expected weight
+ */
 function calcExpWeight(endDate) {
   const firstEntry = userStore.user.history[userStore.user.history.length - 1]
   const startWeight = firstEntry.currentWeight
@@ -72,9 +80,6 @@ function getExpectedProgress() {
   const periodStartDate = new Date(periodStartEntry.date)
   const periodStartWeight = calcExpWeight(periodStartDate)
   const periodEndWeight = calcExpWeight(selectedDate.value)
-
-  // const expWeightToday = firstEntry.weight - userStore.user.weeklyChange / 7 * differenceInCalendarDays(selectedDate.value, new Date(firstEntry.date))
-
   const expected = [
     {
       date: periodStartDate.getTime(),

@@ -2,6 +2,9 @@ import { computed, ref } from 'vue'
 import { weightedValue, getNutrientName } from '@/helpers/nutrients'
 import { unwrap } from '@/helpers/helpers'
 
+/**
+ * Represents a food item.
+ */
 export class Food {
   /**
    * Unit options for the food item.
@@ -59,6 +62,13 @@ export class Food {
   }
   )
 
+  /**
+   * Returns the macros of the food item based on the current weight.
+   * The macros are calculated by multiplying the value of each nutrient
+   * per 100g by the weight of the food item.
+   *
+   * @returns {object} an associative array containing mapping the nutrient names to their values
+   */
   getMacros() {
     const macros = {
       protein: 0,
@@ -75,6 +85,11 @@ export class Food {
     return macros
   }
 
+  /**
+   * Returns the state of the food item as a plan object.
+   *
+   * @returns {object} an associative array containing the food item data
+   */
   toData() {
     return {
       id: this.id,
@@ -102,6 +117,12 @@ export class Food {
     return food
   }
 
+  /**
+   * Translates an array of plain objects into an array of Food objects.
+   *
+   * @param {Array<object>} data - the array of plain objects to be converted
+   * @returns {Array<Food>} an array of Food objects
+   */
   static itemsFromData(data) {
     return data.map(item => new Food(item))
   }

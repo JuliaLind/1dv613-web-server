@@ -1,6 +1,14 @@
 
+/**
+ * Handles fetch requests and responses.
+ */
 export class FetchService {
   #baseUrl
+  /**
+   * Creates a new instance of the FetchService.
+   *
+   * @param {string} baseUrl - the base URL for the fetch requests
+   */
   constructor(baseUrl) {
     this.#baseUrl = baseUrl
   }
@@ -36,6 +44,17 @@ export class FetchService {
     return data
   }
 
+  /**
+   * Handles a fetch request.
+   *
+   * @param {object} options - the options for the fetch request
+   * @param {string} options.path - the path for the fetch request
+   * @param {object} options.headers - the headers for the fetch request
+   * @param {object} options.body - the body for the fetch request
+   * @param {string} options.method - the method for the fetch request
+   * @returns {object} - the response object
+   * @throws {Error} - if the request fails
+   */
   async request({
     path,
     headers = {

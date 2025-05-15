@@ -16,19 +16,24 @@ const macrosForChart = computed(() => {
       {
         data: [macros.protein, macros.fat - macros.saturatedFat, macros.saturatedFat, macros.carbohydrates - macros.sugars, macros.sugars, macros.fiber, macros.salt],
         backgroundColor: [
-          chartColors.green,     // Protein
-          chartColors.red,         // Fat (excl saturated)
-          chartColors.redLight,    // Saturated fat
-          chartColors.blue,        // Carbs (excl sugar)
-          chartColors.blueLight,   // Sugars
-          chartColors.yellow,      // Fiber
-          chartColors.orange       // Salt
+          chartColors.green, // Protein
+          chartColors.red, // Fat (excl saturated)
+          chartColors.redLight, // Saturated fat
+          chartColors.blue, // Carbs (excl sugar)
+          chartColors.blueLight, // Sugars
+          chartColors.yellow, // Fiber
+          chartColors.orange // Salt
         ]
       }
     ]
   }
 })
 
+/**
+ * Returns true if any of the macros are greater than 0.
+ *
+ * @returns {boolean} - True if any of the macros are greater than 0
+ */
 function hasAnyMacros() {
   for (const value of macrosForChart.value.datasets[0].data) {
     if (value > 0) {

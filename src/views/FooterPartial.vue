@@ -17,6 +17,9 @@ const router = useRouter()
 const userStore = useUserStore()
 
 
+/**
+ * Signs out the user and clears the user data from the state.
+ */
 async function signout() {
   try {
     await authService.logout()
@@ -38,21 +41,6 @@ const updatedToday = computed(() => {
   return userStore.isSet && (new Date(userStore.user.updatedAt)).getTime() <= (new Date()).getTime()
 })
 
-
-// TODO add badge to user profile icon if user data is not completed or weight has not been updated today
-// const message = computed(() => {
-//   if (!userStore.isSet) {
-//     return 'Complete your profile to get a personalized experience'
-//   }
-
-//   if (!userStore.isUpdated) {
-//     return 'Update your weight each day to get a more accurate target date'
-//   }
-
-//   return null
-// })
-
-
 </script>
 
 <template>
@@ -68,7 +56,7 @@ const updatedToday = computed(() => {
   <Toolbar id="bottom-nav" >
     <template #start>
       <!-- Keep Primevue classes for the button -->
-       <div class="overlay-container">
+      <div class="overlay-container">
       <Button id="profile-btn" icon="pi pi-user" class="p-button-text primary-color nav-btn" @click="visible = true" />
       <OverlayBadge v-if="!updatedToday" severity="warn"></OverlayBadge>
       </div>
@@ -85,10 +73,6 @@ const updatedToday = computed(() => {
 </template>
 
 <style scoped>
-/* :root {
-  --p-icon-size: 1.5rem !important;
-} */
-
 h2 {
   font-size: var(--text-xl);
   font-weight: var(--bold);

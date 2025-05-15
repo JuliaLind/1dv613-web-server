@@ -1,6 +1,9 @@
 import { ref } from "vue"
 import { Food } from "@/models/Food"
 
+/**
+ * Represents a list of food items.
+ */
 export class FoodList {
   /**
    * Creates a new food list.

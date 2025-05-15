@@ -13,6 +13,7 @@ export class MealService {
    * Created a new instance of the MealService.
    *
    * @param {AuthService} authService - the authentication service
+   * @param fetchService
    */
   constructor(authService = new AuthService(), fetchService = new FetchService(dataUrl)) {
     this.#authService = authService

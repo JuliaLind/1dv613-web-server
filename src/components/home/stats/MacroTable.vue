@@ -14,6 +14,8 @@ const userStore = useUserStore()
  *
  * @param {number} actual - the actual value of the nutrient
  * @param {number} recommended - the recommended value of the nutrient
+ * @param {number} delta - the allowed range of deviation from the recommended value
+ * @returns {boolean} - true if the actual value is within the allowed range of the recommended value
  */
 function isWithinRecRange(actual, recommended, delta = 0.2) {
   return actual >= recommended * (1 - delta) && actual <= recommended * (1 + delta)
@@ -23,7 +25,8 @@ function isWithinRecRange(actual, recommended, delta = 0.2) {
  * Returns true if the nutrient is one of the nutrients that is better to
  * consume more than recommended amount of.
  *
- * @param {string} nutrient - the nutrient to check 
+ * @param {string} nutrient - the nutrient to check
+ * @returns {boolean} - true if the nutrient is one of the nutrients that is better to consume more than recommended amount of
  */
 function moreIsBetter(nutrient) {
   return ['fiber'].includes(nutrient)
@@ -33,7 +36,8 @@ function moreIsBetter(nutrient) {
  * Returns true if the nutrient is one of the nutrients that is better to consume
  * less than the recommended amount.
  *
- * @param {string} nutrient - the nutrient to check 
+ * @param {string} nutrient - the nutrient to check
+ * @returns {boolean} - true if the nutrient is one of the nutrients that is better to consume less than the recommended amount
  */
 function lessIsBetter(nutrient) {
   return ['fat', 'saturatedFat', 'sugars', 'salt'].includes(nutrient)
@@ -44,6 +48,7 @@ function lessIsBetter(nutrient) {
  * close to the recommended amount.
  *
  * @param {string} nutrient - the nutrient to check 
+ * @returns {boolean} - true if the nutrient is one of the nutrients that is better to consume close to the recommended amount
  */
 function equalIsBetter(nutrient) {
   return ['protein', 'carbohydrates'].includes(nutrient)
@@ -57,6 +62,8 @@ function equalIsBetter(nutrient) {
  * @param {string} nutrient - the nutrient to check
  * @param {number} actual - the actual value of the nutrient
  * @param {number} recommended - the recommended value of the nutrient
+ *
+ * @returns {string} - the css class to use for the actual value of the nutrient
  */
 function classActual(nutrient, actual, recommended) {
   if (!userStore.isSet) {

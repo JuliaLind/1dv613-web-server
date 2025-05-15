@@ -3,6 +3,9 @@ import { Food } from "@/models/Food"
 import { unwrap } from "@/helpers/helpers"
 import { addToTotal } from "@/helpers/nutrients"
 
+/**
+ * Represents a meal.
+ */
 export class Meal {
   static TYPES = {
     breakfast: 'breakfast',
@@ -98,6 +101,12 @@ export class Meal {
     return Meal.TYPES[this.type] || this.type
   }
 
+  /**
+   * Creates a new meal object from the given data.
+   *
+   * @param {object} data - associative array with meal data
+   * @returns {Meal} - the new meal object
+   */
   static fromData(data) {
     const meal = new Meal(data.type)
     meal.id = data.id
@@ -107,16 +116,33 @@ export class Meal {
     return meal
   }
 
+  /**
+   * Adds a food item to the meal.
+   *
+   * @param {Food} item - the food item to be added
+   */
   addFoodItem(item) {
     this.foodItems.push(item)
   }
 
+  /**
+   * Adds multiple food items to the meal.
+   * The items are passed as plain objects and
+   * converted to Food objects.
+   *
+   * @param {Array<object>} items - the food items to be added
+   */
   addFoodItems(items) {
     for (const item of items) {
       this.addFoodItem(new Food(item))
     }
   }
 
+  /**
+   * Deletes a food item from the meal.
+   *
+   * @param {string} itemId - id of the food item to be deleted
+   */
   delFoodItem(itemId) {
     // dont change to filter! will not trigger kcal computed reativity!
     const index = this.foodItems.findIndex(item => item.id === itemId)
@@ -125,20 +151,40 @@ export class Meal {
     }
   }
 
+  /**
+   * Initializes the meal with data from the server.
+   *
+   * @param {object} data - associative array with meal data
+   */
   init(data) {
     this.id = data.id
     this.foodItems.length = 0
     this.addFoodItems(data.foodItems)
   }
 
+  /**
+   * Finds a food item by its id.
+   *
+   * @param {string} id - id of the food item to be found
+   * @returns {Food} - the food item with the given id
+   */
   findItemById(id) {
     return this.foodItems.find((item) => item.id === id)
   }
 
+  /**
+   * Removes the last food item from the meal.
+   * Called when optimistic update needs to be reversed.
+   */
   reset() {
     this.foodItems.pop()
   }
 
+  /**
+   * Creats a new set of meals for a day.
+   *
+   * @returns {object} - an object with meals for each type
+   */
   static newSet() {
     const day = {}
     for (const type in Meal.TYPES) {
@@ -147,6 +193,12 @@ export class Meal {
     return day
   }
 
+  /**
+   * Updates the meals for a day with data from the server.
+   *
+   * @param {object} day - object containing the meals in a day
+   * @param {object} data - associative array with meal data from the server
+   */
   static updFromData(day, data) {
     for (const type in this.TYPES) {
       day[type] = data?.[type] ? this.fromData(data[type]) : new Meal(type)

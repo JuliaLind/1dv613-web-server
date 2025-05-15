@@ -9,6 +9,14 @@ export function weightedValue(weight = 0, value_100g = 0) {
   return Math.round(value_100g / 100 * weight)
 }
 
+/**
+ * Adds the values in the macros associative array to the
+ * values in the total associative array.
+ *
+ * @param {object} total - associative array mapping nutrient names to their values
+ * @param {object} macros - associative array mapping nutrient names to their values
+ * @returns {object} the total object with the summed values of the nutrients from the total and macros objects
+ */
 export function addToTotal(total = {
   protein: 0,
   fat: 0,
@@ -24,6 +32,12 @@ export function addToTotal(total = {
   return total
 }
 
+/**
+ * Transforms the nutrient name from camel case to lowercase with spaces.
+ *
+ * @param {string} nutrient - nutrient name in camel case
+ * @returns {string} the nutrient name in lowercase with spaces
+ */
 export function getNutrientName(nutrient) {
   // regex: find capital letter and replace it
   // with space + the found letter, globally.
@@ -31,48 +45,3 @@ export function getNutrientName(nutrient) {
   // example saturatedFat -> saturated fat
   return nutrient.replace(/([A-Z])/g, ' $1').toLowerCase()
 }
-
-// /**
-//  * 
-//  * @param {number} weight the weight of the food in grams
-//  * @param {object} nutrients the nutrients of the food per 100 grams
-//  * @param {*} nutrients 
-//  * @returns 
-//  */
-// export function weightedNutrients(weight = 0, nutrients = {}) {
-//   const weightedNutrients = {}
-//   for (const [key, value] of Object.entries(nutrients)) {
-//     weightedNutrients[key] = weightedValue(weight, value)
-//   }
-//   return weightedNutrients
-// }
-
-// /**
-//  * 
-//  * @param {object} meal the meal object containing food items
-//  * @param {object} totals - associative array
-//  * of nutrient names and their values
-//  * @returns {object} the totals object with the summed values of the nutrients
-//  */
-// export function nutrientsPerMeal(meal, totals = {
-//   kcal: 0,
-//   protein: 0,
-//   fat: 0,
-//   saturatedFat: 0,
-//   carbohydrates: 0,
-//   sugars: 0,
-//   fiber: 0,
-//   salt: 0
-// }) {
-//   for (const foodItem of meal.foodItems) {
-//     const foodNutrients = weightedNutrients(foodItem.weight, {
-//       ...foodItem.macros_100g,
-//       kcal: foodItem.kcal_100g
-//     })
-//     Object.keys(totals).forEach(key => {
-//       totals[key] += foodNutrients[key] || 0
-//     })
-//   }
-//   return totals
-// }
-

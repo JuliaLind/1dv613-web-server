@@ -11,6 +11,12 @@ export class AuthService {
   #tokenService
   #fetchService
 
+  /**
+   * Creates a new instance of the AuthService.
+   *
+   * @param {TokenService} tokenService - the service for handling tokens
+   * @param {FetchService} fetchService - the service for handling fetch requests
+   */
   constructor(tokenService = new TokenService(), fetchService = new FetchService(authUrl)) {
     this.#tokenService = tokenService
     this.#fetchService = fetchService
@@ -60,6 +66,8 @@ export class AuthService {
    * @param {string} user.password - The user's password.
    * @param {string} user.username - The user's username.
    * @param {string} user.birthdate - The user's birthdate. 
+   *
+   * @returns {any} The response data from the server.
    */
   async register(user) {
     const res = await this.#fetchService.request(
@@ -126,7 +134,8 @@ export class AuthService {
   }
 
   /**
-   * 
+   * Extracts the payload from the access token.
+   *
    * @returns { number} the age of the user from the access token payload
    * @throws {Error} If the token is not found or invalid.
    */

@@ -129,7 +129,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
 
-    /**
+  /**
    * Selects the most recent entry from
    * the weight history that is before or equal to the chosen date, and returns the weight from the entry. If no entry is found, it returns the last entry in the history.
    *
@@ -178,7 +178,10 @@ export const useUserStore = defineStore('user', () => {
     } else {
       userService.put(newData)
     }
+
     Object.assign(user, newData)
+
+    // add the new data at the beginning of history array
     user.history.unshift({
       effectiveDate,
       currentWeight: newData.currentWeight,
@@ -192,6 +195,8 @@ export const useUserStore = defineStore('user', () => {
 
   /**
    * Deletes the user data from the database and resets the user object.
+   *
+   * @param {object} credentials - associative array with email and password
    */
   async function deleteProfile(credentials) {
     await userService.delete(credentials)
