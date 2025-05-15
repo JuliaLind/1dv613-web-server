@@ -52,6 +52,28 @@ export default defineConfig([
       'cypress/support/**/*.{js,ts,jsx,tsx}'
     ],
   },
-
+  {
+  name: 'app/jsdoc-rules',
+  files: ['**/*.{js,vue}'],
+  plugins: {
+    jsdoc: {
+      rules: (await import('eslint-plugin-jsdoc')).default.rules,
+    },
+  },
+  rules: {
+    'jsdoc/require-jsdoc': ['warn', {
+      require: {
+        FunctionDeclaration: true,
+        MethodDefinition: true,
+        ClassDeclaration: true,
+        ArrowFunctionExpression: false,
+        FunctionExpression: false
+      }
+    }],
+    'jsdoc/require-description': 'warn',
+    'jsdoc/require-param': 'warn',
+    'jsdoc/require-returns': 'warn',
+  }
+},
   skipFormatting,
 ])
