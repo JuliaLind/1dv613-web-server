@@ -2,55 +2,28 @@
 import 'chartjs-adapter-date-fns'
 import Chart from 'primevue/chart'
 import { ref, computed } from 'vue'
-import { useUserStore } from '@/stores/user.store.js'
 import { differenceInCalendarDays } from 'date-fns'
 
+const { actual, expected, chartTitle } = defineProps({
+  actual: {
+    type: Array,
+    required: true
+  },
+  expected: {
+    type: Array,
+    required: true
+  },
+  chartTitle: {
+    type: String,
+    default: ''
+  }
+})
 
-const userStore = useUserStore()
-
-function getActualProgress() {
-  const data = userStore.user.history.map(entry => ({
-    date: new Date(entry.effectiveDate).getTime(),
-    weight: entry.currentWeight
-  }))
-  const reversedData = data.reverse()
-
-  return reversedData
-}
-
-function getFirstEntry(history) {
-  return history[history.length - 1]
-}
-
-function getExpectedProgress() {
-  const firstEntry = getFirstEntry(userStore.user.history)
-  const currentEntry = userStore.historyEntry
-
-  const expected = [
-    {
-      date: new Date(firstEntry.effectiveDate).getTime(),
-      weight: firstEntry.currentWeight
-    },
-    {
-      date: new Date().getTime(),
-      weight: currentEntry.currentWeight
-    },
-    {
-      date: new Date(userStore.targetDate).getTime(),
-      weight: userStore.user.targetWeight
-    }
-  ]
-
-  return expected
-}
 
 const chartData = computed(() => {
-  if (!userStore.isSet) {
+  if (!actual || !expected) {
     return null
   }
-
-  const actual = getActualProgress()
-  const expected = getExpectedProgress()
 
   return {
     labels: expected.map(entry => new Date(entry.date).toLocaleDateString()),
@@ -89,6 +62,16 @@ const chartOptions = ref({
           return `${context.dataset.label}: ${context.raw.y}kg`
         }
       }
+    },
+    title: {
+      display: true,
+      text: chartTitle,
+      font: {
+        size: 18,
+      },
+      padding: {
+        bottom: 12,
+      },
     }
   },
   scales: {
@@ -118,29 +101,23 @@ const chartOptions = ref({
 
 const chartContainerStyle = computed(() => {
   const daysCount = differenceInCalendarDays(
-    new Date(userStore.user.history[0].effectiveDate),
-    new Date(getFirstEntry(userStore.user.history).effectiveDate),
+    new Date(actual[actual.length - 1].date),
+    new Date(actual[0].date),
   ) + 1  // Add 1 to include the start date
   const widthInRem = daysCount * 4  // 0.5rem spacing between days
 
   return {
-    width: `${widthInRem}rem`, 
-    maxWidth: 'none'
+    width: `${widthInRem}rem`,
+    maxWidth: 'none',
+    minWidth: '100%',
   }
 })
 
-// const chartWidth = computed(() => {
-//   const daysCount = differenceInCalendarDays(
-//     new Date(userStore.user.history[0].effectiveDate),
-//     new Date(getFirstEntry(userStore.user.history).effectiveDate),
-//   ) + 1  // Add 1 to include the start date
-//   return daysCount * 0.5  // 0.5rem spacing between days
-// })
 </script>
 
 
 <template>
-  <div v-if="userStore.isSet" class="scroll-container">
+  <div class="scroll-container">
     <div class="chart-container" :style="chartContainerStyle">
       <Chart type="line" :data="chartData" :options="chartOptions" class="w-full h-[20rem]" />
       <!-- <Chart type="line" :data="chartData" :options="chartOptions" :class="'h-[20rem] w-[' +  chartWidth + 'rem]'" /> -->

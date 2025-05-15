@@ -63,7 +63,7 @@ const visible = ref(false)
   <Toolbar id="bottom-nav">
     <template #start>
       <!-- Keep Primevue classes for the button -->
-      <Button id="profile-btn" icon="pi pi-user" text class="p-button-text primary-color" @click="visible = true" />
+      <Button id="profile-btn" icon="pi pi-user" class="p-button-text primary-color nav-btn" @click="visible = true" />
     </template>
 
     <template #center>
@@ -71,15 +71,15 @@ const visible = ref(false)
 
     <template #end>
       <!-- Keep Primevue classes for the button -->
-      <Button id="signout-btn" icon="pi pi-sign-out" text @click="signout" class="p-button-text primary-color" />
+      <Button id="signout-btn" icon="pi pi-sign-out" @click="signout" class="p-button-text primary-color nav-btn" />
     </template>
   </Toolbar>
 </template>
 
 <style scoped>
-:root {
-  --p-icon-size: 3rem;
-}
+/* :root {
+  --p-icon-size: 1.5rem !important;
+} */
 
 h2 {
   font-size: var(--text-xl);

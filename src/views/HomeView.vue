@@ -12,13 +12,15 @@ import { useUserStore } from '@/stores/user.store.js'
 import HeaderDisplay from '@/components/home/HeaderDisplay.vue'
 
 import MacroStats from '@/components/home/stats/StatsOverv.vue'
-import WeightChart from '@/components/home/stats/WeightChart.vue'
+
 
 import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
 import Tab from 'primevue/tab'
 import TabPanels from 'primevue/tabpanels'
 import TabPanel from 'primevue/tabpanel'
+import TotalProgress from '@/components/home/stats/TotalProgress.vue'
+import WeekProgress from '@/components/home/stats/WeekProgress.vue'
 
 
 const dayStore = useDayStore()
@@ -84,7 +86,7 @@ onMounted(async () => {
       <TabList>
         <Tab value="0">Log</Tab>
         <Tab value="1">Stats</Tab>
-        <Tab value="2">Progress</Tab>
+        <Tab value="2" v-if="userStore.isSet">Progress</Tab>
       </TabList>
 
       <TabPanels>
@@ -99,8 +101,9 @@ onMounted(async () => {
           <MacroStats />
         </TabPanel>
 
-        <TabPanel value="2" class="tab-content">
-          <WeightChart />
+        <TabPanel value="2" class="tab-content" v-if="userStore.isSet">
+          <TotalProgress />
+          <WeekProgress />
         </TabPanel>
       </TabPanels>
     </Tabs>

@@ -19,6 +19,8 @@ const form = ref({
   ...toRaw(userStore.user)
 })
 
+const emit = defineEmits(['close'])
+
 /**
  * Saves the entered user profile data to the database.
  *
@@ -50,6 +52,8 @@ async function saveProfile(event) {
       weeklyChange,
       gender
     })
+
+    emit('close')
     toastService.alertSuccess('Profile updated', 'Your profile has been updated successfully')
   } catch (error) {
     handleError(error, toast)

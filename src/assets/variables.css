@@ -6,6 +6,9 @@
   --space-m: 1rem;
   --space-xs: 0.25rem;
 
+  /* Override default Primevue CSS variables */
+  --p-icon-size: 1.5rem !important;
+
   /* Colors */
   --light-shadow: rgba(0, 0, 0, 0.1);
 
