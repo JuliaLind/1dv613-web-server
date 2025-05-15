@@ -5,7 +5,8 @@ import { useDayStore } from '@/stores/day.store.js'
 import SingleMeal from '@/components/home/meallist/SingleMeal.vue'
 import { Meal } from '@/models/Meal.js'
 
-const store = useDayStore()
+
+const dayStore = useDayStore()
 const visible = ref(false)
 const emit = defineEmits(['error'])
 
@@ -17,7 +18,7 @@ const emit = defineEmits(['error'])
  */
 async function addToSelected(food) {
   try {
-    await store.addToSelected(food)
+    await dayStore.addToSelected(food)
   } catch (error) {
     emit('error', error)
   }
@@ -32,19 +33,18 @@ async function addToSelected(food) {
  */
 async function delItem(id, type) {
   try {
-    await store.delItem(id, type)
+    await dayStore.delItem(id, type)
   } catch (error) {
     emit('error', error)
   }
 }
 
-
 </script>
 
 <template>
-  <div v-if="store.meals" id="meal-list">
+  <div v-if="dayStore.meals" id="meal-list">
     <SingleMeal v-for="type in Object.keys(Meal.TYPES)" :key="type" :type="type"
-      @select="store.selectMeal(type); visible = true" @delete="foodId => delItem(foodId, type)" />
+      @select="dayStore.selectMeal(type); visible = true" @delete="foodId => delItem(foodId, type)" />
   </div>
   <ProductList v-model:visible="visible" @add-food="addToSelected" />
 </template>

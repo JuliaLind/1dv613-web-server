@@ -21,13 +21,13 @@ import './commands'
 
 import '@cypress/code-coverage/support'
 
-before(function () {
+beforeEach(function () {
   cy.fixture('user.json').then((user) => {
     cy.createUser(user)
   })
 })
 
-after(function () {
+afterEach(function () {
   cy.fixture('user.json').then((user) => {
     const data = {
       email: user.email,

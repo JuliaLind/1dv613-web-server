@@ -7,13 +7,39 @@ import { addToTotal } from "@/helpers/nutrients"
  * Represents a meal.
  */
 export class Meal {
-  static TYPES = {
-    breakfast: 'breakfast',
-    snack1: 'snack',
-    lunch: 'lunch',
-    snack2: 'snack',
-    dinner: 'dinner',
-    snack3: 'snack'
+  // static TYPES = {
+  //   breakfast: 'breakfast',
+  //   snack1: 'snack',
+  //   lunch: 'lunch',
+  //   snack2: 'snack',
+  //   dinner: 'dinner',
+  //   snack3: 'snack'
+  // }
+    static TYPES = {
+    breakfast: {
+      name: 'breakfast',
+      distr: 0.2
+    },
+    snack1: {
+      name: 'snack',
+      distr: 0.1
+    },
+    lunch: {
+      name: 'lunch',
+      distr: 0.25
+    },
+    snack2: {
+      name: 'snack',
+      distr: 0.1
+    },
+    dinner: {
+      name: 'dinner',
+      distr: 0.25
+    },
+    snack3: {
+      name: 'snack',
+      distr: 0.1
+    }
   }
 
   /**
@@ -25,6 +51,25 @@ export class Meal {
     this.setType(type)
     this.foodItems = reactive([])
     this.id = ''
+  }
+
+  /**
+   * Returns the fraction of the daily distribution that should be allocated to this meal.
+   *
+   * @returns {number} - how much of the daily distribution this meal should have
+   */
+  getDistribution() {
+    return Meal.TYPES[this.type].distr
+  }
+
+  /**
+   * REturns true if the meal does not have
+   * any food items.
+   *
+   * @returns {boolean} - true if the meal is empty
+   */
+  isEmpty () {
+    return this.foodItems.length === 0
   }
 
   /**
@@ -98,7 +143,7 @@ export class Meal {
    * @returns {string} - the name of the meal
    */
   getName() {
-    return Meal.TYPES[this.type] || this.type
+    return Meal.TYPES[this.type].name || this.type
   }
 
   /**

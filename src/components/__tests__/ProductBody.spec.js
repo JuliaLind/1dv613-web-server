@@ -2,9 +2,6 @@ import { describe, it, expect, vi, afterEach, beforeEach, afterAll, beforeAll } 
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import PrimeVue from 'primevue/config'
-import Button from 'primevue/button'
-import InputNumber from 'primevue/inputnumber'
-import Select from 'primevue/select'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 

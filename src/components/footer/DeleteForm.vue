@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { createToastService } from '@/services/toast.service'
 import { useConfirm } from "primevue/useconfirm"
+import { isFilled} from '@/helpers/validate'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -17,7 +18,14 @@ const form = ref({
   password: '',
 })
 
+
+
 const proceed = (event) => {
+  if (!isFilled(form.value)) {
+    toastService.alertError('Validation error', 'Please fill in email and password')
+    return
+  }
+
   confirm.require({
     target: event.currentTarget,
     message: 'Do you really want to delete your account? This action is irreversible.',
@@ -50,7 +58,7 @@ const proceed = (event) => {
 <template>
   <ConfirmPopup></ConfirmPopup>
 
-  <form>
+  <form id="delete-form">
     <span class="danger-zone">Danger zone</span>
 
     <h2>Delete Profile</h2>
@@ -72,7 +80,7 @@ const proceed = (event) => {
         </FloatLabel>
 
         <FloatLabel variant="on">
-          <Password id="password" v-model="form.password" toggleMask required maxlength="255" />
+          <Password id="password" v-model="form.password" toggleMask required :feedback="false" maxlength="255" />
           <label for="password">Password</label>
         </FloatLabel>
       </fieldset>
