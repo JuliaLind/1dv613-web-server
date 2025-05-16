@@ -62,7 +62,7 @@ const diffWeight = computed(() => {
 <style scoped>
 .header-toolbar {
   background-color: var(--primary-100);
-  color: var(--primary-600);
+  color: var(--primary-700);
   padding: 0.5rem 1rem;
   box-shadow: var(--box-shadow);
   display: flex;
