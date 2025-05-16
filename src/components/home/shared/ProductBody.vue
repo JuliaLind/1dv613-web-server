@@ -99,6 +99,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input[type="number"] {
   text-align: right;
+  flex-grow: 1;
 }
 
 select {

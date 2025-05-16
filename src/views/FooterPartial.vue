@@ -57,7 +57,7 @@ const updatedToday = computed(() => {
     <template #start>
       <!-- Keep Primevue classes for the button -->
       <div class="overlay-container">
-      <Button id="profile-btn" icon="pi pi-user" class="p-button-text primary-color nav-btn" @click="visible = true" />
+      <Button id="profile-btn" icon="pi pi-user" aria-label="Open profile" class="p-button-text primary-color nav-btn" @click="visible = true" />
       <OverlayBadge v-if="!updatedToday" severity="warn"></OverlayBadge>
       </div>
     </template>
@@ -67,7 +67,7 @@ const updatedToday = computed(() => {
 
     <template #end>
       <!-- Keep Primevue classes for the button -->
-      <Button id="signout-btn" icon="pi pi-sign-out" @click="signout" class="p-button-text primary-color nav-btn" />
+      <Button id="signout-btn" aria-label="Sign out" icon="pi pi-sign-out" @click="signout" class="p-button-text primary-color nav-btn" />
     </template>
   </Toolbar>
 </template>

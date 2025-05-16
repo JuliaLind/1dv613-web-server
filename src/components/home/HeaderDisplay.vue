@@ -86,7 +86,7 @@ const diffWeight = computed(() => {
 }
 
 .days-circle {
-  color: var(--primary-600);
+  color: var(--primary-700);
   background: var(--primary-50);
   justify-content: flex-start;
 }

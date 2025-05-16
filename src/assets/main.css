@@ -24,5 +24,9 @@ h1 {
 }
 
 .not-ok {
-    color: var(--red-500) !important;
+  color: var(--red-500) !important;
+}
+
+button {
+  color: var(--primary-600) !important;
 }
