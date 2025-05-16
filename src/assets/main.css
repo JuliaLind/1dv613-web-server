@@ -27,6 +27,10 @@ h1 {
   color: var(--red-500) !important;
 }
 
-button {
+button:not(.btn-primary):not(.p-button-danger) {
   color: var(--primary-600) !important;
+}
+
+button {
+  font-size: 1rem;
 }

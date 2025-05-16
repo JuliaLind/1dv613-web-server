@@ -23,7 +23,7 @@ const food = props.food.clone()
             {{ unit.name }}
           </option>
         </select>
-        <button type="button" @click="$emit('done', food.toData())" class="save-btn" aria-label="Add">
+        <button type="button" @click="$emit('done', food.toData())" class="save-btn btn-primary" aria-label="Add">
           <i class="pi pi-check"></i>
         </button>
       </form>
@@ -100,6 +100,7 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   text-align: right;
   flex-grow: 1;
+  flex-basis: 6rem;
 }
 
 select {
