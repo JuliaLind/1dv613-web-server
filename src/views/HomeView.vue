@@ -83,24 +83,24 @@ onMounted(async () => {
 
     <Tabs value="0" class="tab-view">
       <TabList>
-        <Tab value="0" id="log-tab">Log</Tab>
-        <Tab value="1" id="stats-tab">Stats</Tab>
-        <Tab value="2" id="progress-tab" v-if="userStore.isSet">Progress</Tab>
+        <Tab value="0">Log</Tab>
+        <Tab value="1">Stats</Tab>
+        <Tab value="2" v-if="userStore.isSet">Progress</Tab>
       </TabList>
 
       <TabPanels>
-        <TabPanel value="0" class="tab-content" id="log-view">
+        <TabPanel value="0" class="tab-content">
           <HeaderDisplay class="header" />
           <div>
             <MealList :key="dayStore.selectedDate" />
           </div>
         </TabPanel>
 
-        <TabPanel value="1" class="tab-content" id="stats-view">
+        <TabPanel value="1" class="tab-content">
           <MacroStats />
         </TabPanel>
 
-        <TabPanel value="2" class="tab-content" id="progress-view" v-if="userStore.isSet">
+        <TabPanel value="2" class="tab-content" v-if="userStore.isSet">
           <TotalProgress />
           <WeekProgress />
         </TabPanel>
