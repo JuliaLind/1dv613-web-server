@@ -28,8 +28,8 @@ export class TokenService {
    * @param {Array<number>} okStatus - array of status codes that are considered ok
    * @throws {Error} - if the status code is not in the okStatus array
    */
-  isLoggedOut(status, okStatus = [204, 401]) {
-    if (!okStatus.includes(status)) {
+  isLoggedOut(status) {
+    if (status === 500) {
       throw new Error('Something went wrong')
     }
     this.clearTokens()

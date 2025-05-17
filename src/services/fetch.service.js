@@ -4,6 +4,7 @@
  */
 export class FetchService {
   #baseUrl
+
   /**
    * Creates a new instance of the FetchService.
    *
@@ -11,37 +12,6 @@ export class FetchService {
    */
   constructor(baseUrl) {
     this.#baseUrl = baseUrl
-  }
-
-
-  /**
-   * Handles the response from a fetch request.
-   *
-   * @param {object} response - the response object 
-   * @returns {any} - the response data
-   */
-  async handleResponse(response) {
-    let data
-
-    // 404 is ok, will happen often if user has not registered
-    // data or meals on selected date
-    if ([204, 404].includes(response.status)) {
-      return undefined
-    }
-
-    try {
-      data = await response.json()
-    } catch {
-      throw new Error("Bad response from server")
-    }
-
-    if (response.status >= 400) {
-      const error = new Error(data.message)
-      error.status = response.status
-      throw error
-    }
-
-    return data
   }
 
   /**
@@ -74,5 +44,35 @@ export class FetchService {
     )
 
     return response
+  }
+
+  /**
+   * Handles the response from a fetch request.
+   *
+   * @param {object} response - the response object 
+   * @returns {any} - the response data
+   */
+  async handleResponse(response) {
+    let data
+
+    // 404 is ok, will happen often if user has not registered
+    // data or meals on selected date
+    if ([204, 404].includes(response.status)) {
+      return undefined
+    }
+
+    try {
+      data = await response.json()
+    } catch {
+      throw new Error("Bad response from server")
+    }
+
+    if (response.status >= 400) {
+      const error = new Error(data.message)
+      error.status = response.status
+      throw error
+    }
+
+    return data
   }
 }

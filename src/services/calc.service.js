@@ -82,12 +82,11 @@ export class CalcService {
   /**
    * Caluclates the daily kcal neccessary to maintain the current weight, based on the Mifflin-St Jeor (1990) formula.
    *
-   * @param {Object} params - the user params
-   * @param gender
-   * @param age
-   * @param height
-   * @param weight
-   * @param activityLevel
+   * @param {string} gender - 'm' or 'f'
+   * @param {number} age - the age of the user
+   * @param {number} height - the height of the user in cm
+   * @param {number} weight - the weight of the user in kg
+   * @param {string} activityLevel - the activity level of the user
    * @returns {number} - the maintenance kcal
    */
   static maintenanceKcal(gender, age, height, weight, activityLevel = 'sedentary') {
@@ -107,16 +106,12 @@ export class CalcService {
   /**
    * Calculates the number of kcal to be consumed daily to reach the target weight.
    *
-   * @param {object} params - the neccessary information for calculating the daily limit
-   * @returns {number} - the max kcal to be consumed daily
-   * @param {number} params.weeklyChange - the weekly change in kg
-   * @param {number} params.targetWeight - the target weight in kg
-   * @param {number} params.currentWeight - the current weight in kg
-   * @param weeklyChange
-   * @param targetWeight
-   * @param currentWeight
-   * @param maintenanceKcal
-   * @param {number} params.maintenanceKcal - the maintenance kcal
+   * @param {number} weeklyChange - the weekly change in kg
+   * @param {number} targetWeight - the target weight in kg
+   * @param {number} currentWeight - the current weight in kg
+   * @param {number} maintenanceKcal - the maintenance kcal
+   * the user should eat to maintain current weight
+   * @returns {number} - the daily kcal limit
    */
   static dailyLimit(weeklyChange, targetWeight, currentWeight, maintenanceKcal) {
     const kcalPerKg = 7700

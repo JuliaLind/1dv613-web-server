@@ -109,7 +109,7 @@ export class AuthService {
       body: credentials,
     })
 
-    this.#tokenService.isLoggedOut(res.status, [204])
+    this.#tokenService.isLoggedOut(res.status)
   }
 
   /**
