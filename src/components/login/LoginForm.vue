@@ -51,7 +51,7 @@ async function handleSubmit(event) {
       </div>
     </Fluid>
 
-    <Button type="submit" label="Login" size="large" />
+    <Button type="submit" class="btn-primary" label="Login" size="large" />
   </form>
 
   <p>

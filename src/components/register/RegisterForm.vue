@@ -88,7 +88,7 @@ async function handleSubmit(event) {
       </div>
     </Fluid>
 
-    <Button type="submit" label="Submit" size="large" class="text-base font-medium tracking-wide px-6 py-3" />
+    <Button type="submit" label="Submit" size="large" class="btn-primary" />
     <p>
       Already have an account?
       <RouterLink to="/login" class="text-primary-color underline">
