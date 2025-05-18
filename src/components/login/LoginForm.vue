@@ -40,7 +40,7 @@ async function handleSubmit(event) {
     <Fluid>
       <div class="flex flex-col gap-2">
         <FloatLabel variant="on">
-          <InputText id="email" v-model="form.email" />
+          <InputText id="email" v-model="form.email" required />
           <label for="email">Email</label>
         </FloatLabel>
 

@@ -64,7 +64,7 @@ async function handleSubmit(event) {
     <Fluid>
       <div class="flex flex-col gap-2">
         <FloatLabel variant="on">
-          <input type="date" id="birthDate" v-model="form.birthDate"
+          <input type="date" required id="birthDate" v-model="form.birthDate"
             class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-filled" />
           <label for="birthDate">Date of birth</label>
         </FloatLabel>
@@ -82,7 +82,7 @@ async function handleSubmit(event) {
 
 
         <FloatLabel variant="on">
-          <Password v-model="form.confirmPassword" toggleMask id="confirmPassword" />
+          <Password v-model="form.confirmPassword" required toggleMask id="confirmPassword" />
           <label for="confirmPassword">Confirm Password</label>
         </FloatLabel>
       </div>
