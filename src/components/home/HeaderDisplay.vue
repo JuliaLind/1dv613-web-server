@@ -93,7 +93,7 @@ const diffWeight = computed(() => {
 
 .kcal-circle {
   background-color: #f0faff;
-  color: var(--primary-600);
+  color: var(--primary-700);
 }
 
 .daily-budget,
