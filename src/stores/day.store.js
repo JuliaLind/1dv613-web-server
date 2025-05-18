@@ -57,14 +57,13 @@ export const useDayStore = defineStore('day', () => {
   /**
    * Creates a new meal using optimistic update.
    *
-   * @param {object} item - the item to send to server
-   * @param {object} prelItem - the item to be displayed in the UI
+   * @param {object} foodItem - the first food item of the meal
    */
-  async function newMeal(item) {
+  async function newMeal(foodItem) {
     const newMeal = {
       date: selectedDate.value,
       type: selected.type,
-      foodItems: [item]
+      foodItems: [foodItem]
     }
 
     try {
@@ -81,14 +80,13 @@ export const useDayStore = defineStore('day', () => {
   /**
    * Add a food item to the current meal using optimistic update.
    *
-   * @param {object} item - the item to send to server
-   * @param {object} prelItem - the item to be displayed in the UI
-   * @returns {Promise<string>} - the id of the food item
+   * @param {object} foodItem - the food item to add to the meal
+   * @returns {Promise<string>} - the id of the added food item
    * @throws {Error} - if the request fails
    */
-  async function addFoodItem(item) {
+  async function addFoodItem(foodItem) {
     try {
-      return await mealService.addFoodItem(selected.id, item)
+      return await mealService.addFoodItem(selected.id, foodItem)
     } catch (error) {
       // reverse update if error
       selected.reset()
@@ -99,7 +97,7 @@ export const useDayStore = defineStore('day', () => {
   /**
    * Finds a meal by id.
    *
-   * @param {string} id - if od the meal to find
+   * @param {string} id - if of the meal to find
    * @returns {Meal} - the meal with the given id
    */
   function findMealById(id) {
@@ -199,11 +197,11 @@ export const useDayStore = defineStore('day', () => {
 
   /**
    * If the meal contains more than one item,
-   * deletes the item from the meal using optimistic update. Otherwise emits delete event for the whole meal to be deleted.
+   * deletes the item from the meal using optimistic update.
+   * Otherwise emits delete event for the whole meal to be deleted.
    *
-   * @param {string} id - id of the food item to delete 
-   * @param itemId
-   * @param type
+   * @param {string} itemId - id of the food item to delete 
+   * @param {string} type - type of the meal
    */
   async function delItem(itemId, type) {
     const meal = meals[type]
@@ -221,7 +219,6 @@ export const useDayStore = defineStore('day', () => {
       meal.foodItems = temp
       throw error
     }
-
   }
 
   /**

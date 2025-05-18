@@ -28,12 +28,12 @@ async function addToSelected(food) {
 /**
  * Deletes a food item from the meal.
  *
- * @param {string} id - the id of the food item to delete
- * @param {string} type - the type of the meal
+ * @param {string} itemId - the id of the food item to delete
+ * @param {string} mealType - the type of the meal
  */
-async function delItem(id, type) {
+async function delItem(itemId, mealType) {
   try {
-    await dayStore.delItem(id, type)
+    await dayStore.delItem(itemId, mealType)
   } catch (error) {
     emit('error', error)
   }

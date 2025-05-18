@@ -19,7 +19,7 @@ export const useUserStore = defineStore('user', () => {
     gender: null,
     activityLevel: CalcService.activityLevelOptions.sedentary.value,
     weeklyChange: null,
-    updatedAt: null,
+    // updatedAt: null,
     history: [],
   }
 
@@ -67,7 +67,7 @@ export const useUserStore = defineStore('user', () => {
     if (!this.updatedAt) {
       return true // because the user has not registered their data yet
     }
-    return isToday(new Date(user.updatedAt))
+    return isToday(new Date(user.history[0].effectiveDate))
   })
 
   /**
@@ -188,9 +188,9 @@ export const useUserStore = defineStore('user', () => {
       age: age.value,
       height: newData.height
     })
-    // set today even if no change has been made
-    // because this is more to track if the user has reviewed their data
-    user.updatedAt = format(new Date(), 'yyyy-MM-dd')
+    // // set today even if no change has been made
+    // // because this is more to track if the user has reviewed their data
+    // user.updatedAt = format(new Date(), 'yyyy-MM-dd')
   }
 
   /**

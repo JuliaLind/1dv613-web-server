@@ -38,7 +38,7 @@ async function signout() {
 const visible = ref(false)
 
 const updatedToday = computed(() => {
-  return userStore.isSet && (new Date(userStore.user.updatedAt)).getTime() <= (new Date()).getTime()
+  return userStore.isSet && userStore.isUpdated
 })
 
 </script>

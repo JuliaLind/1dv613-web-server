@@ -11,7 +11,7 @@ import FooterPartial from './FooterPartial.vue'
 import { useUserStore } from '@/stores/user.store.js'
 import HeaderDisplay from '@/components/home/HeaderDisplay.vue'
 
-import MacroStats from '@/components/home/stats/StatsOverv.vue'
+import StatsOverv from '@/components/home/stats/StatsOverv.vue'
 
 
 import Tabs from 'primevue/tabs'
@@ -97,7 +97,7 @@ onMounted(async () => {
         </TabPanel>
 
         <TabPanel value="1" class="tab-content">
-          <MacroStats />
+          <StatsOverv />
         </TabPanel>
 
         <TabPanel value="2" class="tab-content" v-if="userStore.isSet">

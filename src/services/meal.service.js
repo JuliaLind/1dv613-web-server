@@ -1,4 +1,5 @@
 const dataUrl = import.meta.env.VITE_DATA_URL
+import { format } from 'date-fns'
 import { AuthService } from './auth.service.js'
 import { FetchService } from './fetch.service.js'
 
@@ -47,7 +48,7 @@ export class MealService {
    * @param {string} date - the date to get the meals for
    * @returns {Promise<object>} - the meals for the given date
    */
-  async index(date = new Date()) {
+  async index(date = format(new Date(), 'yyyy-MM-dd')) {
     const data = await this.request({ path: `/date/${date}` })
 
     return data

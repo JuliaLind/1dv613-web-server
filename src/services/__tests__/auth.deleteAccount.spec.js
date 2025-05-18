@@ -8,7 +8,7 @@ describe('Auth service, deleteAccount', () => {
     vi.clearAllMocks()
   })
 
-  it('ok, tokenService.isLoggedOut should be called', async () => {
+  it('ok, tokenService.isLoggedOut should be called once', async () => {
     const tokenService = {
       isLoggedOut: vi.fn(),
     }
@@ -36,6 +36,6 @@ describe('Auth service, deleteAccount', () => {
 
 
     expect(tokenService.isLoggedOut).toHaveBeenCalledTimes(1)
-    expect(tokenService.isLoggedOut).toHaveBeenCalledWith(204, [204])
+    expect(tokenService.isLoggedOut).toHaveBeenCalledWith(204)
   })
 })
