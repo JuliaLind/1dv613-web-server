@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('createUser', ({ email, birthDate, password }) => {
-  cy.request('POST', `${Cypress.env('VITE_AUTH_URL')}/register`, {
+  cy.request('POST', `${Cypress.env('VITE_AUTH_URL')}/user`, {
     email,
     birthDate,
     password
@@ -33,7 +33,7 @@ Cypress.Commands.add('createUser', ({ email, birthDate, password }) => {
 })
 
 Cypress.Commands.add('deleteUser', ({ email, password }) => {
-  cy.request('DELETE', `${Cypress.env('VITE_AUTH_URL')}/`, {
+  cy.request('DELETE', `${Cypress.env('VITE_AUTH_URL')}/user`, {
     email,
     password
   })

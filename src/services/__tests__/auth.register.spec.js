@@ -34,7 +34,7 @@ describe('Auth service, login', () => {
 
     expect(fetchService.request).toHaveBeenCalledWith(
       {
-        path: '/register',
+        path: '/user',
         body: credentials,
       }
     )
@@ -65,7 +65,7 @@ describe('Auth service, login', () => {
 
     expect(fetchService.request).toHaveBeenCalledWith(
       {
-        path: '/register',
+        path: '/user',
         body: credentials,
       }
     )

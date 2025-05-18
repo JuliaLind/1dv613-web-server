@@ -72,7 +72,7 @@ export class AuthService {
   async register(user) {
     const res = await this.#fetchService.request(
       {
-        path: '/register',
+        path: '/user',
         body: user,
       }
     )
