@@ -64,7 +64,7 @@ export const useUserStore = defineStore('user', () => {
    * @returns {boolean} - true if the user has updated their data today
    */
   const isUpdated = computed(() => {
-    if (!this.updatedAt) {
+    if (user.history.length === 0) {
       return true // because the user has not registered their data yet
     }
     return isToday(new Date(user.history[0].effectiveDate))
