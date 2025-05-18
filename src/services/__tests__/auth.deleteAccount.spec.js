@@ -30,7 +30,7 @@ describe('Auth service, deleteAccount', () => {
 
     expect(fetchService.request).toHaveBeenCalledExactlyOnceWith({
       method: 'DELETE',
-      path: '/',
+      path: '/user',
       body: credentials,
     })
 

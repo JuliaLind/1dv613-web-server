@@ -104,7 +104,7 @@ export class AuthService {
    */
   async deleteAccount(credentials) {
     let res = await this.#fetchService.request({
-      path: '/',
+      path: '/user',
       method: 'DELETE',
       body: credentials,
     })
