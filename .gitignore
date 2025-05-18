@@ -29,8 +29,10 @@ coverage
 
 *.tsbuildinfo
 
-.env.*
+# .env.*
 .env
+.env.development
+.env.test
 
 # other
 copy.bash
