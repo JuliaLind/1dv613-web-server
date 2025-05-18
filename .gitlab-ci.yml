@@ -74,7 +74,7 @@ test:e2e:
 
     - cd ../auth-server
     - echo "$TEST_PRIVATE_PEM" > test_private.pem
-    - npm ci
+    - npm ci --no-cache
     - export DB_CONNECTION_STRING="mongodb://root:password@mongo:27017/auth_test?authSource=admin"
     - export ACCESS_TOKEN_PRIVATE_KEY_PATH="$CI_PROJECT_DIR/../auth-server/test_private.pem"
     - export ACCESS_TOKEN_LIFE="2h"
@@ -87,7 +87,7 @@ test:e2e:
 
     - cd ../data-server
     - echo "$TEST_PUBLIC_PEM" > public.pem
-    - npm ci
+    - npm ci --no-cache
     - export DB_CONNECTION_STRING="mongodb://root:password@mongo:27017/data_test?authSource=admin"
     - export AUTH_TOKEN_SECRET_PATH="$CI_PROJECT_DIR/../data-server/public.pem"
     - export PORT=5054
@@ -96,7 +96,7 @@ test:e2e:
     - echo "=== Data Server Logs (initial) ===" && cat data.log
 
     - cd ../web-server
-    - npm ci
+    - npm ci --no-cache
     - export VITE_AUTH_URL="http://localhost:5053/api/v1"
     - export VITE_DATA_URL="http://localhost:5054/api/v1"
     - npm run dev -- --port 4173 > vite.log 2>&1 &
