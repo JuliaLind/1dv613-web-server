@@ -1,4 +1,7 @@
 <script setup>
+import { ref } from 'vue'
+import Skeleton from 'primevue/skeleton'
+
 defineProps({
   img: {
     type: String,
@@ -22,11 +25,24 @@ defineProps({
   }
 })
 
+const imgClass = ref('hidden')
+const loaded = ref(false)
+
+/**
+ * Toggles the visibility of the image. and sceleton
+ * when the image has loaded.
+ */
+function onLoad() {
+  imgClass.value = ''
+  loaded.value = true
+}
+
 </script>
 
 <template>
   <div class="food-container">
-    <img v-if="img" :src="img" :alt="name" />
+    <img v-if="img" :src="img" :alt="name" @load="onLoad" :class="imgClass"/>
+    <Skeleton v-if="!loaded" width="64px" height="64px" class="img-skeleton" borderRadius="16px"></Skeleton>
     <div class="food-info">
       <span class="descr">
         {{ name }}, {{ brand ?? '' }}
@@ -39,6 +55,17 @@ defineProps({
 </template>
 
 <style scoped>
+
+.hidden {
+  visibility: hidden;
+}
+
+.img-skeleton {
+  width: 64px !important;
+  flex-shrink: 0;
+  height: 64px;
+}
+
 .descr {
   text-align: left;
   width: 100%;
