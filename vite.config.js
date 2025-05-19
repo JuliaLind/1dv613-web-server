@@ -28,6 +28,9 @@ export default defineConfig(({ command }) => ({
   },
   server: {
     host: '0.0.0.0' // added to work with wait-on and Cypress
+  },
+  build: {
+    sourcemap: true // this enables source maps for builds
   }
 }))
 
