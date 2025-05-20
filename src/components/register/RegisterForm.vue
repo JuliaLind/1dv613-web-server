@@ -7,7 +7,8 @@ import { AuthService } from '@/services/auth.service'
 import { createToastService } from '@/services/toast.service'
 import {
   validateEmail, validatePassword, validateBirthDate,
-  matchPasswords
+  matchPasswords,
+  validateMandatory
 } from '@/helpers/validate'
 
 const toast = useToast()
@@ -39,6 +40,12 @@ async function handleSubmit(event) {
   const { birthDate, email, password, confirmPassword } = form.value
 
   try {
+    validateMandatory({
+      birthDate,
+      email,
+      password,
+      confirmPassword
+    })
     validateBirthDate(birthDate, latestDate)
     validateEmail(email)
     validatePassword(password)
