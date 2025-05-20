@@ -76,13 +76,13 @@ async function handleSubmit(event) {
         </FloatLabel>
 
         <FloatLabel variant="on">
-          <Password inputId="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required />
+          <Password inputId="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required :feedback="false" />
           <label for="password">Password</label>
         </FloatLabel>
 
 
         <FloatLabel variant="on">
-          <Password v-model="form.confirmPassword" required toggleMask inputId="confirmPassword" />
+          <Password v-model="form.confirmPassword" required toggleMask inputId="confirmPassword" :feedback="false" />
           <label for="confirmPassword">Confirm Password</label>
         </FloatLabel>
       </div>

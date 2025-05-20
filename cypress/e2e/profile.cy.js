@@ -12,8 +12,6 @@ describe('Complete user profile', function () {
       }
 
       age = differenceInYears(new Date(), new Date(user.birthDate))
-      cy.log(`User age: ${age}`)
-      cy.log(`User birth date: ${user.birthDate}`)
     })
   })
   beforeEach(() => {
