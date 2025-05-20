@@ -1,16 +1,3 @@
-describe('Vist home page unauthenticated', function () {
-  it('Req 1.2.3 redirects unauthenticated users from / to /login', () => {
-    cy.visit('/', {
-      onBeforeLoad(win) {
-        win.localStorage.clear()
-      }
-    })
-
-    cy.url().should('include', '/login')
-    cy.get('h1').should('contain', 'Log in')
-  })
-})
-
 describe('Vist home page authenticated', function () {
   let credentials
   before(function () {

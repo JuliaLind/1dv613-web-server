@@ -60,4 +60,15 @@ describe('Req 1.2 - Log in', function () {
       })
     })
   })
+
+  it('Req 1.2.3 redirects unauthenticated users from / to /login', () => {
+    cy.visit('/', {
+      onBeforeLoad(win) {
+        win.localStorage.clear()
+      }
+    })
+
+    cy.url().should('include', '/login')
+    cy.get('h1').should('contain', 'Log in')
+  })
 })
