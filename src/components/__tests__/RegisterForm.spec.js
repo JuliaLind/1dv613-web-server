@@ -9,6 +9,7 @@ import FloatLabel from 'primevue/floatlabel'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
 import Fluid from 'primevue/fluid'
+import { subYears, addDays } from 'date-fns'
 
 import RegisterForm from '../register/RegisterForm.vue'
 
@@ -45,9 +46,9 @@ describe('RegisterForm', () => {
   let authServiceInstance
   const email = 'julia@email.com'
   const password = 'password123'
-  const birthDate = '1990-01-01'
-  const minBirthDate = new Date()
-    .setFullYear(new Date().getFullYear() - 18)
+
+  const latestDate = subYears(new Date(), 18)
+  const birthDate = latestDate.toISOString().split('T')[0]
 
   beforeEach(async () => {
     router = createRouter({
@@ -163,7 +164,7 @@ describe('RegisterForm', () => {
       email,
       password,
       confirmPassword: password,
-      birthDate: minBirthDate,
+      birthDate: addDays(latestDate, 1).toISOString().split('T')[0],
       reason: 'user is less than 18 years old',
     },
     {
