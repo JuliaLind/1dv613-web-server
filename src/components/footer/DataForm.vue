@@ -188,7 +188,7 @@ const targetDate = computed(() => {
               <p class="target-date">{{ targetDate }}</p>
             </div>
             <!-- Save Button -->
-            <Button class="btn btn-primary" type="submit" label="Save" size="large" />
+            <Button class="btn btn-primary btn-lg" type="submit" label="Save" size="large" />
           </div>
           <div class="btn-container">
             <Button label="Back" severity="secondary" icon="pi pi-arrow-left" data-id="prev-step-3" @click="activateCallback('2')" />

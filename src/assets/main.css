@@ -31,6 +31,17 @@ button:not(.btn-primary):not(.p-button-danger) {
   color: var(--primary-600) !important;
 }
 
+button.btn-lg {
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+  
+button.btn-primary.btn-lg {
+  background: linear-gradient(to bottom, var(--primary-400), var(--primary-500));
+}
+
 button {
   font-size: 1rem;
 }

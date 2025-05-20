@@ -45,13 +45,13 @@ async function handleSubmit(event) {
         </FloatLabel>
 
         <FloatLabel variant="on">
-          <Password id="password" v-model="form.password" toggleMask required maxlength="255" />
+          <Password inputId="password" v-model="form.password" toggleMask required maxlength="255" />
           <label for="password">Password</label>
         </FloatLabel>
       </div>
     </Fluid>
 
-    <Button type="submit" class="btn-primary" label="Login" size="large" />
+    <Button type="submit" class="btn-primary btn-lg" label="Login" size="large" />
   </form>
 
   <p>

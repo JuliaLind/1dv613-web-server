@@ -76,19 +76,19 @@ async function handleSubmit(event) {
         </FloatLabel>
 
         <FloatLabel variant="on">
-          <Password id="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required />
+          <Password inputId="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required />
           <label for="password">Password</label>
         </FloatLabel>
 
 
         <FloatLabel variant="on">
-          <Password v-model="form.confirmPassword" required toggleMask id="confirmPassword" />
+          <Password v-model="form.confirmPassword" required toggleMask inputId="confirmPassword" />
           <label for="confirmPassword">Confirm Password</label>
         </FloatLabel>
       </div>
     </Fluid>
 
-    <Button type="submit" label="Submit" size="large" class="btn-primary" />
+    <Button type="submit" label="Submit" size="large" class="btn-primary btn-lg" />
     <p>
       Already have an account?
       <RouterLink to="/login" class="text-primary-color underline">
