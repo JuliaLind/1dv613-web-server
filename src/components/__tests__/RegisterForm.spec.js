@@ -80,8 +80,8 @@ describe('RegisterForm', () => {
     authServiceInstance = wrapper.vm.authService
 
     emailInput = wrapper.findComponent({ name: 'InputText' })
-    passwordInput = wrapper.find('#password input')
-    confirmPasswordInput = wrapper.find('#confirmPassword input')
+    passwordInput = wrapper.find('#password')
+    confirmPasswordInput = wrapper.find('#confirmPassword')
     birthDateInput = wrapper.find('#birthDate')
     submitButton = wrapper.find('button[type="submit"]')
   })

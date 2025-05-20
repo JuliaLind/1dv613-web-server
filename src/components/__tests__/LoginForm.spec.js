@@ -73,7 +73,7 @@ describe('LoginForm', () => {
     authServiceInstance = wrapper.vm.authService
 
     emailInput = wrapper.findComponent({ name: 'InputText' })
-    passwordInput = wrapper.find('#password input')
+    passwordInput = wrapper.find('#password')
     submitButton = wrapper.find('button[type="submit"]')
   })
 
