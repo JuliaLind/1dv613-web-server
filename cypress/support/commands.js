@@ -33,9 +33,14 @@ Cypress.Commands.add('createUser', ({ email, birthDate, password }) => {
 })
 
 Cypress.Commands.add('deleteUser', ({ email, password }) => {
-  cy.request('DELETE', `${Cypress.env('VITE_AUTH_URL')}/user`, {
-    email,
-    password
+  cy.request({
+    method: 'DELETE',
+    url: `${Cypress.env('VITE_AUTH_URL')}/user`,
+    body: {
+      email,
+      password,
+    },
+    failOnStatusCode: false
   })
 })
 
