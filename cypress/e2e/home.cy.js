@@ -1,5 +1,5 @@
 describe('Vist home page unauthenticated', function () {
-  it('redirects unauthenticated users from / to /login', () => {
+  it('Req 1.2.3 redirects unauthenticated users from / to /login', () => {
     cy.visit('/', {
       onBeforeLoad(win) {
         win.localStorage.clear()

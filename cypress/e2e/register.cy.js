@@ -36,7 +36,7 @@ describe('Req 1.1 - registration', function () {
       })
   })
 
-  it('Req 1.1.2 A user who is under 18 years old cannot register', function () {
+  it('Req 1.1.2 (+ 1.1.5) A user who is under 18 years old cannot register', function () {
     cy.intercept('POST', `**/user*`).as('registerUser')
 
     cy.visit('/')
@@ -53,7 +53,7 @@ describe('Req 1.1 - registration', function () {
     cy.get('@registerUser.all').should('have.length', 0)
   })
 
-  describe ('Req 1.1.3 - A user cannot create a second account with same email', function () {
+  describe ('Req 1.1.3 (+ 1.1.5) - A user cannot create a second account with same email', function () {
     let credentials
 
     beforeEach(() => {
@@ -87,7 +87,7 @@ describe('Req 1.1 - registration', function () {
     })
   })
 
-  describe('Req 1.1.4 - A user cannot submit form if any of the fields are empty', function () {
+  describe('Req 1.1.4 (+ 1.1.5) - A user cannot submit form if any of the fields are empty', function () {
     const inputData = [
       {
         email: '',
