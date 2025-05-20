@@ -16,7 +16,7 @@ const router = useRouter()
 const toastService = createToastService(toast)
 
 const today = new Date()
-const minDate = subYears(today, 18)
+const latestDate = subYears(today, 18)
 
 const form = ref({
   birthDate: '',
@@ -39,7 +39,7 @@ async function handleSubmit(event) {
   const { birthDate, email, password, confirmPassword } = form.value
 
   try {
-    validateBirthDate(birthDate, minDate)
+    validateBirthDate(birthDate, latestDate)
     validateEmail(email)
     validatePassword(password)
     matchPasswords(password, confirmPassword)
