@@ -37,7 +37,7 @@ describe('Token service', () => {
     expect(localStorage.getItem('refreshToken')).toBe(tokens.refreshToken)
   })
 
-  describe('getAccessToken', () => {
+  describe('getAccessToken - req 1.4.4 checks accessToken for expiry between getting from local storage and returning to requesting service', () => {
     it('ok, should return access token from local storage', () => {
       const sut = new TokenService()
       Storage.prototype.getItem = vi.fn(() => tokens.accessToken)

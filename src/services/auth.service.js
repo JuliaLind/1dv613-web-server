@@ -20,6 +20,11 @@ export class AuthService {
   constructor(tokenService = new TokenService(), fetchService = new FetchService(authUrl)) {
     this.#tokenService = tokenService
     this.#fetchService = fetchService
+
+    // this is for e2e testing with cypress
+    if (window.Cypress) {
+      window.tokenService = this.#tokenService
+    }
   }
 
   /**

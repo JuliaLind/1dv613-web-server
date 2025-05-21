@@ -140,4 +140,6 @@ describe('Req 1.1 - registration', function () {
       })
     })
   })
+
+  // Req 1.1.6 is tested in unittests of auth-server repo
 })
