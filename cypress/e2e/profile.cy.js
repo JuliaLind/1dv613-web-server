@@ -230,5 +230,28 @@ describe('Req 1.5 - personal plan', function () {
 
   // 1.5.6 - is tested in the data-server repo
 
-  // TODO add test for 1.5.7
+  describe('Req 1.5.7 - User should get suggestion on nutrients in g per day', function () {
+    beforeEach(() => {
+      cy.fixture('profile.json').then((profile) => {
+        profile.age = age
+        profile.effectiveDate = format(new Date(), 'yyyy-MM-dd')
+        cy.addProfileData(profile, token)
+      })
+    })
+
+    afterEach(() => {
+      cy.deleteProfileData(token)
+    })
+
+    it('should show the correct values for a moderate activity level', function () {
+      cy.visit('/')
+      cy.contains('button', 'Stats')
+        .click()
+
+      cy.get('th:nth-of-type(2)').should('contain', 'Value (g)')
+      cy.get('th:nth-of-type(3)').should('contain', 'Recommended (g)')
+    })
+
+  })
+
 })
