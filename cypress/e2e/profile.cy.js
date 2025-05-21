@@ -227,4 +227,8 @@ describe('Req 1.5 - personal plan', function () {
         .should('have.class', 'p-toast-message-info')
     })
   })
+
+  // 1.5.6 - is tested in the data-server repo
+
+  // TODO add test for 1.5.7
 })
