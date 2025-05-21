@@ -20,19 +20,4 @@ describe('Vist home page authenticated', function () {
     cy.visit('/')
     cy.url().should('not.include', '/login')
   })
-
-
-  it('User has no previous data, toast with message should be displayed, and a badge on the profile icon', function () {
-    cy.visit('/')
-
-    cy.contains('.p-toast-summary', 'Complete your profile')
-    .should('be.visible')
-    .closest('.p-toast-message')
-    .should('have.class', 'p-toast-message-info')
-
-    cy.get('.pi-user')
-      .closest('.overlay-container')
-    .find('.p-badge-warn')
-    .should('be.visible')
-  })
 })

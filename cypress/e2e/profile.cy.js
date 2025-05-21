@@ -1,9 +1,10 @@
-import { differenceInYears, addDays, format  } from 'date-fns'
+import { differenceInYears, addDays, subDays, format  } from 'date-fns'
 
-describe('Complete user profile', function () {
+describe('Req 1.5 - personal plan', function () {
   let credentials
   let token
   let age
+
   before(function () {
     cy.fixture('user.json').then((user) => {
       credentials = {
@@ -37,7 +38,7 @@ describe('Complete user profile', function () {
     return format(date, 'yyyy-MM-dd')
   }
 
-  it('Fill out user data and save, a toast should be displayed and the badge should no longer be visible', function () {
+  it('Req 1.5.1 - Fill out user data and get suggested kcal/day and estimated goal date', function () {
     cy.intercept('POST', `**/user*`).as('addProfileData')
     cy.visit('/')
     cy.get('.pi-user')
@@ -63,32 +64,35 @@ describe('Complete user profile', function () {
     cy.get('input[type="radio"][name="weeklyChange"]').check('0.5')
     cy.get('[data-id="next-step-2"]').click()
 
-    // page 3
+
+    // kcal/day
     cy.get('.kcal').should('contain', '2103')
 
-
-
+    // target date
     cy.get('.target-date').should('contain', calcDate(81))
     cy.contains('Save').click()
 
+    // profile should close automatically
     cy.get('#profile').should('not.exist')
     cy.contains('.p-toast-summary', 'Profile updated')
       .should('be.visible')
       .closest('.p-toast-message')
       .should('have.class', 'p-toast-message-success')
 
-    // cy.get('.pi-user')
-    //   .closest('.overlay-container')
-    //   .find('.p-badge-warn')
-    //   .should('not.exist')
+      // badge showing that user has not filled out their data should be removed
+    cy.get('.pi-user')
+      .closest('.overlay-container')
+      .find('.p-badge-warn')
+      .should('not.exist')
 
+      // should have been successfully added to the server database
     cy.wait('@addProfileData').then((interception) => {
       assert.equal(interception.response.statusCode, 201)
     })
   })
 
   describe('User has already filled out their data', function () {
-    this.beforeEach(() => {
+    beforeEach(() => {
       cy.fixture('profile.json').then((profile) => {
         profile.age = age
         profile.effectiveDate = new Date().toISOString()
@@ -96,11 +100,11 @@ describe('Complete user profile', function () {
       })
     })
 
-    this.afterEach(() => {
+    afterEach(() => {
       cy.deleteProfileData(token)
     })
 
-    it('Update current user data', function () {
+    it('Req 1.5.2 - Update current user data and get updated kcal/day and target date', function () {
       cy.intercept('PUT', `**/user*`).as('updProfileData')
       cy.visit('/')
       cy.get('.pi-user')
@@ -149,8 +153,7 @@ describe('Complete user profile', function () {
       })
     })
 
-    
-    it('Should not be able to update if a field is missing', function () {
+    it('Req 1.5.3 - Should not be able to update if a field is missing', function () {
       cy.intercept('PUT', `**/user*`).as('updProfileData')
       cy.intercept('POST', `**/user*`).as('addProfileData')
       cy.visit('/')
@@ -182,6 +185,46 @@ describe('Complete user profile', function () {
       // should not send bad request to server
       cy.get('@updProfileData.all').should('have.length', 0)
       cy.get('@addProfileData.all').should('have.length', 0)
+    })
+  })
+
+  it('Req 1.5.4 - User has no previous data, toast with message should be displayed, and a badge on the profile icon', function () {
+    cy.visit('/')
+
+    cy.contains('.p-toast-summary', 'Complete your profile')
+    .should('be.visible')
+    .closest('.p-toast-message')
+    .should('have.class', 'p-toast-message-info')
+
+    cy.get('.pi-user')
+      .closest('.overlay-container')
+    .find('.p-badge-warn')
+    .should('be.visible')
+  })
+
+  describe('Req 1.5.5 - User should get reminded daily to update their data', function () {
+    beforeEach(() => {
+      cy.fixture('profile.json').then((profile) => {
+        profile.age = age
+        profile.effectiveDate = subDays(new Date(), 1).toISOString() // yesterdays date
+        cy.addProfileData(profile, token)
+      })
+    })
+
+    afterEach(() => {
+      cy.deleteProfileData(token)
+    })
+
+    it('', function () {
+      cy.visit('/')
+      cy.get('.pi-user')
+        .closest('.overlay-container')
+        .find('.p-badge-warn')
+        .should('be.visible')
+      cy.contains('.p-toast-summary', 'Update your weight')
+        .should('be.visible')
+        .closest('.p-toast-message')
+        .should('have.class', 'p-toast-message-info')
     })
   })
 })
