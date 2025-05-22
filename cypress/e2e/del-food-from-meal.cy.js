@@ -59,7 +59,7 @@ describe('Req 1.8 - delete fooditem from meal', function () {
       .should('have.length', 2)
 
 
-    cy.get('#breakfast .meal-item:first-of-type .action-btn')
+    cy.get('#breakfast .meal-item:first-of-type() .action-btn')
       .click()
 
     cy.get('.delete-fooditem-btn')
@@ -81,7 +81,7 @@ describe('Req 1.8 - delete fooditem from meal', function () {
 
     cy.get('#breakfast .meal-item').should('have.length', 2)
 
-    cy.get('#breakfast .meal-item:first-of-type .action-btn')
+    cy.get('#breakfast .meal-item:first-of-type() .action-btn')
       .click()
 
     cy.get('.delete-fooditem-btn')
@@ -93,7 +93,7 @@ describe('Req 1.8 - delete fooditem from meal', function () {
 
     cy.get('#breakfast .meal-item').should('have.length', 1)
 
-    cy.get('#breakfast .meal-item:first-of-type .action-btn')
+    cy.get('#breakfast .meal-item:first-of-type() .action-btn')
       .click() // because the second item is now the first one and only one
 
     cy.get('.delete-fooditem-btn')
@@ -133,7 +133,7 @@ describe('Req 1.8 - delete fooditem from meal', function () {
       .should('have.length', 2)
 
 
-    cy.get('#breakfast .meal-item:first-of-type .action-btn')
+    cy.get('#breakfast .meal-item:first-of-type() .action-btn')
       .click()
 
     cy.get('.delete-fooditem-btn')
