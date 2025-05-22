@@ -21,6 +21,7 @@ import './commands'
 
 import '@cypress/code-coverage/support'
 
+
 before(function () {
   cy.fixture('user.json').then((user) => {
     cy.createUser(user)

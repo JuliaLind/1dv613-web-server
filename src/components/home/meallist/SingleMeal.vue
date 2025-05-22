@@ -41,7 +41,7 @@ function calcSuggestedKcal() {
 </script>
 
 <template>
-  <div class="bg-white rounded-l shadow-md p-4">
+  <div class="bg-white rounded-l shadow-md p-4" :id="type">
     <header>
       <h2>{{ meal.getName() }}</h2>
       <span class="meal-kcal">{{ meal.kcal }} kcal</span>

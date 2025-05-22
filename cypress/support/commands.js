@@ -111,3 +111,24 @@ Cypress.Commands.add('login', ({ email, password }) => {
     })
   })
 })
+
+Cypress.Commands.add('addMeal', (meal, token) => {
+  return cy.request({
+    method: 'POST',
+    url: `${Cypress.env('VITE_DATA_URL')}/meals`,
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: meal,
+  })
+})
+
+Cypress.Commands.add('deleteMeals', (token) => {
+  return cy.request({
+    method: 'DELETE',
+    url: `${Cypress.env('VITE_DATA_URL')}/meals`,
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+  })
+})
