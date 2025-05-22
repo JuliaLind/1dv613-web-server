@@ -160,29 +160,38 @@ describe('Req 1.6 - meals', function () {
       .click() // close the toast message so it
     // does not cover other elements
     cy.get('#date').should('have.text', today)
+
+     
     cy.contains('#snack1', /Ice Caramel Salted/i)
       .should('be.visible')
 
+
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#lunch', /Kyckling Bröstfilé Fryst/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#lunch', /Sparris i Bitar/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#lunch', /Pommes Chateau Frysta/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#dinner', /Mexicana X-tra Allt Pizza Fryst/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#snack3', /Svartvinbär Fruktdryck/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#snack3', /Choco Brownie Kaka/i)
       .scrollIntoView()
       .should('be.visible')
@@ -191,35 +200,44 @@ describe('Req 1.6 - meals', function () {
       .should('not.exist') // yesterdays food
 
     /* YESTERDAY */
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.get('#prev')
       .scrollIntoView()
       .click()
+
     cy.get('#date').should('have.text', yesterday)
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#breakfast', /Jordgubb Smultron Original Yoghurt 2%/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#lunch', /Coca-cola Zero Läsk Burk/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#lunch', /Sojanuggets Fryst/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#lunch', /Bbq Sås Honey Chipotle/i)
       .scrollIntoView()
       .should('be.visible')
 
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.contains('#dinner', /Pan Pizza Vesuvio Fryst/i)
       .scrollIntoView()
       .should('be.visible')
 
+     
     cy.get('#dinner .descr')
       .filter((_, el) => /Peoples Bulldog 3,5% Öl, Burk/i.test(el.textContent))
       .should('have.length', 2) // check that both beers are displayed
       .each(($el) => {
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.wrap($el).scrollIntoView().should('be.visible')
       })
 
@@ -232,35 +250,23 @@ describe('Req 1.6 - meals', function () {
   it('Req 1.6.2 - Log should display breakfast, snack, lunch, snack, dinner, snack', () => {
     cy.visit('/')
 
-    cy.get('#meal-list .meal').eq(0)
-      .find('h2')
-      .invoke('text')
-      .should('match', /breakfast/i)
+    cy.get('.meal:first-of-type h2')
+      .should('have.text', 'breakfast')
 
-    cy.get('#meal-list .meal').eq(1)
-      .find('h2')
-      .invoke('text')
-      .should('match', /snack/i)
+    cy.get('.meal:nth-of-type(2) h2')
+       .should('have.text', 'snack')
 
-    cy.get('#meal-list .meal').eq(2)
-      .find('h2')
-      .invoke('text')
-      .should('match', /lunch/i)
+    cy.get('.meal:nth-of-type(3) h2')
+       .should('have.text', 'lunch')
 
-    cy.get('#meal-list .meal').eq(3)
-      .find('h2')
-      .invoke('text')
-      .should('match', /snack/i)
+    cy.get('.meal:nth-of-type(4) h2')
+       .should('have.text', 'snack')
 
-    cy.get('#meal-list .meal').eq(4)
-      .find('h2')
-      .invoke('text')
-      .should('match', /dinner/i)
+    cy.get('.meal:nth-of-type(5) h2')
+       .should('have.text', 'dinner')
 
-    cy.get('#meal-list .meal').eq(5)
-      .find('h2')
-      .invoke('text')
-      .should('match', /snack/i)
+    cy.get('.meal:nth-of-type(6) h2')
+      .should('have.text', 'snack')
   })
 
 })
