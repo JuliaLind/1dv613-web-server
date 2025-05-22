@@ -36,11 +36,11 @@ const toastService = createToastService(toast)
 async function fetchUserData() {
   await userStore.fetchUserData()
   if (!userStore.isSet) {
-    toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience', {life: 5000})
+    toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience', { life: 5000 })
     return
   }
   if ((new Date(userStore.user.updatedAt)).getTime() < (new Date()).getTime()) {
-    toastService.alertInfo('Update your weight', 'Update your weight each day to get the most out of the app', {life: 5000})
+    toastService.alertInfo('Update your weight', 'Update your weight each day to get the most out of the app', { life: 5000 })
   }
 }
 
@@ -91,7 +91,7 @@ onMounted(async () => {
       <TabPanels>
         <TabPanel value="0" class="tab-content">
           <HeaderDisplay class="header" />
-          <div>
+          <div class="scroll-container">
             <MealList :key="dayStore.selectedDate" />
           </div>
         </TabPanel>

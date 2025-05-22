@@ -41,21 +41,16 @@ function onLoad() {
 
 <template>
   <div class="food-container">
-    <img v-if="img" :src="img" :alt="name" @load="onLoad" :class="imgClass"/>
+    <img v-if="img" :src="img" :alt="name" @load="onLoad" :class="imgClass" />
     <Skeleton v-if="!loaded" width="64px" height="64px" class="img-skeleton" borderRadius="16px"></Skeleton>
     <div class="food-info">
-      <span class="descr">
-        {{ name }}, {{ brand ?? '' }}
-      </span>
-      <span class="food-kcal">
-        {{ kcal }} kcal / {{ weight }} g
-      </span>
+      <span class="descr">{{ name }}, {{ brand ?? '' }}</span>
+      <span class="food-kcal">{{ kcal }} kcal / {{ weight }} g</span>
     </div>
   </div>
 </template>
 
 <style scoped>
-
 .hidden {
   visibility: hidden;
 }
