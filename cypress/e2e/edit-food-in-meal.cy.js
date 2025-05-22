@@ -55,7 +55,7 @@ describe('Req 1.9 - edit food item in a meal', function () {
   })
 
 
-  it('Req 1.9.1 - User should be able to edit an item in a meal', () => {
+  it('Req 1.9.1 - User should be able to change weight of a food item in a meal', () => {
     cy.intercept('PATCH', `**/meals/${mealId}/upd`).as('updFoodItem')
 
 
