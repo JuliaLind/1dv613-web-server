@@ -161,7 +161,7 @@ describe('Req 1.6 - meals', function () {
     // does not cover other elements
     cy.get('#date').should('have.text', today)
 
-     
+
     cy.contains('#snack1', /Ice Caramel Salted/i)
       .should('be.visible')
 
@@ -232,7 +232,7 @@ describe('Req 1.6 - meals', function () {
       .scrollIntoView()
       .should('be.visible')
 
-     
+
     cy.get('#dinner .descr')
       .filter((_, el) => /Peoples Bulldog 3,5% Öl, Burk/i.test(el.textContent))
       .should('have.length', 2) // check that both beers are displayed
@@ -254,19 +254,60 @@ describe('Req 1.6 - meals', function () {
       .should('have.text', 'breakfast')
 
     cy.get('.meal:nth-of-type(2) h2')
-       .should('have.text', 'snack')
+      .should('have.text', 'snack')
 
     cy.get('.meal:nth-of-type(3) h2')
-       .should('have.text', 'lunch')
+      .should('have.text', 'lunch')
 
     cy.get('.meal:nth-of-type(4) h2')
-       .should('have.text', 'snack')
+      .should('have.text', 'snack')
 
     cy.get('.meal:nth-of-type(5) h2')
-       .should('have.text', 'dinner')
+      .should('have.text', 'dinner')
 
     cy.get('.meal:nth-of-type(6) h2')
       .should('have.text', 'snack')
+  })
+
+  it('Req 1.6.3 - should contain kcal for each meal and total kcal for the day', () => {
+    cy.visit('/')
+
+    cy.get('.p-toast-close-button')
+      .click() // close the toast message so it
+    // does not cover other elements
+
+    cy.get('.kcal-number').should('contain.text', '2422')
+
+    cy.get('#breakfast .meal-kcal')
+      .should('have.text', '0 kcal')
+
+    cy.get('#snack1 .meal-kcal')
+      .should('have.text', '219 kcal')
+
+    cy.get('#lunch .meal-kcal')
+      .should('have.text', '580 kcal')
+
+    cy.get('#snack2 .meal-kcal')
+      .should('have.text', '0 kcal')
+
+    cy.get('#dinner .meal-kcal')
+      .should('have.text', '1040 kcal')
+
+    cy.get('#snack3 .meal-kcal')
+      .should('have.text', '583 kcal')
+
+    /* check the values are updated when changing date */
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
+    cy.get('#prev')
+      .scrollIntoView()
+      .click()
+
+    cy.get('.kcal-number').should('contain.text', '2410')
+    cy.get('#breakfast .meal-kcal')
+      .should('have.text', '234 kcal')
+
+    cy.get('#snack1 .meal-kcal')
+      .should('have.text', '0 kcal')
   })
 
 })
