@@ -13712,7 +13712,7 @@
           "column": 2
         },
         "end": {
-          "line": 41,
+          "line": 39,
           "column": 3
         }
       },
@@ -13723,106 +13723,86 @@
         },
         "end": {
           "line": 38,
-          "column": 39
+          "column": 77
         }
       },
       "6": {
         "start": {
-          "line": 39,
-          "column": 4
+          "line": 48,
+          "column": 2
         },
         "end": {
-          "line": 39,
-          "column": 41
+          "line": 50,
+          "column": 3
         }
       },
       "7": {
         "start": {
-          "line": 40,
+          "line": 49,
           "column": 4
         },
         "end": {
-          "line": 40,
-          "column": 77
+          "line": 49,
+          "column": 66
         }
       },
       "8": {
         "start": {
-          "line": 50,
+          "line": 60,
           "column": 2
         },
         "end": {
-          "line": 52,
+          "line": 64,
           "column": 3
         }
       },
       "9": {
         "start": {
-          "line": 51,
+          "line": 61,
           "column": 4
         },
         "end": {
-          "line": 51,
-          "column": 66
+          "line": 63,
+          "column": 5
         }
       },
       "10": {
         "start": {
           "line": 62,
-          "column": 2
+          "column": 6
         },
         "end": {
-          "line": 66,
-          "column": 3
+          "line": 62,
+          "column": 18
         }
       },
       "11": {
         "start": {
-          "line": 63,
-          "column": 4
+          "line": 65,
+          "column": 2
         },
         "end": {
           "line": 65,
-          "column": 5
+          "column": 13
         }
       },
       "12": {
         "start": {
-          "line": 64,
-          "column": 6
+          "line": 76,
+          "column": 2
         },
         "end": {
-          "line": 64,
-          "column": 18
+          "line": 78,
+          "column": 3
         }
       },
       "13": {
         "start": {
-          "line": 67,
-          "column": 2
-        },
-        "end": {
-          "line": 67,
-          "column": 13
-        }
-      },
-      "14": {
-        "start": {
-          "line": 78,
-          "column": 2
-        },
-        "end": {
-          "line": 80,
-          "column": 3
-        }
-      },
-      "15": {
-        "start": {
-          "line": 79,
+          "line": 77,
           "column": 4
         },
         "end": {
-          "line": 79,
+          "line": 77,
           "column": 58
         }
       }
@@ -13894,7 +13874,7 @@
             "column": 57
           },
           "end": {
-            "line": 42,
+            "line": 40,
             "column": 1
           }
         },
@@ -13904,73 +13884,73 @@
         "name": "validatePassword",
         "decl": {
           "start": {
-            "line": 49,
+            "line": 47,
             "column": 16
           },
           "end": {
-            "line": 49,
+            "line": 47,
             "column": 32
           }
         },
         "loc": {
           "start": {
-            "line": 49,
+            "line": 47,
             "column": 43
           },
           "end": {
-            "line": 53,
+            "line": 51,
             "column": 1
           }
         },
-        "line": 49
+        "line": 47
       },
       "4": {
         "name": "isFilled",
         "decl": {
           "start": {
-            "line": 61,
+            "line": 59,
             "column": 16
           },
           "end": {
-            "line": 61,
+            "line": 59,
             "column": 24
           }
         },
         "loc": {
           "start": {
-            "line": 61,
+            "line": 59,
             "column": 33
           },
           "end": {
-            "line": 68,
+            "line": 66,
             "column": 1
           }
         },
-        "line": 61
+        "line": 59
       },
       "5": {
         "name": "validateMandatory",
         "decl": {
           "start": {
-            "line": 77,
+            "line": 75,
             "column": 16
           },
           "end": {
-            "line": 77,
+            "line": 75,
             "column": 33
           }
         },
         "loc": {
           "start": {
-            "line": 77,
+            "line": 75,
             "column": 42
           },
           "end": {
-            "line": 81,
+            "line": 79,
             "column": 1
           }
         },
-        "line": 77
+        "line": 75
       }
     },
     "branchMap": {
@@ -14041,7 +14021,7 @@
             "column": 2
           },
           "end": {
-            "line": 41,
+            "line": 39,
             "column": 3
           }
         },
@@ -14053,7 +14033,7 @@
               "column": 2
             },
             "end": {
-              "line": 41,
+              "line": 39,
               "column": 3
             }
           },
@@ -14103,11 +14083,11 @@
       "4": {
         "loc": {
           "start": {
-            "line": 50,
+            "line": 48,
             "column": 2
           },
           "end": {
-            "line": 52,
+            "line": 50,
             "column": 3
           }
         },
@@ -14115,11 +14095,11 @@
         "locations": [
           {
             "start": {
-              "line": 50,
+              "line": 48,
               "column": 2
             },
             "end": {
-              "line": 52,
+              "line": 50,
               "column": 3
             }
           },
@@ -14128,16 +14108,16 @@
             "end": {}
           }
         ],
-        "line": 50
+        "line": 48
       },
       "5": {
         "loc": {
           "start": {
-            "line": 63,
+            "line": 61,
             "column": 4
           },
           "end": {
-            "line": 65,
+            "line": 63,
             "column": 5
           }
         },
@@ -14145,11 +14125,11 @@
         "locations": [
           {
             "start": {
-              "line": 63,
+              "line": 61,
               "column": 4
             },
             "end": {
-              "line": 65,
+              "line": 63,
               "column": 5
             }
           },
@@ -14158,16 +14138,16 @@
             "end": {}
           }
         ],
-        "line": 63
+        "line": 61
       },
       "6": {
         "loc": {
           "start": {
-            "line": 78,
+            "line": 76,
             "column": 2
           },
           "end": {
-            "line": 80,
+            "line": 78,
             "column": 3
           }
         },
@@ -14175,11 +14155,11 @@
         "locations": [
           {
             "start": {
-              "line": 78,
+              "line": 76,
               "column": 2
             },
             "end": {
-              "line": 80,
+              "line": 78,
               "column": 3
             }
           },
@@ -14188,7 +14168,7 @@
             "end": {}
           }
         ],
-        "line": 78
+        "line": 76
       }
     },
     "s": {
@@ -14200,14 +14180,12 @@
       "5": 0,
       "6": 0,
       "7": 0,
-      "8": 0,
-      "9": 0,
-      "10": 54,
-      "11": 165,
-      "12": 26,
-      "13": 28,
-      "14": 0,
-      "15": 0
+      "8": 54,
+      "9": 165,
+      "10": 26,
+      "11": 28,
+      "12": 0,
+      "13": 0
     },
     "f": {
       "0": 0,
@@ -14253,10 +14231,10 @@
         "/usr/src/app/src/helpers/validate.js"
       ],
       "names": [],
-      "mappings": "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"
+      "mappings": "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"
     },
     "_coverageSchema": "1a1c01bbd47fc00a2c39e90264f33305004495a9",
-    "hash": "60318e910b108fb0a86382ffbe5d7aaab15f8666"
+    "hash": "a59bcf36bf15e25009a5ba6cb66ed3651a30521b"
   },
   "/usr/src/app/src/services/calc.service.js": {
     "path": "/home/juli22/school/proj/web-server/src/services/calc.service.js",
@@ -33629,19 +33607,19 @@
       "10": 24,
       "11": 10,
       "12": 12,
-      "13": 0,
-      "14": 12,
-      "15": 24,
-      "16": 14,
-      "17": 24,
+      "13": 4,
+      "14": 8,
+      "15": 16,
+      "16": 9,
+      "17": 16,
       "18": 10,
       "19": 0,
       "20": 10,
       "21": 12,
-      "22": 0,
-      "23": 12,
-      "24": 12,
-      "25": 12,
+      "22": 4,
+      "23": 8,
+      "24": 8,
+      "25": 8,
       "26": 10,
       "27": 12,
       "28": 0,
@@ -33669,9 +33647,9 @@
       "4": 10,
       "5": 24,
       "6": 12,
-      "7": 24,
-      "8": 14,
-      "9": 24,
+      "7": 16,
+      "8": 9,
+      "9": 16,
       "10": 0,
       "11": 12,
       "12": 12,
@@ -33692,15 +33670,15 @@
       ],
       "2": [
         24,
-        24
+        16
       ],
       "3": [
-        0,
-        12
+        4,
+        8
       ],
       "4": [
-        0,
-        12
+        4,
+        8
       ],
       "5": [
         12,
@@ -36033,9 +36011,9 @@
       "9": 5,
       "10": 5,
       "11": 5,
-      "12": 5,
-      "13": 5,
-      "14": 5,
+      "12": 2,
+      "13": 2,
+      "14": 2,
       "15": 6,
       "16": 0,
       "17": 6,
@@ -36045,24 +36023,24 @@
       "21": 6,
       "22": 5,
       "23": 6,
-      "24": 12,
-      "25": 12,
-      "26": 12,
-      "27": 12,
-      "28": 12,
+      "24": 4,
+      "25": 4,
+      "26": 4,
+      "27": 4,
+      "28": 4,
       "29": 0,
-      "30": 12,
-      "31": 12,
+      "30": 4,
+      "31": 4,
       "32": 6,
       "33": 0,
       "34": 6,
       "35": 6,
-      "36": 0,
-      "37": 6,
-      "38": 6,
-      "39": 6,
-      "40": 6,
-      "41": 6,
+      "36": 4,
+      "37": 2,
+      "38": 2,
+      "39": 2,
+      "40": 2,
+      "41": 2,
       "42": 5,
       "43": 0,
       "44": 0,
@@ -36086,12 +36064,12 @@
       "1": 6,
       "2": 5,
       "3": 5,
-      "4": 5,
+      "4": 2,
       "5": 6,
       "6": 7,
       "7": 7,
       "8": 6,
-      "9": 12,
+      "9": 4,
       "10": 6,
       "11": 0,
       "12": 0,
@@ -36115,19 +36093,19 @@
       ],
       "3": [
         7,
-        7
+        2
       ],
       "4": [
         0,
-        12
+        4
       ],
       "5": [
         0,
         6
       ],
       "6": [
-        0,
-        6
+        4,
+        2
       ],
       "7": [
         12,

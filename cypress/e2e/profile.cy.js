@@ -1,4 +1,4 @@
-import { differenceInYears, addDays, subDays, format  } from 'date-fns'
+import { differenceInYears, addDays, subDays, format } from 'date-fns'
 
 describe('Req 1.5 - personal plan', function () {
   let credentials
@@ -79,13 +79,13 @@ describe('Req 1.5 - personal plan', function () {
       .closest('.p-toast-message')
       .should('have.class', 'p-toast-message-success')
 
-      // badge showing that user has not filled out their data should be removed
+    // badge showing that user has not filled out their data should be removed
     cy.get('.pi-user')
       .closest('.overlay-container')
       .find('.p-badge-warn')
       .should('not.exist')
 
-      // should have been successfully added to the server database
+    // should have been successfully added to the server database
     cy.wait('@addProfileData').then((interception) => {
       assert.equal(interception.response.statusCode, 201)
     })
@@ -126,8 +126,8 @@ describe('Req 1.5 - personal plan', function () {
 
       // page 1
       cy.get('#current-weight')
-      .find('input')
-      .clear()
+        .find('input')
+        .clear()
 
       cy.get('#current-weight').type('78.8')
       cy.get('[data-id="next-step-1"]').click()
@@ -164,12 +164,12 @@ describe('Req 1.5 - personal plan', function () {
 
       // page 1
       cy.get('#height')
-      .find('input')
-      .clear()
+        .find('input')
+        .clear()
 
       cy.get('#current-weight')
-      .find('input')
-      .clear()
+        .find('input')
+        .clear()
 
       cy.get('#current-weight').type('78.8')
       cy.get('[data-id="next-step-1"]').click()
@@ -192,14 +192,14 @@ describe('Req 1.5 - personal plan', function () {
     cy.visit('/')
 
     cy.contains('.p-toast-summary', 'Complete your profile')
-    .should('be.visible')
-    .closest('.p-toast-message')
-    .should('have.class', 'p-toast-message-info')
+      .should('be.visible')
+      .closest('.p-toast-message')
+      .should('have.class', 'p-toast-message-info')
 
     cy.get('.pi-user')
       .closest('.overlay-container')
-    .find('.p-badge-warn')
-    .should('be.visible')
+      .find('.p-badge-warn')
+      .should('be.visible')
   })
 
   describe('Req 1.5.5 - User should get reminded daily to update their data', function () {
@@ -243,13 +243,33 @@ describe('Req 1.5 - personal plan', function () {
       cy.deleteProfileData(token)
     })
 
-    it('should show the correct values for a moderate activity level', function () {
+    it('should show the correct recommended amounts for the prefilled profile', function () {
       cy.visit('/')
       cy.contains('button', 'Stats')
         .click()
 
       cy.get('th:nth-of-type(2)').should('contain', 'Value (g)')
       cy.get('th:nth-of-type(3)').should('contain', 'Recommended (g)')
+      cy.get('tbody tr:nth-of-type(1) td:nth-of-type(1)').should('contain', 'protein')
+      cy.get('tbody tr:nth-of-type(1) td:nth-of-type(3)').should('contain', '162')
+    
+      cy.get('tbody tr:nth-of-type(2) td:nth-of-type(1)').should('contain', 'fat')
+      cy.get('tbody tr:nth-of-type(2) td:nth-of-type(3)').should('contain', '60')
+
+      cy.get('tbody tr:nth-of-type(3) td:nth-of-type(1)').should('contain', 'saturated fat')
+      cy.get('tbody tr:nth-of-type(3) td:nth-of-type(3)').should('contain', '0')
+
+      cy.get('tbody tr:nth-of-type(4) td:nth-of-type(1)').should('contain', 'carbohydrates')
+      cy.get('tbody tr:nth-of-type(4) td:nth-of-type(3)').should('contain', '243')
+
+      cy.get('tbody tr:nth-of-type(5) td:nth-of-type(1)').should('contain', 'sugars')
+      cy.get('tbody tr:nth-of-type(5) td:nth-of-type(3)').should('contain', '0')
+
+      cy.get('tbody tr:nth-of-type(6) td:nth-of-type(1)').should('contain', 'fiber')
+      cy.get('tbody tr:nth-of-type(6) td:nth-of-type(3)').should('contain', '38')
+
+      cy.get('tbody tr:nth-of-type(7) td:nth-of-type(1)').should('contain', 'salt')
+      cy.get('tbody tr:nth-of-type(7) td:nth-of-type(3)').should('contain', '0')
     })
 
   })

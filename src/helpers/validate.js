@@ -35,8 +35,6 @@ export function matchPasswords(password, confirmPassword) {
  */
 export function validateBirthDate(birthDate, latestDate) {
   if (!birthDate || new Date(birthDate) > new Date(latestDate)) {
-    console.log('birthDate', birthDate)
-    console.log('latestDate', latestDate)
     throw new Error('You must be at least 18 years old to create an account')
   }
 }
