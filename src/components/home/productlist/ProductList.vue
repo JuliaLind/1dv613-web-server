@@ -133,7 +133,7 @@ onMounted(async () => {
       </IconField>
     </template>
     <Accordion value="0">
-      <AccordionPanel v-for="product in foodList.items.value" :key="product.ean" :value="product.ean" class="productlist-item">
+      <AccordionPanel v-for="product in foodList.items.value" :key="product.ean" :value="product.ean" class="productlist-item" :id="'product-' +product.ean">
         <AccordionHeader>
           <ProductHeader :name="product.name" :img="product.imgUrl" :brand="product.brand" :kcal="product.kcal_100g"
             :weight="product.weight" />

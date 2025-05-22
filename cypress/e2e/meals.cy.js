@@ -355,5 +355,4 @@ describe('Req 1.6 - meals', function () {
 
     })
   })
-
 })

@@ -55,7 +55,7 @@ function calcSuggestedKcal() {
 
     </div>
     <footer>
-      <Button class="p-button-text primary-color" :aria-label="'Add food'" icon="pi pi-plus" @click="$emit('select')" />
+      <Button class="p-button-text primary-color add-food-btn" :aria-label="'Add food'" icon="pi pi-plus" @click="$emit('select')" />
     </footer>
   </div>
 </template>
