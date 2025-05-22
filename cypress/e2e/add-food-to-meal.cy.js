@@ -41,7 +41,7 @@ describe('Req 1.7 - add food item to a meal', function () {
     cy.clearLocalStorage()
   })
 
-  it('Req 1.7.1 - User should be able to add food item to own meal', () => {
+  it('Req 1.7.1 - User should be able to add food item to meal', () => {
     cy.intercept('PATCH', `**/meals/${mealId}/add`).as('addFoodItem')
 
     cy.visit('/')
@@ -119,7 +119,7 @@ describe('Req 1.7 - add food item to a meal', function () {
       .should('have.length', 21)
   })
 
-  it('Req 1.7.4 - the kcal for the meal and for the day should change when the enw food item is added', () => {
+  it('Req 1.7.4 - the kcal for the meal and for the day should change when the new food item is added', () => {
     cy.visit('/')
     cy.get('.p-toast-close-button')
       .click() // close the toast message so it does not cover other elements
@@ -228,6 +228,5 @@ describe('Req 1.7 - add food item to a meal', function () {
       .contains('.food-kcal', '920 kcal / 400 g')
     cy.get('#snack1 .meal-item:nth-of-type(2)')
       .contains('.food-kcal', '920 kcal / 400 g')
-
   })
 })

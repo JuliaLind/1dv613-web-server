@@ -62,12 +62,14 @@ defineEmits(['delete'])
   <div class="meal-item">
     <ProductHeader :img="food.imgUrl" :name="food.name" :brand="food.brand" :kcal="food.kcal" :weight="food.weight" />
 
-    <Button icon="pi pi-ellipsis-v" aria-label="Show actions" @click="toggleMenu($event)" text rounded class="self-start" />
+    <Button icon="pi pi-ellipsis-v" aria-label="Show actions" @click="toggleMenu($event)" text rounded
+      class="self-start action-btn" />
 
     <OverlayPanel ref="menu" :dismissable="true">
       <div class="btn-container">
-        <Button label="Edit" text @click="edit = true; $refs.menu.hide()" />
-        <Button label="Delete" text severity=" danger" @click="$emit('delete'); $refs.menu.hide()" />
+        <Button label="Edit" text @click="edit = true; $refs.menu.hide()" class="edit-fooditem-btn" />
+        <Button label="Delete" text severity=" danger" @click="$emit('delete'); $refs.menu.hide()"
+          class="delete-fooditem-btn" />
       </div>
     </OverlayPanel>
   </div>
@@ -85,5 +87,4 @@ defineEmits(['delete'])
 .meal-item {
   display: flex;
 }
-
 </style>
