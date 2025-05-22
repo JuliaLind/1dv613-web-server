@@ -125,11 +125,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Drawer v-model:visible="visible" position="right">
+  <Drawer v-model:visible="visible" id="product-list" position="right">
     <template #header>
       <IconField>
         <InputIcon class="pi pi-search" />
-        <InputText v-model="query" placeholder="Search" @input="onInput" />
+        <InputText v-model="query" placeholder="Search" @input="onInput" id="search-input"/>
       </IconField>
     </template>
     <Accordion value="0">

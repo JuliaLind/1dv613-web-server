@@ -120,6 +120,8 @@ Cypress.Commands.add('addMeal', (meal, token) => {
       Authorization: `Bearer ${token}`
     },
     body: meal,
+  }).then((response) => {
+    return response.body.id
   })
 })
 
@@ -132,3 +134,4 @@ Cypress.Commands.add('deleteMeals', (token) => {
     },
   })
 })
+
