@@ -19,7 +19,7 @@ const props = defineProps({
  *
  * @returns {number} - the kcalories left to distribute in the current day
  */
-function kcalToDistribute () {
+function kcalToDistribute() {
   return userStore.dailyLimit - dayStore.kcal
 }
 
@@ -41,7 +41,7 @@ function calcSuggestedKcal() {
 </script>
 
 <template>
-  <div class="bg-white rounded-l shadow-md p-4" :id="type">
+  <div class="meal" :id="type">
     <header>
       <h2>{{ meal.getName() }}</h2>
       <span class="meal-kcal">{{ meal.kcal }} kcal</span>
@@ -51,7 +51,7 @@ function calcSuggestedKcal() {
         @delete="$emit('delete', food.id)" />
       <div v-if="meal.isEmpty() && userStore.isSet" class="text-center text-grey-500">
         <p class="suggested">Suggested: {{ calcSuggestedKcal() }} kcal</p>
-        </div>
+      </div>
 
     </div>
     <footer>
@@ -61,6 +61,16 @@ function calcSuggestedKcal() {
 </template>
 
 <style scoped>
+.meal {
+  background-color: white;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+
+}
+
 header {
   display: flex;
   align-items: center;

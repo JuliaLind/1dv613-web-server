@@ -123,7 +123,8 @@ describe('Req 1.6 - meals', function () {
 
   let token
 
-  before(() => {
+
+  beforeEach(() => {
     cy.fixture('user.json')
       .then((user) => {
         return {
@@ -134,22 +135,21 @@ describe('Req 1.6 - meals', function () {
       .then((credentials) => {
         cy.login(credentials).then((tokens) => {
           token = tokens.accessToken
+
+          cy.addMeal(meals.yesterday.breakfast, token)
+          cy.addMeal(meals.yesterday.lunch, token)
+          cy.addMeal(meals.yesterday.dinner, token)
+          cy.addMeal(meals.today.snack1, token)
+          cy.addMeal(meals.today.lunch, token)
+          cy.addMeal(meals.today.dinner, token)
+          cy.addMeal(meals.today.snack3, token)
         })
       })
   })
 
-  beforeEach(() => {
-    cy.addMeal(meals.yesterday.breakfast, token)
-    cy.addMeal(meals.yesterday.lunch, token)
-    cy.addMeal(meals.yesterday.dinner, token)
-    cy.addMeal(meals.today.snack1, token)
-    cy.addMeal(meals.today.lunch, token)
-    cy.addMeal(meals.today.dinner, token)
-    cy.addMeal(meals.today.snack3, token)
-  })
-
   afterEach(() => {
     cy.deleteMeals(token)
+    cy.clearLocalStorage()
   })
 
   it('Req 1.6.1 - should show meals for today and yesterday', () => {
@@ -227,6 +227,40 @@ describe('Req 1.6 - meals', function () {
     cy.contains('#snack1', /Ice Caramel Salted/i)
       .should('not.exist') // todays food
 
+  })
+
+  it('Req 1.6.2 - Log should display breakfast, snack, lunch, snack, dinner, snack', () => {
+    cy.visit('/')
+
+    cy.get('#meal-list .meal').eq(0)
+      .find('h2')
+      .invoke('text')
+      .should('match', /breakfast/i)
+
+    cy.get('#meal-list .meal').eq(1)
+      .find('h2')
+      .invoke('text')
+      .should('match', /snack/i)
+
+    cy.get('#meal-list .meal').eq(2)
+      .find('h2')
+      .invoke('text')
+      .should('match', /lunch/i)
+
+    cy.get('#meal-list .meal').eq(3)
+      .find('h2')
+      .invoke('text')
+      .should('match', /snack/i)
+
+    cy.get('#meal-list .meal').eq(4)
+      .find('h2')
+      .invoke('text')
+      .should('match', /dinner/i)
+
+    cy.get('#meal-list .meal').eq(5)
+      .find('h2')
+      .invoke('text')
+      .should('match', /snack/i)
   })
 
 })
