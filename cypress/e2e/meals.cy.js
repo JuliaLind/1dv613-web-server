@@ -12,7 +12,7 @@ describe('Req 1.6 - meals', function () {
           {
             ean: '7310865018465', // Jordgubb Smultron Original Yoghurt 2%
             unit: 'g',
-            weight: 300
+            weight: 100
           }
         ]
       },
@@ -23,17 +23,17 @@ describe('Req 1.6 - meals', function () {
           {
             ean: '5000112637939', // Coca-cola Zero Läsk Burk
             unit: 'g',
-            weight: 300
+            weight: 250
           },
           {
             ean: '7290115203868', // Sojanuggets Fryst
             unit: 'g',
-            weight: 300
+            weight: 100
           },
           {
             ean: '1220000450066', // Bbq Sås Honey Chipotle
             unit: 'g',
-            weight: 100
+            weight: 50
           }
         ]
       },
@@ -44,7 +44,7 @@ describe('Req 1.6 - meals', function () {
           {
             ean: '7311043006526', // Pan Pizza Vesuvio Fryst
             unit: 'g',
-            weight: 500
+            weight: 200
           },
           {
             ean: '7310401053615', // Peoples Bulldog 3,5% Öl, Burk
@@ -67,7 +67,7 @@ describe('Req 1.6 - meals', function () {
           {
             ean: '7310050005355', // Ice Caramel Salted
             unit: 'g',
-            weight: 300
+            weight: 100
           }
         ]
       },
@@ -78,7 +78,7 @@ describe('Req 1.6 - meals', function () {
           {
             ean: '7313940011566', // Kyckling Bröstfilé Fryst
             unit: 'g',
-            weight: 200
+            weight: 150
           },
           {
             ean: '7311041012376', // Sparris i Bitar
@@ -88,7 +88,7 @@ describe('Req 1.6 - meals', function () {
           {
             ean: '7310240073812', // Pommes Chateau Frysta
             unit: 'g',
-            weight: 300
+            weight: 100
           }
         ]
       },
@@ -99,7 +99,7 @@ describe('Req 1.6 - meals', function () {
           {
             ean: '7310240071870', // Mexicana X-tra Allt Pizza Fryst
             unit: 'g',
-            weight: 400
+            weight: 150
           }
         ]
       },
@@ -109,12 +109,12 @@ describe('Req 1.6 - meals', function () {
         foodItems: [{
           ean: '7350000550559', // Svartvinbär Fruktdryck
           unit: 'g',
-          weight: 250
+          weight: 100
         },
         {
           ean: '7622202029998', // Choco Brownie Kaka
           unit: 'g',
-          weight: 100
+          weight: 50
         }
         ]
       }
@@ -276,25 +276,25 @@ describe('Req 1.6 - meals', function () {
       .click() // close the toast message so it
     // does not cover other elements
 
-    cy.get('.kcal-number').should('contain.text', '2422')
+    cy.get('.kcal-number').should('contain.text', '1045')
 
     cy.get('#breakfast .meal-kcal')
       .should('have.text', '0 kcal')
 
     cy.get('#snack1 .meal-kcal')
-      .should('have.text', '219 kcal')
+      .should('have.text', '73 kcal')
 
     cy.get('#lunch .meal-kcal')
-      .should('have.text', '580 kcal')
+      .should('have.text', '302 kcal')
 
     cy.get('#snack2 .meal-kcal')
       .should('have.text', '0 kcal')
 
     cy.get('#dinner .meal-kcal')
-      .should('have.text', '1040 kcal')
+      .should('have.text', '390 kcal')
 
     cy.get('#snack3 .meal-kcal')
-      .should('have.text', '583 kcal')
+      .should('have.text', '280 kcal')
 
     /* check the values are updated when changing date */
     // eslint-disable-next-line cypress/unsafe-to-chain-command
@@ -302,12 +302,58 @@ describe('Req 1.6 - meals', function () {
       .scrollIntoView()
       .click()
 
-    cy.get('.kcal-number').should('contain.text', '2410')
+    cy.get('.kcal-number').should('contain.text', '1067')
     cy.get('#breakfast .meal-kcal')
-      .should('have.text', '234 kcal')
+      .should('have.text', '78 kcal')
 
     cy.get('#snack1 .meal-kcal')
       .should('have.text', '0 kcal')
+  })
+
+  describe('Req 1.6.4 - users with completed profile should see daily kcal goal and suggested kcal for meals without food items', () => {
+    beforeEach(() => {
+      cy.fixture('profile.json').then((profile) => {
+        profile.age = 18
+        profile.effectiveDate = new Date().toISOString()
+        cy.addProfileData(profile, token)
+      })
+    })
+
+    afterEach(() => {
+      cy.deleteProfileData(token)
+    })
+
+    it('breakfast and snack2 should contain suggested kcal, the other 4 meals should not', () => {
+      cy.visit('/')
+
+      cy.get('.daily-budget')
+        .should('contain', '2281')
+
+      cy.contains('#breakfast p.suggested', 'Suggested')
+        .should('exist')
+
+      cy.get('#breakfast p.suggested')
+        .should('contain', 'Suggested: 824 kcal')
+
+      cy.contains('#snack1 p.suggested', 'Suggested')
+        .should('not.exist')
+
+      cy.contains('#lunch p.suggested', 'Suggested')
+        .should('not.exist')
+
+      cy.contains('#snack2 p.suggested', 'Suggested')
+        .should('exist')
+
+      cy.get('#snack2 p.suggested')
+        .should('contain', 'Suggested: 412 kcal')
+
+      cy.contains('#dinner p.suggested', 'Suggested')
+        .should('not.exist')
+
+      cy.contains('#snack3 p.suggested', 'Suggested')
+        .should('not.exist')
+
+    })
   })
 
 })
