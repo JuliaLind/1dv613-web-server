@@ -88,5 +88,32 @@ describe('Req 1.9 - edit food item in a meal', function () {
 
   })
 
+  it('Req 1.9.2 - meal kcal and day kcal should be updated when a meal item is edited', () => {
 
+
+    cy.visit('/')
+    cy.get('.p-toast-close-button')
+      .click() // close the toast message so it does not cover other elements
+
+    // initial kcal
+    cy.get('#lunch .meal-kcal')
+      .should('have.text', '434 kcal')
+    cy.get('.kcal-number').should('contain.text', '512')
+
+    cy.get('#lunch .meal-item:first-of-type() .action-btn')
+      .click()
+
+    cy.get('.edit-fooditem-btn')
+      .click()
+    cy.get('#lunch .food-detail input#weight').clear()
+    cy.get('#lunch .food-detail input#weight')
+      .type(900)
+    cy.get('#lunch .food-detail .save-btn')
+      .click()
+
+    // kcal should be updated
+    cy.get('#lunch .meal-kcal')
+      .should('have.text', '1953 kcal')
+    cy.get('.kcal-number').should('contain.text', '2031')
+  })
 })
