@@ -139,4 +139,84 @@ describe('Req 1.12 - statistics and visualization', () => {
       .next()
       .should('have.text', '4')
   })
+
+  describe('Req 1.12.2 - For users with personalized plan the actual nutrient intake should be compared to the recommended intake', () => {
+    before(() => {
+      cy.fixture('profile.json')
+        .then((profile) => {
+          return cy.addProfileData({
+            ...profile,
+            age: 30,
+            effectiveDate: format(new Date(), 'yyyy-MM-dd'),
+          }, token)
+        })
+    })
+
+    after(() => {
+      cy.deleteProfileData(token)
+    })
+
+    it('Actual and recommended intake should be displayed in separate columns', () => {
+      cy.visit('/')
+      cy.get('.p-toast-close-button')
+        .click() // close the toast message so it
+      // does not cover other elements
+
+      cy.get('#prev')
+        .click() // go to yesterday
+
+      cy.contains('button', 'Stats').click()
+
+      cy.get('th')
+        .should('have.length', 3)
+      cy.get('th:nth-of-type(1)')
+        .should('contain', 'Nutrient')
+      cy.get('th:nth-of-type(2)')
+        .should('contain', 'Value (g)')
+      cy.get('th:nth-of-type(3)')
+        .should('contain', 'Recommended (g)')
+
+      cy.contains('td', 'protein')
+        .next() // get the td to the right
+        .should('have.text', '61')
+        .next()
+        .should('have.text', '165')
+
+      cy.contains('td', 'fat')
+        .next()
+        .should('have.text', '42')
+        .next()
+        .should('have.text', '61')
+
+      cy.contains('td', 'saturated fat')
+        .next()
+        .should('have.text', '19')
+        .next()
+        .should('have.text', '0')
+
+      cy.contains('td', 'carbohydrates')
+        .next()
+        .should('have.text', '103')
+        .next()
+        .should('have.text', '247')
+
+      cy.contains('td', 'sugars')
+        .next()
+        .should('have.text', '43')
+        .next()
+        .should('have.text', '0')
+
+      cy.contains('td', 'fiber')
+        .next()
+        .should('have.text', '5')
+        .next()
+        .should('have.text', '38')
+
+      cy.contains('td', 'salt')
+        .next()
+        .should('have.text', '4')
+        .next()
+        .should('have.text', '0')
+    })
+  })
 })
