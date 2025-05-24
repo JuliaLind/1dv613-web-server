@@ -6,7 +6,7 @@ describe('Req 1.2 - Log in', function () {
   }
 
 
-  it('Req 1.2.1 - should log in with valid credentials', function () {
+  it('Req 1.2.1 pt1. - should log in with valid credentials', function () {
     cy.intercept('POST', `**/login`).as('loginUser')
     cy.visit('/login')
 
@@ -19,6 +19,22 @@ describe('Req 1.2 - Log in', function () {
       assert.equal(interception.response.statusCode, 201)
     })
     cy.contains('.p-toast-summary', 'Welcome')
+      .should('be.visible')
+  })
+
+  it ('Req 1.2.1 - pt2, should not login in with invalid credentials', () => {
+    cy.intercept('POST', `**/login`).as('loginUser')
+    cy.visit('/login')
+
+    cy.get('#email').type('not@registered.se')
+    cy.get('input[type="password"]').eq(0).type('somepassword')
+
+    cy.get('form').submit()
+    cy.url().should('include', '/login')
+    cy.wait('@loginUser').then((interception) => {
+      assert.equal(interception.response.statusCode, 401)
+    })
+    cy.contains('.p-toast-summary', 'Login failed')
       .should('be.visible')
   })
 

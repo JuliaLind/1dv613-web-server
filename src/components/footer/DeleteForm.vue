@@ -43,12 +43,16 @@ const proceed = (event) => {
       try {
         await userStore.deleteProfile(form.value)
         router.push('/login')
-        toastService.alertSuccess('Profile deleted', 'Your account has been deleted successfully')
+        toastService.alertSuccess('Account deleted', 'Your account has been deleted successfully')
       } catch (error) {
         toastService.alertError('Deletion failed', error.message)
       }
     },
     reject: () => {
+      form.value = {
+        email: '',
+        password: ''
+      }
       toastService.alertInfo('Cancelled', 'Wise choice, keep tracking your meals and you will reach your goals!')
     }
   })
@@ -86,7 +90,7 @@ const proceed = (event) => {
       </fieldset>
     </Fluid>
 
-    <Button @click.prevent="proceed" type="submit" label="Delete profile" size="large" severity="danger" />
+    <Button @click.prevent="proceed" type="submit" label="Delete profile" size="large" severity="danger" class="btn-lg delete-btn" />
   </form>
 </template>
 
@@ -99,12 +103,17 @@ h2 {
   color: var(--grey-800);
 }
 
-Button {
+.delete-btn {
+  background: linear-gradient(to bottom, var(--red-500), var(--red-600));
+}
+
+/* .delete-btn {
   font-size: var(--text-base);
   font-weight: var(--bold);
   padding: calc(var(--space-std) / 2) var(--space-std);
   border-radius: var(--rounded);
-}
+  text-transform: uppercase;
+} */
 
 form {
   margin-top: var(--space-std);

@@ -136,7 +136,7 @@ const targetDate = computed(() => {
             </div>
           </fieldset>
           <div class="right btn-container">
-            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" data-id="next-step-1" class="btn-primary" @click="activateCallback('2')" />
+            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" data-id="next-step-1" class="btn-primary btn-lg" @click="activateCallback('2')" />
           </div>
         </StepPanel>
         <StepPanel v-slot="{ activateCallback }" value="2">
@@ -168,8 +168,8 @@ const targetDate = computed(() => {
           </fieldset>
 
           <div class="right left btn-container">
-            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" data-id="prev-step-2" @click="activateCallback('1')" />
-            <Button label="Next" class="btn-primary" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('3')" data-id="next-step-2" />
+            <Button label="Back" class="btn-lg" severity="secondary" icon="pi pi-arrow-left" data-id="prev-step-2" @click="activateCallback('1')" />
+            <Button label="Next" class="btn-primary btn-lg" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('3')" data-id="next-step-2" />
           </div>
         </StepPanel>
         <StepPanel v-slot="{ activateCallback }" value="3">
@@ -191,7 +191,7 @@ const targetDate = computed(() => {
             <Button class="btn btn-primary btn-lg" type="submit" label="Save" size="large" />
           </div>
           <div class="btn-container">
-            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" data-id="prev-step-3" @click="activateCallback('2')" />
+            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" data-id="prev-step-3" class="btn-lg" @click="activateCallback('2')" />
           </div>
         </StepPanel>
       </StepPanels>

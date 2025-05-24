@@ -113,17 +113,12 @@ export class UserService {
    * array with email and password
    */
   async delete(credentials) {
-    try {
-      await this.#deleteFromDataServer()
-    } catch (error) {
-      if (error.status === 401) {
-        // user does not need to enter credentials again if both
-        // access token and refresh token have expired
-        await this.#authService.login(credentials)
-        await this.#deleteFromDataServer()
-      }
-    }
+    // make sure credentials are valid before deleting from data server
+    await this.#authService.login(credentials)
+    await this.#deleteFromDataServer()
 
+    // delete from auth-server last, if deletion from
+    // data-server fails the account should not be deleted
     await this.#authService.deleteAccount(credentials)
   }
 }

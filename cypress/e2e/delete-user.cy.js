@@ -1,104 +1,143 @@
-// import { format, subYears } from 'date-fns'
+import { format, subYears } from 'date-fns'
 
-// describe('Req 1.10 - delete account', function () {
-//   let token
-//   const age = 18
-//   const birthDate = format(subYears(new Date(), age), 'yyyy-MM-dd')
+describe('Req 1.10 - delete account', function () {
+  let token
+  const age = 18
+  const birthDate = format(subYears(new Date(), age), 'yyyy-MM-dd')
 
-//   const credentials = {
-//     email: 'other-user@email.com',
-//     password: 'otheruser',
-//     birthDate
-//   }
+  const credentials = {
+    email: 'other-user@email.com',
+    password: 'otheruser',
+    birthDate
+  }
 
-//   const today = format(new Date(), 'yyyy-MM-dd')
-//   const breakfast = {
-//     date: today,
-//     type: 'breakfast',
-//     foodItems: [
-//       {
-//         ean: '7310865018465', // Jordgubb Smultron Original Yoghurt 2%
-//         unit: 'g',
-//         weight: 100
-//       }
-//     ]
-//   }
+  const today = format(new Date(), 'yyyy-MM-dd')
+  const breakfast = {
+    date: today,
+    type: 'breakfast',
+    foodItems: [
+      {
+        ean: '7310865018465', // Jordgubb Smultron Original Yoghurt 2%
+        unit: 'g',
+        weight: 100
+      }
+    ]
+  }
 
-//   beforeEach(() => {
-//     cy.createUser(credentials)
-//       .then(() => {
-//         return cy.login({
-//           email: credentials.email,
-//           password: credentials.password
-//         })
-//       })
-//       .then((tokens) => {
-//         token = tokens.accessToken
-//       })
-//       .then((token) => {
-//         cy.addMeal(breakfast, token)
+  beforeEach(() => {
+    cy.createUser(credentials)
+      .then(() => {
+        return cy.login({
+          email: credentials.email,
+          password: credentials.password
+        })
+      })
+      .then((tokens) => {
+        token = tokens.accessToken
+        return token
+      })
+      .then((token) => {
+        cy.addMeal(breakfast, token)
 
-//         cy.fixture('profile.json')
-//           .then((profile) => {
-//             return cy.addProfileData({
-//               ...profile,
-//               age,
-//               effectiveDate: format(new Date(), 'yyyy-MM-dd'),
-//             }, token)
-//           })
-//       })
-//   })
+        cy.fixture('profile.json')
+          .then((profile) => {
+            return cy.addProfileData({
+              ...profile,
+              age,
+              effectiveDate: format(new Date(), 'yyyy-MM-dd'),
+            }, token)
+          })
+      })
+  })
 
-//   afterEach(() => {
-//     cy.deleteUserData(credentials)
-//     cy.deleteUser(credentials)
+  afterEach(() => {
+    cy.deleteFromDataServer(token)
+    cy.deleteUser(credentials)
 
-//     cy.clearLocalStorage()
-//   })
+    cy.log('user deleted')
 
-//   it('Req 1.10.1 - Logged in user who filles out correct email and password should be able to delete account', () => {
-//     cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/user`).as('deleteUserData')
-//     cy.intercept('DELETE', `${Cypress.env('VITE_AUTH_URL')}/user`).as('deleteAccount')
-//     cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/meals`).as('deleteMeals')
+    cy.clearLocalStorage()
+  })
 
-//     cy.visit('/')
+  it('Req 1.10.1 - Logged in user who filles out correct email and password should be able to delete account', () => {
+    cy.intercept('POST', `${Cypress.env('VITE_AUTH_URL')}/login`).as('loginUser')
+    cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/user`).as('deleteUserData')
+    cy.intercept('DELETE', `${Cypress.env('VITE_AUTH_URL')}/user`).as('deleteAccount')
+    cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/meals`).as('deleteMeals')
 
-//     cy.get('.p-toast-close-button')
-//       .click() // close the toast message so it does not cover other elements
+    cy.visit('/')
 
-//     cy.get('.pi-user').click()
-//     cy.get('#delete-form #email').type(credentials.email)
-//     cy.get('#delete-form #password').type(credentials.password)
-//     cy.get('#delete-form .p-button-danger').click()
-//     cy.get('.p-toast-message-content').should('contain', 'Account deleted')
-//     cy.get('.p-toast-message-content').should('have.class', 'p-toast-message-success')
-//     cy.get('.pi-user').should('not.exist')
-//     cy.url().should('not.include', '/')
-//     cy.url().should('include', '/login')
+    cy.get('.p-toast-close-button')
+      .click() // close the toast message so it does not cover other elements
 
-//     cy.wait('@deleteAccount').then((interception) => {
-//       expect(interception.response.statusCode).to.equal(204)
-//     })
+    cy.get('.pi-user').click()
+    cy.get('#delete-form #email').type(credentials.email)
+    cy.get('#delete-form #password').type(credentials.password)
+    cy.get('#delete-form .p-button-danger').click()
+    cy.get('.p-confirmpopup-accept-button').click()
+    cy.get('.p-toast-summary').should('contain', 'Account deleted')
+    cy.get('.p-toast-message').should('have.class', 'p-toast-message-success')
+    cy.get('.pi-user').should('not.exist')
+    cy.url().should('include', '/login')
 
-//     cy.wait('@deleteUserData').then((interception) => {
-//       expect(interception.response.statusCode).to.equal(204)
-//     })
+    // User should have been successfully authenticated
+    cy.wait('@loginUser').then((interception) => {
+      expect(interception.response.statusCode).to.equal(201)
+    })
 
-//     cy.wait('@deleteMeals').then((interception) => {
-//       expect(interception.response.statusCode).to.equal(204)
-//     })
+    // User data has been successfully deleted from data-server
+    cy.wait('@deleteUserData').then((interception) => {
+      expect(interception.response.statusCode).to.equal(204)
+    })
 
-//     cy.intercept('POST', `**/login`).as('loginUser')
+    // User's meals have been successfully deleted from data-server
+    cy.wait('@deleteMeals').then((interception) => {
+      expect(interception.response.statusCode).to.equal(204)
+    })
 
-//     cy.get('#email').type(credentials.email)
-//     cy.get('input[type="password"]').eq(0).type(credentials.password)
+    // User's account has been successfully deleted
+    cy.wait('@deleteAccount').then((interception) => {
+      expect(interception.response.statusCode).to.equal(204)
+    })
 
-//     cy.get('form').submit()
-//     cy.url().should('include', '/')
-//     cy.wait('@loginUser').then((interception) => {
-//       assert.equal(interception.response.statusCode, 404)
-//     })
-//     cy.contains('.p-toast-summary', 'Welcome')
-//       .should('be.visible')
-//   })
-// })
+
+    // Should not be able to login again after account has been deleted
+    cy.intercept('POST', `**/login`).as('loginUser')
+
+    cy.get('#email').type(credentials.email)
+    cy.get('input[type="password"]').eq(0).type(credentials.password)
+
+    cy.get('form').submit()
+    cy.url().should('include', '/login')
+
+    // user has been deleted from auth-server
+    cy.wait('@loginUser').then((interception) => {
+      assert.equal(interception.response.statusCode, 401)
+    })
+    cy.contains('.p-toast-summary', 'Login failed')
+      .should('be.visible')
+
+    cy.request({
+      method: 'GET',
+      url: `${Cypress.env('VITE_DATA_URL')}/meals/${today}`,
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      failOnStatusCode: false
+    }).then((response) => {
+      expect(response.status).to.equal(404)
+    })
+
+    cy.request({
+      method: 'GET',
+      url: `${Cypress.env('VITE_DATA_URL')}/user`,
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      failOnStatusCode: false
+    }).then((response) => {
+      expect(response.status).to.equal(404)
+    })
+  })
+
+})

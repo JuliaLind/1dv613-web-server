@@ -51,23 +51,13 @@ Cypress.Commands.add('deleteUserData', ({ email, password }) => {
   }).then((response) => {
     const accessToken = response.body.accessToken
 
-    cy.request({
-      method: 'DELETE',
-      url: `${Cypress.env('VITE_DATA_URL')}/user`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
-      failOnStatusCode: false
-    })
-    return cy.request({
-      method: 'DELETE',
-      url: `${Cypress.env('VITE_AUTH_URL')}/meals`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      failOnStatusCode: false
-    })
+    cy.deleteFromDataServer(accessToken)
   })
+})
+
+Cypress.Commands.add('deleteFromDataServer', (accessToken) => {
+  cy.deleteProfileData(accessToken)
+  cy.deleteMeals(accessToken)
 })
 
 Cypress.Commands.add('addProfileData', (data, token) => {
