@@ -113,7 +113,8 @@ export class UserService {
    * array with email and password
    */
   async delete(credentials) {
-    // make sure credentials are valid before deleting from data server
+    // make sure credentials are valid before deleting from data server.
+    // Make sure that accessToken to be sent to data-server belongs to the user whose credentials have been provided (i.e. a user cannot delete another user's data).
     await this.#authService.login(credentials)
     await this.#deleteFromDataServer()
 

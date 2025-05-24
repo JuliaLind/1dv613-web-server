@@ -59,7 +59,7 @@ describe('Req 1.10 - delete account', function () {
     cy.clearLocalStorage()
   })
 
-  it('Req 1.10.1 - Logged in user who filles out correct email and password should be able to delete account', () => {
+  it('Req 1.10.1  + 1.10.3 - Logged in user who filles out correct email and password should be able to delete account. User data should be deleted from from auth-server and data-server', () => {
     cy.intercept('POST', `${Cypress.env('VITE_AUTH_URL')}/login`).as('loginUser')
     cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/user`).as('deleteUserData')
     cy.intercept('DELETE', `${Cypress.env('VITE_AUTH_URL')}/user`).as('deleteAccount')
@@ -140,4 +140,102 @@ describe('Req 1.10 - delete account', function () {
     })
   })
 
+  it('User account should not be deleted if credentials are correct but user rejects the confirmation dialog', () => {
+    cy.intercept('POST', `${Cypress.env('VITE_AUTH_URL')}/login`).as('loginUser')
+    cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/meals`).as('deleteMeals')
+    cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/user`).as('deleteUserData')
+    cy.intercept('DELETE', `${Cypress.env('VITE_AUTH_URL')}/user`).as('deleteAccount')
+
+    cy.visit('/')
+
+    cy.get('.p-toast-close-button')
+      .click() // close the toast message so it does not cover other elements
+
+    cy.get('.pi-user').click()
+    cy.get('#delete-form #email').type(credentials.email)
+    cy.get('#delete-form #password').type(credentials.password)
+    cy.get('#delete-form .p-button-danger').click()
+    cy.get('.p-confirmpopup-reject-button').click()
+
+    // No requests to backend should have been made
+    cy.get('@loginUser.all').should('have.length', 0)
+    cy.get('@deleteMeals.all').should('have.length', 0)
+    cy.get('@deleteUserData.all').should('have.length', 0)
+    cy.get('@deleteAccount.all').should('have.length', 0)
+
+
+    // User remains logged in
+    cy.get('.pi-user').should('exist')
+    cy.url().should('not.include', '/login')
+    cy.get('.p-toast-summary').should('contain', 'Cancelled')
+    cy.get('.p-toast-message').should('have.class', 'p-toast-message-info')
+    cy.getAllLocalStorage('accessToken').then((accessToken) => {
+      expect(accessToken).to.exist
+    })
+    cy.getAllLocalStorage('refreshToken').then((refreshToken) => {
+      expect(refreshToken).to.exist
+    })
+  })
+
+  const wrongCredentials = [
+    {
+      email: 'wrong@email.com',
+      password: credentials.password,
+      reason: 'wrong email'
+    },
+    {
+      email: credentials.email,
+      password: 'wrongpassword',
+      reason: 'wrong password'
+    }
+  ]
+
+  wrongCredentials.forEach(({
+    email,
+    password,
+    reason
+  }) => {
+    it('Requirement 1.3.2 - User account should not be deleted if credentials are incorrect - ' + reason, () => {
+    cy.intercept('POST', `${Cypress.env('VITE_AUTH_URL')}/login`).as('loginUser')
+    cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/meals`).as('deleteMeals')
+    cy.intercept('DELETE', `${Cypress.env('VITE_DATA_URL')}/user`).as('deleteUserData')
+    cy.intercept('DELETE', `${Cypress.env('VITE_AUTH_URL')}/user`).as('deleteAccount')
+
+    cy.visit('/')
+
+    cy.get('.p-toast-close-button')
+      .click() // close the toast message so it does not cover other elements
+
+    cy.get('.pi-user').click()
+    cy.get('#delete-form #email').type(email)
+    cy.get('#delete-form #password').type(password) // incorrect password
+    cy.get('#delete-form .p-button-danger').click()
+    cy.get('.p-confirmpopup-accept-button').click()
+
+    // Only the login request should have been made
+    cy.wait('@loginUser').then((interception) => {
+      expect(interception.response.statusCode).to.equal(401)
+    })
+
+    cy.get('@deleteMeals.all').should('have.length', 0)
+    cy.get('@deleteUserData.all').should('have.length', 0)
+    cy.get('@deleteAccount.all').should('have.length', 0)
+
+
+    // User remains logged in
+    cy.get('.pi-user').should('exist')
+    cy.url().should('not.include', '/login')
+    cy.get('.p-toast-summary').should('contain', 'Deletion failed')
+    cy.get('.p-toast-message').should('have.class', 'p-toast-message-error')
+    cy.getAllLocalStorage('accessToken').then((accessToken) => {
+      expect(accessToken).to.exist
+    })
+    cy.getAllLocalStorage('refreshToken').then((refreshToken) => {
+      expect(refreshToken).to.exist
+    })
+  })
+  })
+
+
+  
 })
