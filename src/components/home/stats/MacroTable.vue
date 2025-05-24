@@ -40,7 +40,7 @@ function moreIsBetter(nutrient) {
  * @returns {boolean} - true if the nutrient is one of the nutrients that is better to consume less than the recommended amount
  */
 function lessIsBetter(nutrient) {
-  return ['fat', 'saturatedFat', 'sugars', 'salt'].includes(nutrient)
+  return ['saturatedFat', 'sugars', 'salt'].includes(nutrient)
 }
 
 /**
@@ -51,7 +51,7 @@ function lessIsBetter(nutrient) {
  * @returns {boolean} - true if the nutrient is one of the nutrients that is better to consume close to the recommended amount
  */
 function equalIsBetter(nutrient) {
-  return ['protein', 'carbohydrates'].includes(nutrient)
+  return ['protein', 'carbohydrates', 'fat'].includes(nutrient)
 }
 
 /**
