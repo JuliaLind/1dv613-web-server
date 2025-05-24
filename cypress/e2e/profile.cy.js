@@ -19,7 +19,6 @@ describe('Req 1.5 - personal plan', function () {
     cy.login(credentials).then((tokens) => {
       token = tokens.accessToken
     })
-
   })
 
   afterEach(() => {

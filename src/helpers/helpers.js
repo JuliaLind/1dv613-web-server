@@ -1,5 +1,4 @@
 import { isRef, unref } from 'vue'
-import { useRouter } from 'vue-router'
 import { createToastService } from '@/services/toast.service.js'
 
 
@@ -38,10 +37,10 @@ export function unwrap(value) {
  *
  * @param {Error} error - the caught error
  * @param {object} toast - the Primevue toast object
+ * @param router
  * @returns {void}
  */
-export function handleError(error, toast) {
-  const router = useRouter()
+export function handleError(error, toast, router) {
   const toastService = createToastService(toast)
 
     if (error.status === 401) {

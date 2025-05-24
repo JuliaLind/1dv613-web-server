@@ -94,7 +94,7 @@ Cypress.Commands.add('login', ({ email, password }) => {
     return cy.visit('/', {
       onBeforeLoad(win) {
         win.localStorage.setItem('accessToken', accessToken)
-        win.localStorage.setItem('refeshToken', refreshToken)
+        win.localStorage.setItem('refreshToken', refreshToken)
       }
     }).then(() => {
       return { accessToken, refreshToken }

@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import { useRouter } from 'vue-router'
 import MealList from '@/components/home/meallist/MealList.vue'
 
 import DateChanger from '@/components/home/DateChanger.vue'
@@ -27,6 +28,7 @@ const dayStore = useDayStore()
 const userStore = useUserStore()
 const toast = useToast()
 const toastService = createToastService(toast)
+const router = useRouter()
 
 
 /**
@@ -52,7 +54,7 @@ async function init() {
     await dayStore.fetchMeals()
     await fetchUserData()
   } catch (error) {
-    handleError(error, toast)
+    handleError(error, toast, router)
   }
 }
 
@@ -67,7 +69,7 @@ async function changeDate(newDate) {
     userStore.setDate(newDate)
     await dayStore.fetchMeals() // 404 will not throw an error
   } catch (error) {
-    handleError(error, toast)
+    handleError(error, toast, router)
   }
 }
 

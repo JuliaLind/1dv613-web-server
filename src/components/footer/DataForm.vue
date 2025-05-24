@@ -5,6 +5,7 @@ import { CalcService } from '@/services/calc.service'
 import { useToast } from 'primevue/usetoast'
 import { isFilled } from '@/helpers/validate'
 import { handleError } from '@/helpers/helpers'
+import { useRouter } from 'vue-router'
 import { createToastService } from '@/services/toast.service'
 import Stepper from 'primevue/stepper'
 import StepList from 'primevue/steplist'
@@ -15,6 +16,7 @@ import StepPanel from 'primevue/steppanel'
 const userStore = useUserStore()
 const toast = useToast()
 const toastService = createToastService(toast)
+const router = useRouter()
 const form = ref({
   ...toRaw(userStore.user)
 })
@@ -56,7 +58,7 @@ async function saveProfile(event) {
     emit('close')
     toastService.alertSuccess('Profile updated', 'Your profile has been updated successfully')
   } catch (error) {
-    handleError(error, toast)
+    handleError(error, toast, router)
   }
 }
 
