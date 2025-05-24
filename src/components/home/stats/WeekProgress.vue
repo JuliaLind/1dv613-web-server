@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/user.store.js'
 import WeightChart from '@/components/home/stats/WeightChart.vue'
-import { differenceInCalendarDays } from 'date-fns'
+import { differenceInCalendarDays, subDays } from 'date-fns'
 
 
 const userStore = useUserStore()
@@ -12,8 +12,7 @@ const selectedDate = computed(() => {
 }) // end of the 7 day period
 
 const oneWeekAgo = computed(() => {
-  const date = new Date(userStore.selectedDate)
-  date.setDate(date.getDate() - 7) // start of the 7 day period
+  const date = subDays(new Date(userStore.selectedDate), 7) // start of the 7 day period
 
   return date
 })

@@ -67,9 +67,6 @@ describe('Req 1.10 - delete account', function () {
 
     cy.visit('/')
 
-    cy.get('.p-toast-close-button')
-      .click() // close the toast message so it does not cover other elements
-
     cy.get('.pi-user').click()
     cy.get('#delete-form #email').type(credentials.email)
     cy.get('#delete-form #password').type(credentials.password)
@@ -155,8 +152,6 @@ describe('Req 1.10 - delete account', function () {
 
     cy.visit('/')
 
-    cy.get('.p-toast-close-button')
-      .click() // close the toast message so it does not cover other elements
 
     cy.get('.pi-user').click()
     cy.get('#delete-form #email').type(credentials.email)
@@ -208,8 +203,6 @@ describe('Req 1.10 - delete account', function () {
 
       cy.visit('/')
 
-      cy.get('.p-toast-close-button')
-        .click() // close the toast message so it does not cover other elements
 
       cy.get('.pi-user').click()
       cy.get('#delete-form #email').type(email)

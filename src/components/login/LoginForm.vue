@@ -27,8 +27,8 @@ async function handleSubmit(event) {
   try {
     validateMandatory(form.value)
     await authService.login(form.value)
-    toastService.alertSuccess('Welcome')
     router.push('/')
+    toastService.alertSuccess('Welcome')
   } catch (error) {
     toastService.alertError('Login failed', error.message)
   }

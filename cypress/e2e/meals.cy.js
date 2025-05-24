@@ -314,7 +314,7 @@ describe('Req 1.6 - meals', function () {
     beforeEach(() => {
       cy.fixture('profile.json').then((profile) => {
         profile.age = 18
-        profile.effectiveDate = new Date().toISOString()
+        profile.effectiveDate = format(new Date(), 'yyyy-MM-dd')
         cy.addProfileData(profile, token)
       })
     })

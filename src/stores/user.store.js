@@ -19,7 +19,6 @@ export const useUserStore = defineStore('user', () => {
     gender: null,
     activityLevel: CalcService.activityLevelOptions.sedentary.value,
     weeklyChange: null,
-    // updatedAt: null,
     history: [],
   }
 
@@ -168,7 +167,7 @@ export const useUserStore = defineStore('user', () => {
    * @param {object} newData - associative array of the new data 
    */
   async function updUserData(newData) {
-    const effectiveDate = new Date()
+    const effectiveDate = format(new Date(), 'yyyy-MM-dd')
 
     newData.effectiveDate = effectiveDate
     newData.age = age.value

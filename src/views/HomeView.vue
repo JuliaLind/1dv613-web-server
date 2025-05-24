@@ -41,7 +41,7 @@ async function fetchUserData() {
     toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience', { life: 5000 })
     return
   }
-  if ((new Date(userStore.user.updatedAt)).getTime() < (new Date()).getTime()) {
+  if (!userStore.user.isUpdated) {
     toastService.alertInfo('Update your weight', 'Update your weight each day to get the most out of the app', { life: 5000 })
   }
 }

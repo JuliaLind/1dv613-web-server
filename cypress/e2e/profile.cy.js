@@ -94,7 +94,7 @@ describe('Req 1.5 - personal plan', function () {
     beforeEach(() => {
       cy.fixture('profile.json').then((profile) => {
         profile.age = age
-        profile.effectiveDate = new Date().toISOString()
+        profile.effectiveDate = format(new Date(), 'yyyy-MM-dd')
         cy.addProfileData(profile, token)
       })
     })
@@ -205,7 +205,7 @@ describe('Req 1.5 - personal plan', function () {
     beforeEach(() => {
       cy.fixture('profile.json').then((profile) => {
         profile.age = age
-        profile.effectiveDate = subDays(new Date(), 1).toISOString() // yesterdays date
+        profile.effectiveDate = format(subDays(new Date(), 1), 'yyyy-MM-dd') // yesterdays date
         cy.addProfileData(profile, token)
       })
     })
