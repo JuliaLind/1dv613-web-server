@@ -128,19 +128,16 @@ jobs:
           path: dist/
 
   deploy:
-    name: Deploy Web Frontend to Production
+    name: Deploy Web Frontend via Docker Build
     runs-on: ubuntu-latest
     needs: [lint, test-unit, test-e2e, build]
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build
-          path: dist
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Start SSH agent and add deploy key
+      - name: Start SSH agent and add private key
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -151,15 +148,10 @@ jobs:
           ssh-keyscan -H ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
-      - name: Copy built files to server
-        run: |
-          rsync -avz -e "ssh" dist/ root@${{ secrets.PRODUCTION_HOST }}:/root/app/web-server/dist/
+      - name: Set remote Docker host (via SSH)
+        run: echo "DOCKER_HOST=ssh://root@${{ secrets.PRODUCTION_HOST }}" >> $GITHUB_ENV
 
-      - name: Reload web container (or Nginx)
+      - name: Deploy web-server via Docker Compose
         run: |
-          ssh root@${{ secrets.PRODUCTION_HOST }} '
-            cd /root/app/web-server &&
-            docker compose down &&
-            docker compose up -d
-          '
+          docker compose -f docker-compose.yml up -d --build
 
