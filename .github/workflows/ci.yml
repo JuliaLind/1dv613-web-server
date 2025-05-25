@@ -1,0 +1,126 @@
+name: CI
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run lint
+
+  test-unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    env:
+      CYPRESS_INSTALL_BINARY: 0
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run test:unit
+
+  test-e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    env:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.10.0
+        with:
+          mongodb-version: 7
+          mongodb-username: root
+          mongodb-password: password
+
+      - name: Install tools
+        run: |
+          sudo apt-get update && sudo apt-get install -y mongodb-database-tools curl
+          npm install -g wait-on
+
+      - name: Clone Auth & Data Servers
+        run: |
+          git clone https://github.com/JuliaLind/1dv613-auth-server ../auth-server
+          git clone https://github.com/JuliaLind/1dv613-data-server ../data-server
+
+      - name: Start Auth Server
+        run: |
+          echo "${{ secrets.TEST_PRIVATE_PEM }}" > ../auth-server/test_private.pem
+          cd ../auth-server
+          npm ci
+          DB_CONNECTION_STRING="mongodb://root:password@localhost:27017/auth_test?authSource=admin" \
+          ACCESS_TOKEN_PRIVATE_KEY_PATH="$(pwd)/test_private.pem" \
+          ACCESS_TOKEN_LIFE="2h" \
+          REFRESH_TOKEN_KEY="${{ secrets.TEST_REFRESH_TOKEN_KEY }}" \
+          REFRESH_TOKEN_LIFE="2d" \
+          PORT=5053 \
+          npm run dev:ci > auth.log 2>&1 &
+
+      - name: Start Data Server
+        run: |
+          echo "${{ secrets.TEST_PUBLIC_PEM }}" > ../data-server/public.pem
+          cd ../data-server
+          npm ci
+          DB_CONNECTION_STRING="mongodb://root:password@localhost:27017/data_test?authSource=admin" \
+          AUTH_TOKEN_SECRET_PATH="$(pwd)/public.pem" \
+          PORT=5054 \
+          npm run dev:ci > data.log 2>&1 &
+
+      - name: Start Web Server & Wait
+        run: |
+          cd ../web-server
+          npm ci
+          VITE_AUTH_URL="http://localhost:5053/api/v1" \
+          VITE_DATA_URL="http://localhost:5054/api/v1" \
+          npm run dev -- --port 4173 > vite.log 2>&1 &
+
+          npx wait-on --timeout 90000 http://localhost:4173 http://localhost:5053/api/v1 http://localhost:5054/api/v1
+
+          echo "=== Auth Logs ===" && tail -n 20 ../auth-server/auth.log || true
+          echo "=== Data Logs ===" && tail -n 20 ../data-server/data.log || true
+          echo "=== Vite Logs ===" && tail -n 20 vite.log || true
+
+      - name: Import Mongo Seed
+        run: |
+          mongoimport --uri="mongodb://root:password@localhost:27017/data_test" \
+          --collection=fooditems --file=../data-server/data/clean.json \
+          --jsonArray --authenticationDatabase=admin
+
+      - name: Run Cypress E2E Tests
+        run: |
+          npx cypress run --e2e
+
+      - name: Upload Cypress Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts
+          path: |
+            cypress/screenshots
+            cypress/videos
+            coverage/e2e
+
+  build:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    env:
+      VITE_AUTH_URL: "https://cscloud6-36.lnu.se/auth/api/v1" # switch to new server later
+      VITE_DATA_URL: "https://cscloud6-36.lnu.se/data/api/v1" # switch to new server later
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: dist/
