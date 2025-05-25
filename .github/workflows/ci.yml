@@ -79,7 +79,6 @@ jobs:
 
       - name: Start Web Server & Wait
         run: |
-          cd ../web-server
           npm ci
           VITE_AUTH_URL="http://localhost:5053/api/v1" \
           VITE_DATA_URL="http://localhost:5054/api/v1" \
