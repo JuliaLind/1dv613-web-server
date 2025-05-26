@@ -119,21 +119,21 @@ const targetDate = computed(() => {
               <div id="height-weight-container">
                 <div class="flex-col">
                   <label for="height">Height (cm)</label>
-                  <InputNumber v-model="form.height" id="height" inputId="height" suffix=" cm" :maxFractionDigits="1"
+                  <InputNumber v-model="form.height" id="height" inputId="height" suffix=" cm" inputmode="decimal" :maxFractionDigits="1"
                     class="w-full" />
                 </div>
 
                 <div class="flex-col">
                   <label for="current-weight">Current Weight (kg)</label>
                   <InputNumber v-model="form.currentWeight" id="current-weight" inputId="current-weight" suffix=" kg"
-                    :min="1" class="w-full" :maxFractionDigits="1" />
+                    :min="1" class="w-full" inputmode="decimal" :maxFractionDigits="1" />
                 </div>
               </div>
             </Fluid>
             <!-- Target Weight -->
             <div class="flex-col">
               <label for="target-weight">Target Weight (kg)</label>
-              <InputNumber v-model="form.targetWeight" id="target-weight" inputId="target-weight" suffix=" kg" :min="40"
+              <InputNumber v-model="form.targetWeight" id="target-weight" inputId="target-weight" inputmode="decimal" suffix=" kg" :min="40"
                 :maxFractionDigits="1" class="w-full" />
             </div>
           </fieldset>
