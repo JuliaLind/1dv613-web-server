@@ -93,7 +93,7 @@ jobs:
       - name: Import Mongo Seed
         run: |
           mongoimport --uri="mongodb://root:password@localhost:27017/data_test" \
-          --collection=fooditems --file=../data-server/data/clean.json \
+          --collection=fooditems --file=../data-server/data/foods.json \
           --jsonArray --authenticationDatabase=admin
 
       - name: Run Cypress E2E Tests

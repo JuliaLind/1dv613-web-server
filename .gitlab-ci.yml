@@ -107,7 +107,7 @@ test:e2e:
     - echo "=== Data Server Logs ===" && tail -n 20 ../data-server/data.log || true
     - echo "=== Vite Logs ===" && tail -n 20 vite.log || true
 
-    - mongoimport --uri="mongodb://root:password@mongo:27017/data_test" --collection=fooditems --file=../data-server/data/clean.json --jsonArray --authenticationDatabase admin
+    - mongoimport --uri="mongodb://root:password@mongo:27017/data_test" --collection=fooditems --file=../data-server/data/foods.json --jsonArray --authenticationDatabase admin
 
   script:
     - set -e
