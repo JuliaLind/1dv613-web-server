@@ -337,7 +337,6 @@ Button.btn {
   margin-top: var(--space-m);
   background-color: var(--primary-600);
   color: var(--white);
-  font-size: var(--text-base);
   font-weight: var(--bold);
   padding: calc(var(--space-std) / 2) var(--space-std);
   border-radius: var(--rounded);
@@ -378,7 +377,8 @@ Button.btn:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--primary-300);
+  /* background-color: var(--primary-300); */
+  background-color: var(--primary-600);
   width: 6rem;
   height: 6rem;
   border-radius: 50%;
