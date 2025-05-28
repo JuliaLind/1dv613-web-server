@@ -81,7 +81,7 @@ defineEmits(['delete'])
 .btn-container {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--space-m)/2);
+  gap: 0.5rem;
 }
 
 .meal-item {

@@ -11,14 +11,14 @@ import RegisterForm from '@/components/register/RegisterForm.vue'
 
 <style scoped>
 main {
-  padding: var(--space-m);
+  padding: 1rem;
 }
 
 h1 {
   font-size: var(--text-2xl);
   font-weight: var(--bold);
   color: var(--grey-800);
-  margin-bottom: var(--space-std);
+  margin-bottom: 1.5rem;
   text-align: center;
 }
 </style>

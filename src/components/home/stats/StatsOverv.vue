@@ -19,8 +19,8 @@ import MacroChart from './MacroChart.vue'
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-  gap: var(--space-m);
-  padding: var(--space-m);
+  gap: 1rem;
+  padding: 1rem;
 }
 
 </style>

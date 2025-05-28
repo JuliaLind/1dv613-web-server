@@ -2,14 +2,6 @@
 @import 'primeicons/primeicons.css';
 @import './variables.css';
 
-/* 
-main {
-  max-width: 48em;
-}
-
-h1 {
-  color: var(--p-cyan-600);
-} */
 
 .capitalize {
   text-transform: capitalize;
@@ -32,7 +24,7 @@ button:not(.btn-primary):not(.p-button-danger) {
 }
 
 button.btn-lg {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 600;
@@ -43,5 +35,5 @@ button.btn-primary.btn-lg {
 }
 
 button {
-  font-size: 1rem;
+  font-size: var(--text-base);
 }

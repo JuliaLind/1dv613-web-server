@@ -62,11 +62,11 @@ function calcSuggestedKcal() {
 
 <style scoped>
 .meal {
-  background-color: white;
+  background-color: var(--white);
   border-top-left-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px var(--light-shadow),
+    0 2px 4px -2px var(--light-shadow);
   padding: 1rem;
 
 }
@@ -86,8 +86,8 @@ h2 {
 .item-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
-  margin-top: calc(var(--space-m) / 2);
+  gap: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .meal-kcal {
@@ -105,7 +105,7 @@ footer {
   text-align: left;
   font-size: 1.125rem;
   color: var(--primary-700);
-  font-weight: 500;
+  font-weight: var(--medium);
   margin-top: 0.5rem;
   margin-left: 0.25rem;
 }

@@ -64,7 +64,7 @@ const diffWeight = computed(() => {
   background-color: var(--primary-100);
   color: var(--primary-700);
   padding: 0.5rem 1rem;
-  box-shadow: var(--box-shadow);
+  box-shadow:  0 4px 6px var(--light-shadow);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -92,7 +92,7 @@ const diffWeight = computed(() => {
 }
 
 .kcal-circle {
-  background-color: #f0faff;
+  background-color: var(--primary-50);
   color: var(--primary-700);
 }
 

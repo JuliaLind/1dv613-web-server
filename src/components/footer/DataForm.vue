@@ -119,21 +119,21 @@ const targetDate = computed(() => {
               <div id="height-weight-container">
                 <div class="flex-col">
                   <label for="height">Height (cm)</label>
-                  <InputNumber v-model="form.height" id="height" inputId="height" suffix=" cm" inputmode="decimal" :maxFractionDigits="1"
+                  <InputNumber v-model="form.height" id="height" inputmode="decimal" inputId="height" suffix=" cm" :maxFractionDigits="1" :min-fraction-digits="1"
                     class="w-full" />
                 </div>
 
                 <div class="flex-col">
                   <label for="current-weight">Current Weight (kg)</label>
-                  <InputNumber v-model="form.currentWeight" id="current-weight" inputId="current-weight" suffix=" kg"
-                    :min="1" class="w-full" inputmode="decimal" :maxFractionDigits="1" />
+                  <InputNumber v-model="form.currentWeight" inputmode="decimal" id="current-weight" inputId="current-weight" suffix=" kg"
+                    :min="1" class="w-full" :maxFractionDigits="1" :min-fraction-digits="1" />
                 </div>
               </div>
             </Fluid>
             <!-- Target Weight -->
             <div class="flex-col">
               <label for="target-weight">Target Weight (kg)</label>
-              <InputNumber v-model="form.targetWeight" id="target-weight" inputId="target-weight" inputmode="decimal" suffix=" kg" :min="40"
+              <InputNumber v-model="form.targetWeight" inputmode="decimal" id="target-weight" :min-fraction-digits="1" inputId="target-weight" suffix=" kg" :min="40"
                 :maxFractionDigits="1" class="w-full" />
             </div>
           </fieldset>
@@ -204,7 +204,7 @@ const targetDate = computed(() => {
 
 <style scoped>
 .btn-container {
-  padding-top: var(--space-std);
+  padding-top: 1.5rem;
   display: flex;
 }
 
@@ -219,20 +219,20 @@ const targetDate = computed(() => {
 form {
   display: flex;
   flex-direction: column;
-  padding: var(--space-std);
+  padding: 1.5rem;
   max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
   background-color: var(--white);
-  border-radius: var(--rounded-sm);
-  box-shadow: var(--box-shadow);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-top: 4px solid var(--primary-300);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-std);
+  gap: 1.5rem;
 }
 
 input:focus,
@@ -243,27 +243,27 @@ input[type='radio']:focus {
 
 #gender-container {
   display: flex;
-  gap: var(--space-m);
+  gap: 1rem;
 }
 
 #weekly-change-container {
   display: flex;
   flex-wrap: wrap;
-  column-gap: var(--space-m);
-  row-gap: var(--space-xs);
+  column-gap: 1rem;
+  row-gap: 0.25rem;
   justify-items: flex-start;
 }
 
 #height-weight-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-m);
+  gap: 1rem;
 }
 
 #activity-level-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 0.25rem;
 }
 
 #target-weight {
@@ -275,7 +275,6 @@ input[type='radio']:focus {
 #target-weight:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(56, 178, 172, 0.5);
-  /* focus:ring-2 */
 }
 
 .flex-col {
@@ -288,28 +287,28 @@ label {
   font-size: var(--text-sm);
   font-weight: var(--medium);
   color: var(--grey-700);
-  margin-bottom: var(--space-xs);
+  margin-bottom: 0.25rem;
 }
 
 
 label:not(.for-option) {
   font-weight: var(--bold);
   color: var(--primary-600);
-  margin-bottom: var(--space-xs);
-  margin-top: var(--space-xs);
+  margin-bottom: 0.25rem;
+  margin-top: 0.25rem;
 }
 
 
 label.multiple {
   display: flex;
   align-items: flex-start;
-  gap: calc(var(--space-std) / 2);
+  gap: 0.75rem;
 }
 
 label.for-option {
   display: inline-flex;
   align-items: center;
-  gap: calc(var(--space-std) / 3);
+  gap: 0.5rem;
 }
 
 .option-name {
@@ -330,16 +329,16 @@ input[type='radio'] {
 }
 
 input[type='radio'].stacked {
-  margin-top: var(--space-xs);
+  margin-top: 0.25rem;
 }
 
 Button.btn {
-  margin-top: var(--space-m);
+  margin-top: 1rem;
   background-color: var(--primary-600);
   color: var(--white);
   font-weight: var(--bold);
-  padding: calc(var(--space-std) / 2) var(--space-std);
-  border-radius: var(--rounded);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
   transition: background-color 0.2s ease-in-out;
   letter-spacing: 0.05em;
   width: 100%;
@@ -377,7 +376,6 @@ Button.btn:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: var(--primary-300); */
   background-color: var(--primary-600);
   width: 6rem;
   height: 6rem;

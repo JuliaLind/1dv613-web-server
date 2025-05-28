@@ -63,10 +63,10 @@ function update(date) {
 
 <style scoped>
 #date-changer {
-  padding: calc(var(--space-m)/2) var(--space-m);
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-m);
+  gap: 1rem;
 }
 </style>

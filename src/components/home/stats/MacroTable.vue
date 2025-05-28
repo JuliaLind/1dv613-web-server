@@ -133,7 +133,7 @@ table {
   width: min-content;
   font-size: var(--text-xs);
   border: 1px solid var(--grey-200);
-  border-radius: var(--rounded-md);
+  border-radius:0.375rem;
   box-shadow: 0 1px 2px var(--light-shadow);
   overflow: hidden;
 }
@@ -157,7 +157,7 @@ thead {
 
 th,
 td {
-  padding: calc(var(--space-m)/2) var(--space-m);
+  padding: 0.5rem 1rem;
   width: fit-content;
 }
 

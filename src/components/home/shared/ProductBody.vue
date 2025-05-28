@@ -45,10 +45,11 @@ const food = props.food.clone()
     </table>
   </div>
 </template>
+
 <style scoped>
 .save-btn {
   background-color: var(--primary-500);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 0.5rem;
   padding: 0.5rem;
@@ -120,31 +121,31 @@ option {
 .food-detail {
   background-color: var(--white);
   border-radius: 0.5rem;
-  box-shadow: var(--box-shadow);
-  padding: var(--space-m);
-  margin-bottom: var(--space-m);
+  box-shadow: 0 4px 6px var(--light-shadow);
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 header {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--space-xs);
+  margin-top: 0.25rem;
 }
 
 form {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--space-xs);
+  gap: 0.25rem;
 }
 
 table {
-  margin-top: var(--space-m);
+  margin-top: 1rem;
   min-width: 100%;
   font-size: var(--text-xs);
   text-align: left;
   border: 1px solid var(--grey-200);
-  border-radius: var(--rounded-md);
+  border-radius: 0.375rem;
   box-shadow: 0 1px 2px var(--light-shadow);
   overflow: hidden;
 }
@@ -158,7 +159,7 @@ thead {
 
 th,
 td {
-  padding: calc(var(--space-m)/2) var(--space-m);
+  padding: 0.5rem 1rem;
 }
 
 td {

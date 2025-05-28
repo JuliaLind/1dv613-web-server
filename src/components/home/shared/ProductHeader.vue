@@ -80,7 +80,7 @@ function onLoad() {
 .food-info {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 0.25rem;
   width: 100%;
 }
 
@@ -89,7 +89,7 @@ img {
   height: 64px;
   object-fit: cover;
   border-radius: 0.5rem;
-  margin-bottom: calc(var(--space-m)/2);
+  margin-bottom: 0.5rem;
 }
 
 .food-container {
@@ -97,6 +97,6 @@ img {
   text-align: left;
   display: flex;
   flex-direction: row;
-  gap: var(--space-m);
+  gap: 1rem;
 }
 </style>

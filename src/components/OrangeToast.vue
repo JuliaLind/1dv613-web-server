@@ -112,7 +112,7 @@ const getOrangeIcon = (severity, key) => {
   right: 12px;
   background: transparent;
   border: none;
-  font-size: 16px;
+  font-size: var(--text-base);
   color: var(--toast-detail-text);
   cursor: pointer;
 }
@@ -123,7 +123,7 @@ const getOrangeIcon = (severity, key) => {
 
 .p-toast-message-error {
   border-color: var(--toast-border-error);
-  background-color: #fef2f2;
+  background-color: var(--red-50);
 }
 
 .p-toast-message-warn {

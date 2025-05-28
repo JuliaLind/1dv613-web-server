@@ -80,7 +80,7 @@ h2 {
 }
 
 .p-drawer-header {
-  padding: var(--space-xs) !important;
+  padding: 0.25rem !important;
 }
 
 #bottom-nav {

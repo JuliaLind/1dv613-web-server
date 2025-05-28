@@ -53,6 +53,6 @@ async function delItem(itemId, mealType) {
 #meal-list {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--space-m)/2);
+  gap: 0.5rem;
 }
 </style>

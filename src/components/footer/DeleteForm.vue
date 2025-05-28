@@ -107,33 +107,25 @@ h2 {
   background: linear-gradient(to bottom, var(--red-500), var(--red-600));
 }
 
-/* .delete-btn {
-  font-size: var(--text-base);
-  font-weight: var(--bold);
-  padding: calc(var(--space-std) / 2) var(--space-std);
-  border-radius: var(--rounded);
-  text-transform: uppercase;
-} */
-
 form {
-  margin-top: var(--space-std);
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: var(--space-std);
-  padding: var(--space-std);
+  gap: 1.5rem;
+  padding: 1.5rem;
   max-width: 28rem;
   margin-left: auto;
   margin-right: auto;
   background-color: var(--white);
-  border-radius: var(--rounded-sm);
-  box-shadow: var(--box-shadow);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px var(--light-shadow);
   border-top: 4px solid var(--red-500);
 }
 
 fieldset {
   display: flex;
   flex-direction: column;
-  gap: var(--space-m);
+  gap: 1rem;
 }
 
 form p {
