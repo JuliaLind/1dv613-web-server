@@ -29,7 +29,11 @@ import OrangeToast from './components/OrangeToast.vue'
 #app-container {
   width: 100%;
   max-width: 768px;
+  /* Fallback for older browsers */
   min-height: 100vh;
+
+  /* For modern browsers so that url field doesnt cover content */
+  min-height: 100dvh;
   background-color: var(--white);
 }
 </style>

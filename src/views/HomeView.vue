@@ -117,7 +117,11 @@ onMounted(async () => {
 main {
   display: grid;
   grid-template-rows: auto 1fr auto;
+  /* Fallback for older browsers */
   height: 100vh !important;
+
+  /* For modern browsers so that url field doesnt cover bottom nav on mobile phones */
+  height: 100dvh !important;
 }
 
 header {
