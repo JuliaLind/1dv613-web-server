@@ -46,7 +46,7 @@ const updatedToday = computed(() => {
 <template>
   <!-- Keep tailwind classes for the Drawer component, for some reason does not work with corresponding vanilla css-->
   <Drawer id="profile" v-model:visible="visible" position="bottom" modal
-    class="!h-[96vh] max-h-[96vh] max-w-[768px] rounded-t-2xl shadow-2xl">
+    class="!h-[96vh] !h-[96dvh] !max-h-[96vh] !max-h-[96dvh] max-w-[768px] rounded-t-2xl shadow-2xl">
     <template #header>
       <h2>Your Profile</h2>
     </template>
