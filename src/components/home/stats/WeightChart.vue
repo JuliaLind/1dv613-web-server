@@ -59,8 +59,15 @@ const chartData = computed(() => {
 })
 
 const chartOptions = computed(() => {
-  const minDate = new Date(expected[0]?.date || actual[0]?.date)
-  const maxDate = new Date(expected[expected.length - 1]?.date || actual[actual.length - 1]?.date)
+  if (!allSet()) {
+    console.warn('Chart skipped: actual or expected data missing')
+    return {}
+  }
+
+  // Use first and last dates from actual or expected array for min and max
+  const allDates = [...actual, ...expected].map(entry => new Date(entry.date)).sort((a, b) => a - b)
+  const minDate = allDates[0].toISOString()
+  const maxDate = allDates[allDates.length - 1].toISOString()
 
   return {
     maintainAspectRatio: false,
@@ -96,8 +103,8 @@ const chartOptions = computed(() => {
             day: 'MMM d'
           }
         },
-        min: minDate.toISOString(),
-        max: maxDate.toISOString(),
+        min: minDate,
+        max: maxDate,
         title: {
           display: true,
           text: 'Date'
@@ -145,7 +152,7 @@ const chartContainerStyle = computed(() => {
 <template>
   <div class="scroll-container">
     <div class="chart-container" :style="chartContainerStyle">
-      <Chart type="line" :data="chartData" :options="chartOptions" class="w-full h-[20rem]" />
+      <Chart v-if="chartData && Object.keys(chartOptions).length > 0" type="line" :data="chartData" :options="chartOptions" class="w-full h-[20rem]" />
     </div>
   </div>
 </template>
