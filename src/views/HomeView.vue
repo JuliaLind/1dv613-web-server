@@ -38,11 +38,11 @@ const router = useRouter()
 async function fetchUserData() {
   await userStore.fetchUserData()
   if (!userStore.isSet) {
-    toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience', { life: 5000 })
+    toastService.alertInfo('Complete your profile', 'Complete your profile to get a personalized experience', { life: 5000, key: 'daily' })
     return
   }
   if (!userStore.user.isUpdated) {
-    toastService.alertInfo('Update your weight', 'Update your weight each day to get the most out of the app', { life: 5000 })
+    toastService.alertInfo('Update your weight', 'Update your weight each day to get the most out of the app', { life: 5000, key: 'daily' })
   }
 }
 
