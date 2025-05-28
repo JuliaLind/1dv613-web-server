@@ -53,7 +53,7 @@ const proceed = (event) => {
         email: '',
         password: ''
       }
-      toastService.alertInfo('Cancelled', 'Wise choice, keep tracking your meals and you will reach your goals!')
+      toastService.alertInfo('Cancelled', 'Wise choice, keep tracking your meals and you will reach your goals!', { key: 'daily' })
     }
   })
 }
