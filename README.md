@@ -32,6 +32,8 @@ npm run test:unit
 
 ### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
 
+For these tests you need to have the auth-server and data-server running. Follow the instructions in the readme for https://github.com/JuliaLind/slimdreams to start up the whole system with docker before running e2e tests.
+
 ```sh
 npm run test:e2e:dev
 ```
