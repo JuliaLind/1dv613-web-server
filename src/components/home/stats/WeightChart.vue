@@ -1,7 +1,7 @@
 <script setup>
 import 'chartjs-adapter-date-fns'
 import Chart from 'primevue/chart'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { differenceInCalendarDays } from 'date-fns'
 
 const { actual, expected, chartTitle } = defineProps({
@@ -18,7 +18,6 @@ const { actual, expected, chartTitle } = defineProps({
     default: ''
   }
 })
-
 
 /**
  * Checks if the actual and expected arrays
@@ -59,56 +58,68 @@ const chartData = computed(() => {
   }
 })
 
-const chartOptions = ref({
-  maintainAspectRatio: false,
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    tooltip: {
-      callbacks: {
-        label: (context) => {
-          return `${context.dataset.label}: ${context.raw.y}kg`
-        }
-      }
-    },
-    title: {
-      display: true,
-      text: chartTitle,
-      font: {
-        size: 18,
+const chartOptions = computed(() => {
+  const minDate = new Date(expected[0]?.date || actual[0]?.date)
+  const maxDate = new Date(expected[expected.length - 1]?.date || actual[actual.length - 1]?.date)
+
+  return {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
       },
-      padding: {
-        bottom: 12,
-      },
-    }
-  },
-  scales: {
-    x: {
-      type: 'time',
-      time: {
-        unit: 'day',
-        unitStepSize: 30,
-        tooltipFormat: 'yyyy-MM-dd',
-        displayFormats: {
-          day: 'MMM d'
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ${context.raw.y}kg`
         }
       },
       title: {
         display: true,
-        text: 'Date'
+        text: chartTitle,
+        font: {
+          size: 18,
+        },
+        padding: {
+          bottom: 12,
+        },
       }
     },
-    y: {
-      title: {
-        display: true,
-        text: 'Weight (kg)'
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          unit: 'day',
+          unitStepSize: 30,
+          tooltipFormat: 'yyyy-MM-dd',
+          displayFormats: {
+            day: 'MMM d'
+          }
+        },
+        min: minDate.toISOString(),
+        max: maxDate.toISOString(),
+        title: {
+          display: true,
+          text: 'Date'
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Weight (kg)'
+        }
       }
     }
   }
 })
 
+/**
+ * Dynamically calculates the chart container's width based on the number of days
+ * between the first and last data point in the actual dataset.
+ * Ensures a scrollable chart if needed.
+ *
+ * @returns {Object} - Style object with computed width
+ */
 const chartContainerStyle = computed(() => {
   if (!allSet()) {
     return {
@@ -120,8 +131,8 @@ const chartContainerStyle = computed(() => {
   const daysCount = differenceInCalendarDays(
     new Date(actual[actual.length - 1].date),
     new Date(actual[0].date),
-  ) + 1  // Add 1 to include the start date
-  const widthInRem = daysCount * 4  // 0.5rem spacing between days
+  ) + 1
+  const widthInRem = daysCount * 4
 
   return {
     width: `${widthInRem}rem`,
@@ -129,18 +140,16 @@ const chartContainerStyle = computed(() => {
     minWidth: '100%',
   }
 })
-
 </script>
-
 
 <template>
   <div class="scroll-container">
     <div class="chart-container" :style="chartContainerStyle">
       <Chart type="line" :data="chartData" :options="chartOptions" class="w-full h-[20rem]" />
-      <!-- <Chart type="line" :data="chartData" :options="chartOptions" :class="'h-[20rem] w-[' +  chartWidth + 'rem]'" /> -->
     </div>
   </div>
 </template>
+
 <style scoped>
 .scroll-container {
   overflow-x: auto;
