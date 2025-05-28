@@ -16,7 +16,7 @@ const colorClass = computed(() => {
     case 'info':
       return 'p-toast-message-info'
     default:
-      return 'p-toast-message'
+      return ''
   }
 })
 
