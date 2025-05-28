@@ -20,6 +20,8 @@ export const createToastService = (toast) => ({
       life: 3000,
       // sticky: false,
       closable: true,
+      group: 'orange',
+      icon: '',
       ...config
     })
   },
@@ -33,7 +35,7 @@ export const createToastService = (toast) => ({
   alertSuccess(summary, detail) {
     this.alert(summary, detail, {
       severity: 'success',
-      icon: 'pi pi-check'
+      // icon: 'pi pi-check'
     })
   },
 
@@ -46,7 +48,7 @@ export const createToastService = (toast) => ({
   alertError(summary, detail) {
     this.alert(summary, detail, {
       severity: 'error',
-      icon: 'pi pi-times'
+      // icon: 'pi pi-times'
     })
   },
 
@@ -59,7 +61,7 @@ export const createToastService = (toast) => ({
   alertWarn(summary, detail) {
     this.alert(summary, detail, {
       severity: 'warn',
-      icon: 'pi pi-exclamation-triangle'
+      // icon: 'pi pi-exclamation-triangle'
     })
   },
 
@@ -73,7 +75,7 @@ export const createToastService = (toast) => ({
   alertInfo(summary, detail, config = {}) {
     this.alert(summary, detail, {
       severity: 'info',
-      icon: 'pi pi-info-circle',
+      // icon: 'pi pi-info-circle',
       ...config
     })
   }

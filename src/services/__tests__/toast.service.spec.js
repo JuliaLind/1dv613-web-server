@@ -6,6 +6,8 @@ describe('createToastService', () => {
     vi.restoreAllMocks()
   })
 
+  const icon = ''
+
   describe('alert', () => {
     const toast = {
       add: vi.fn(),
@@ -16,7 +18,7 @@ describe('createToastService', () => {
       const detail = 'message detail'
       const config = {
         severity: 'success',
-        icon: 'pi pi-check',
+        // icon: 'pi pi-check',
       }
       sut.alert(summary, detail, config)
       expect(toast.add).toHaveBeenCalledWith({
@@ -24,6 +26,8 @@ describe('createToastService', () => {
         detail,
         life: 3000,
         closable: true,
+        group: 'orange',
+        icon,
         ...config,
       })
     })
@@ -43,7 +47,7 @@ describe('createToastService', () => {
       sut.alertSuccess(summary, detail)
       expect(sut.alert).toHaveBeenCalledWith(summary, detail, {
         severity: 'success',
-        icon: 'pi pi-check',
+        // icon: 'pi pi-check',
       })
     })
 
@@ -51,7 +55,7 @@ describe('createToastService', () => {
       sut.alertError(summary, detail)
       expect(sut.alert).toHaveBeenCalledWith(summary, detail, {
         severity: 'error',
-        icon: 'pi pi-times',
+        // icon: 'pi pi-times',
       })
     })
 
@@ -59,7 +63,7 @@ describe('createToastService', () => {
       sut.alertWarn(summary, detail)
       expect(sut.alert).toHaveBeenCalledWith(summary, detail, {
         severity: 'warn',
-        icon: 'pi pi-exclamation-triangle',
+        // icon: 'pi pi-exclamation-triangle',
       })
     })
 
@@ -67,16 +71,8 @@ describe('createToastService', () => {
       sut.alertInfo(summary, detail)
       expect(sut.alert).toHaveBeenCalledWith(summary, detail, {
         severity: 'info',
-        icon: 'pi pi-info-circle',
+        // icon: 'pi pi-info-circle',
       })
     })
   })
-
-
-
-
-
-
-
-
 })
