@@ -36,19 +36,19 @@ async function handleSubmit(event) {
 </script>
 
 <template>
-  <form @submit="handleSubmit" class="flex flex-col gap-4 p-6 bg-white max-w-md w-full mx-auto">
+  <form @submit="handleSubmit" >
     <Fluid>
-      <div class="flex flex-col gap-2">
+      <fieldset>
         <FloatLabel variant="on">
           <InputText id="email" v-model="form.email" required />
           <label for="email">Email</label>
         </FloatLabel>
 
         <FloatLabel variant="on">
-          <Password inputId="password" v-model="form.password" toggleMask required maxlength="255" :feedback="false" />
+          <Password inputId="password" :feedback="false" v-model="form.password" toggleMask required maxlength="255" />
           <label for="password">Password</label>
         </FloatLabel>
-      </div>
+      </fieldset>
     </Fluid>
 
     <Button type="submit" class="btn-primary btn-lg" label="Login" size="large" />
@@ -63,4 +63,22 @@ async function handleSubmit(event) {
   </p>
 </template>
 
-<style scoped></style>
+<style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--white);
+  max-width: var(--max-width);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+</style>

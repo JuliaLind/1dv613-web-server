@@ -67,12 +67,11 @@ async function handleSubmit(event) {
 </script>
 
 <template>
-  <form @submit="handleSubmit" class="flex flex-col gap-4 p-6 bg-white max-w-md w-full mx-auto">
+  <form @submit="handleSubmit">
     <Fluid>
-      <div class="flex flex-col gap-2">
+      <fieldset>
         <FloatLabel variant="on">
-          <input type="date" required id="birthDate" v-model="form.birthDate"
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-filled" />
+          <input type="date" required id="birthDate" class="p-filled" v-model="form.birthDate" />
           <label for="birthDate">Date of birth</label>
         </FloatLabel>
 
@@ -92,7 +91,7 @@ async function handleSubmit(event) {
           <Password v-model="form.confirmPassword" required toggleMask inputId="confirmPassword" :feedback="false" />
           <label for="confirmPassword">Confirm Password</label>
         </FloatLabel>
-      </div>
+      </fieldset>
     </Fluid>
 
     <Button type="submit" label="Submit" size="large" class="btn-primary btn-lg" />
@@ -110,4 +109,40 @@ async function handleSubmit(event) {
   </form>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--white);
+  max-width: var(--max-width);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+input[type="date"] {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--grey-300);
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+input[type="date"]:focus {
+  border-color: var(--blue-500);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--clear-blue);
+}
+
+</style>
