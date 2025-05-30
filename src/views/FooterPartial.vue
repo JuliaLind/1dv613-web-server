@@ -38,7 +38,7 @@ async function signout() {
 const visible = ref(false)
 
 const updatedToday = computed(() => {
-  return userStore.isSet && userStore.isUpdated
+  return userStore.initialFetchDone && userStore.isSet && userStore.isUpdated
 })
 
 </script>

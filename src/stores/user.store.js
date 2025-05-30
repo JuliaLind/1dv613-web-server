@@ -27,6 +27,8 @@ export const useUserStore = defineStore('user', () => {
     ...defaultUser,
   })
 
+  const initialFetchDone = ref(false)
+
   /**
    * Current age, is retrieved from the access token that
    * is regularly exchanged.
@@ -159,6 +161,7 @@ export const useUserStore = defineStore('user', () => {
     const data = await userService.get()
 
     Object.assign(user, data)
+    initialFetchDone.value = true
   }
 
   /**
