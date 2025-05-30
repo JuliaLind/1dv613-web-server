@@ -1,5 +1,5 @@
 <script setup>
-import { subYears } from 'date-fns'
+import { subYears, format } from 'date-fns'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
@@ -17,7 +17,7 @@ const router = useRouter()
 const toastService = createToastService(toast)
 
 const today = new Date()
-const latestDate = subYears(today, 18)
+const latestDate = format(subYears(today, 18), 'yyyy-MM-dd')
 
 const form = ref({
   birthDate: '',
