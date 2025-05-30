@@ -10,6 +10,7 @@ import {
   matchPasswords,
   validateMandatory
 } from '@/helpers/validate'
+import TermsAndConditions from '@/components/TermsAndConditions.vue'
 
 const toast = useToast()
 const authService = new AuthService()
@@ -64,6 +65,8 @@ async function handleSubmit(event) {
   }
 }
 
+const visible = ref(false)
+
 </script>
 
 <template>
@@ -82,7 +85,8 @@ async function handleSubmit(event) {
         </FloatLabel>
 
         <FloatLabel variant="on">
-          <Password inputId="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required :feedback="false" />
+          <Password inputId="password" v-model="form.password" toggleMask :minlength="8" :maxlength="255" required
+            :feedback="false" />
           <label for="password">Password</label>
         </FloatLabel>
 
@@ -101,16 +105,23 @@ async function handleSubmit(event) {
         Login
       </RouterLink>
     </p>
-    <!-- <p>
+    <p>
       By registering, you agree to our
-      <a href="">Terms of Service</a> and
-      <a href="">Privacy Policy</a>.
-    </p> -->
+      <a href="" @click.prevent="visible = !visible">Terms & Conditions</a>.
+      <Drawer id="terms-and-conditions" v-model:visible="visible" position="bottom" modal
+        class="!h-[96vh] !h-[96dvh] !max-h-[96vh] !max-h-[96dvh] max-w-[768px] rounded-t-2xl shadow-2xl terms-container">
+        <template #header>
+          <h1>Terms and Conditions</h1>
+        </template>
+        <TermsAndConditions @close="visible = false" />
+      </Drawer>
+
+    </p>
   </form>
+
 </template>
 
 <style scoped>
-
 form {
   display: flex;
   flex-direction: column;
@@ -121,6 +132,12 @@ form {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+}
+
+#terms-and-conditions h1 {
+  font-size: var(--text-xl);
+  font-weight: var(--bold);
+  color: var(--grey-800);
 }
 
 
@@ -144,5 +161,4 @@ input[type="date"]:focus {
   outline: none;
   box-shadow: 0 0 0 3px var(--clear-blue);
 }
-
 </style>
