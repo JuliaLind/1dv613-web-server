@@ -158,9 +158,6 @@ describe('Req 1.12 - statistics and visualization', () => {
 
     it('Actual and recommended intake should be displayed in separate columns', () => {
       cy.visit('/')
-      cy.get('.p-toast-close-button')
-        .click() // close the toast message so it
-      // does not cover other elements
 
       cy.get('#prev')
         .click() // go to yesterday

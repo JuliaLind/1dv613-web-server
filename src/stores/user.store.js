@@ -6,6 +6,7 @@ import { isToday, format, endOfDay, isBefore, isEqual } from 'date-fns'
 import { UserService } from '@/services/user.service'
 import { isFilled } from '@/helpers/validate'
 
+
 /**
  * Stores user data and provides methods to manipulate it.
  */
@@ -232,5 +233,6 @@ export const useUserStore = defineStore('user', () => {
     setDate,
     selectedDate,
     historyEntry,
+    initialFetchDone,
   }
 })
