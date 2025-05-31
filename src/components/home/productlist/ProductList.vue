@@ -12,7 +12,7 @@ import MissingItem from '@/components/home/productlist/MissingItem.vue'
 
 const toast = useToast()
 const toastService = createToastService(toast)
-// const visible = ref(false)
+const visible = ref(false)
 const foodList = new FoodList()
 
 const handleError = (error) => {
