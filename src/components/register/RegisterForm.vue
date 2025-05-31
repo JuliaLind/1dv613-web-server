@@ -140,6 +140,9 @@ form {
   color: var(--grey-800);
 }
 
+a {
+  text-decoration: underline;
+}
 
 fieldset {
   display: flex;

@@ -125,15 +125,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Drawer v-model:visible="visible" id="product-list" position="right">
+  <Drawer v-model:visible="visible" id="product-list" position="right" :showCloseIcon="false">
     <template #header>
-      <IconField>
-        <InputIcon class="pi pi-search" />
-        <InputText v-model="query" placeholder="Search" @input="onInput" id="search-input"/>
-      </IconField>
+        <IconField>
+          <InputIcon class="pi pi-search" />
+          <InputText v-model="query" placeholder="Search" @input="onInput" id="search-input" />
+        </IconField>
+        <Button label="Done" class="p-drawer-close-button" @click="visible = false" text />
     </template>
     <Accordion value="0">
-      <AccordionPanel v-for="product in foodList.items.value" :key="product.ean" :value="product.ean" class="productlist-item" :id="'product-' +product.ean">
+      <AccordionPanel v-for="product in foodList.items.value" :key="product.ean" :value="product.ean"
+        class="productlist-item" :id="'product-' + product.ean">
         <AccordionHeader>
           <ProductHeader :name="product.name" :img="product.imgUrl" :brand="product.brand" :kcal="product.kcal_100g"
             :weight="product.weight" />
@@ -154,4 +156,19 @@ footer {
   display: flex;
   justify-content: center;
 }
+
+#product-list {
+  width: 21rem;
+}
+
+
+.p-accordionheader {
+  padding: 1rem 0.5rem 0.5rem;
+}
+/* .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+} */
 </style>
