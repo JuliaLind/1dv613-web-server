@@ -6,9 +6,11 @@ import { Food } from '@/models/Food.js'
 import { useDayStore } from '@/stores/day.store.js'
 import ProductHeader from '../shared/ProductHeader.vue'
 import ProductBody from '../shared/ProductBody.vue'
+import { createToastService } from '@/services/toast.service.js'
 
 const store = useDayStore()
 const toast = useToast()
+const toastService = createToastService(toast)
 
 const props = defineProps({
   food: {
@@ -27,7 +29,6 @@ const food = computed(() => {
 const edit = ref(false)
 const menu = ref()
 
-
 /**
  * Updates the weight and unit of the food item.
  *
@@ -36,12 +37,13 @@ const menu = ref()
 async function upd(data) {
   try {
     await store.updMealItem(props.mealId, data)
+    toastService.alertSuccess('Updated!', '', {
+      life: 1000
+    })
   } catch (error) {
     handleError(error, toast)
   }
   edit.value = false
-
-
 }
 
 

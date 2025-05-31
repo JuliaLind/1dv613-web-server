@@ -23,18 +23,8 @@ const colorClass = computed(() => {
 const getOrangeIcon = (severity, key) => {
   const base = import.meta.env.BASE_URL || '/'
 
-  if (severity === 'info' && key === 'daily') {
-    return `${base}img/orange-daily.png`
-  }
+  return `${base}img/orange-${ key ?? severity }.png`
 
-  const iconMap = {
-    success: `${base}img/orange-success.png`,
-    error: `${base}img/orange-error.png`,
-    warn: `${base}img/orange-warning.png`,
-    info: `${base}img/orange-info.png`
-  }
-
-  return iconMap[severity] || iconMap.info
 }
 </script>
 
@@ -54,16 +44,8 @@ const getOrangeIcon = (severity, key) => {
 
 <style scoped>
 :root {
-  --toast-border-success: var(--green-600);
-  --toast-border-error: var(--red-600);
-  --toast-border-warn: var(--primary-400);
-  --toast-border-info: var(--primary-600);
-  --toast-border-default: var(--grey-300);
-
   --toast-text: var(--grey-800);
   --toast-detail-text: var(--grey-600);
-  --toast-shadow: var(--light-shadow);
-  --toast-bg: var(--white);
 }
 
 .orange-toast {
@@ -71,14 +53,12 @@ const getOrangeIcon = (severity, key) => {
   align-items: center;
   position: relative;
   gap: 12px;
-  padding: 12px 16px;
   border-radius: 8px;
-  background-color: var(--toast-bg);
-  border: 2px solid var(--toast-border-default);
-  box-shadow: 0 2px 8px var(--toast-shadow);
+  box-shadow: none;
   color: var(--toast-text);
   width: 100%;
   box-sizing: border-box;
+  border: 0;
 }
 
 .orange-toast-icon {
@@ -104,39 +84,5 @@ const getOrangeIcon = (severity, key) => {
   font-size: 13px;
   margin: 0;
   color: var(--toast-detail-text);
-}
-
-.orange-toast-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  font-size: var(--text-base);
-  color: var(--toast-detail-text);
-  cursor: pointer;
-}
-
-.p-toast-message-success {
-  border-color: var(--toast-border-success);
-}
-
-.p-toast-message-error {
-  border-color: var(--toast-border-error);
-  background-color: var(--red-50);
-}
-
-.p-toast-message-warn {
-  border-color: var(--toast-border-warn);
-  background-color: var(--primary-50);
-}
-
-.p-toast-message-info {
-  border-color: var(--toast-border-info);
-  background-color: var(--primary-50);
-}
-
-.p-toast-message-default {
-  border-color: var(--toast-border-default);
 }
 </style>

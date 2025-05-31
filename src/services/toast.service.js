@@ -31,11 +31,13 @@ export const createToastService = (toast) => ({
    *
    * @param {string} summary - The summary of the alert (will show in the header as title text).
    * @param {string} detail - The detail of the alert (will show in the body as smaller text).
+   * @param config
    */
-  alertSuccess(summary, detail) {
+  alertSuccess(summary, detail, config = {}) {
     this.alert(summary, detail, {
       severity: 'success',
-      // icon: 'pi pi-check'
+      // icon: 'pi pi-check',
+      ...config
     })
   },
 
@@ -44,11 +46,13 @@ export const createToastService = (toast) => ({
    *
    * @param {string} summary - The summary of the alert (will show in the header as title text).
    * @param {string} detail - The detail of the alert (will show in the body as smaller text).
+   * @param config
    */
-  alertError(summary, detail) {
+  alertError(summary, detail, config = {}) {
     this.alert(summary, detail, {
       severity: 'error',
       // icon: 'pi pi-times'
+      ...config
     })
   },
 
@@ -57,11 +61,13 @@ export const createToastService = (toast) => ({
    *
    * @param {string} summary - The summary of the alert (will show in the header as title text).
    * @param {string} detail - The detail of the alert (will show in the body as smaller text).
+   * @param config
    */
-  alertWarn(summary, detail) {
+  alertWarn(summary, detail, config = {}) {
     this.alert(summary, detail, {
       severity: 'warn',
       // icon: 'pi pi-exclamation-triangle'
+      ...config
     })
   },
 

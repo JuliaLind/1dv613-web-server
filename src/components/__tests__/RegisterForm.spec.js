@@ -10,6 +10,7 @@ import Password from 'primevue/password'
 import Button from 'primevue/button'
 import Fluid from 'primevue/fluid'
 import { subYears, addDays } from 'date-fns'
+import Drawer from 'primevue/drawer'
 
 import RegisterForm from '../register/RegisterForm.vue'
 
@@ -68,7 +69,8 @@ describe('RegisterForm', () => {
           FloatLabel,
           Password,
           Button,
-          Fluid
+          Fluid,
+          Drawer
         },
         stubs: {
           RouterLink: true
