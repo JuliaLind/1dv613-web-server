@@ -155,26 +155,26 @@ describe('Req 1.7 - add food item to a meal', function () {
      * @param {number} weight - weight of the bread item to add
      */
     function addBread(weight) {
-      cy.get('#snack1 .add-food-btn')
-        .click()
+      cy.get('#product-7350029731557 input#weight').then($weightField => {
+        if (!$weightField.is(':visible')) {
+          // If not visible, open the accordion
+          cy.get('#product-7350029731557 button.p-accordionheader').click();
+        }
 
-      cy.get('#product-7350029731557 button.p-accordionheader')
-        .click()
-      cy.get('#product-7350029731557 input#weight').clear()
-      cy.get('#product-7350029731557 input#weight')
-        .type(weight) // add X g of bread
+        cy.get('#product-7350029731557 input#weight')
+          .clear()
+          .type(weight)
 
-      cy.get('#product-7350029731557 .save-btn')
-        .click()
-
-      cy.get('.p-drawer-close-button')
-        .click() // close the drawer
+        cy.get('#product-7350029731557 .save-btn').click()
+      })
     }
 
     cy.visit('/')
     cy.get('.p-toast-close-button')
       .click() // close the toast message so it does not cover other elements
 
+    cy.get('#snack1 .add-food-btn')
+      .click()
 
     // add first food item
     addBread(400)

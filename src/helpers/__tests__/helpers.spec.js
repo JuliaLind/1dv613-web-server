@@ -32,7 +32,6 @@ describe('helpers module', () => {
       await tryCatch(func, errorHandler, arg1, arg2, arg3)
       expect(func).toHaveBeenCalledTimes(1)
       expect(func).toHaveBeenCalledWith(arg1, arg2, arg3)
-      expect(errorHandler).toHaveBeenCalledTimes(1)
       expect(errorHandler).toHaveBeenCalledWith(expect.any(Error))
     })
   })

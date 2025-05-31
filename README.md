@@ -4,6 +4,7 @@ This repo is part of https://github.com/JuliaLind/slimdreams .
 
 The application is deployed on https://julia-lnu.duckdns.org/slimdreams/ .
 
+![Sequence diagram](.readme/add-food-item_sequence-diagram.png)
 
 
 ## Project Setup
