@@ -40,8 +40,6 @@ async function upd(data) {
     handleError(error, toast)
   }
   edit.value = false
-
-
 }
 
 

@@ -23,18 +23,8 @@ const colorClass = computed(() => {
 const getOrangeIcon = (severity, key) => {
   const base = import.meta.env.BASE_URL || '/'
 
-  if (severity === 'info' && key === 'daily') {
-    return `${base}img/orange-daily.png`
-  }
+  return `${base}img/orange-${ key ?? severity }.png`
 
-  const iconMap = {
-    success: `${base}img/orange-success.png`,
-    error: `${base}img/orange-error.png`,
-    warn: `${base}img/orange-warning.png`,
-    info: `${base}img/orange-info.png`
-  }
-
-  return iconMap[severity] || iconMap.info
 }
 </script>
 
