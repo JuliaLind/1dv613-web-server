@@ -4,6 +4,10 @@ import ProductList from '@/components/home/productlist/ProductList.vue'
 import { useDayStore } from '@/stores/day.store.js'
 import SingleMeal from '@/components/home/meallist/SingleMeal.vue'
 import { Meal } from '@/models/Meal.js'
+import { useToast } from 'primevue/usetoast'
+import { createToastService } from '@/services/toast.service.js'
+const toast = useToast()
+const toastService = createToastService(toast)
 
 
 const dayStore = useDayStore()
@@ -19,6 +23,9 @@ const emit = defineEmits(['error'])
 async function addToSelected(food) {
   try {
     await dayStore.addToSelected(food)
+    toastService.alertSuccess('Added!', '', {
+      life: 1000
+    })
   } catch (error) {
     emit('error', error)
   }
@@ -34,6 +41,10 @@ async function addToSelected(food) {
 async function delItem(itemId, mealType) {
   try {
     await dayStore.delItem(itemId, mealType)
+    toastService.alertSuccess('Deleted!', '', {
+      life: 1000,
+      key: 'throw'
+    })
   } catch (error) {
     emit('error', error)
   }
