@@ -1,4 +1,4 @@
-describe('Req 1.7 - add food item to a meal', function () {
+describe('Req 1.4.6 - create new food item', function () {
   const foodItem = {
     ean: '99999999999',
     name: 'Test Food Item',
