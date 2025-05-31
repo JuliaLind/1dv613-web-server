@@ -29,6 +29,10 @@ import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import OverlayPanel from 'primevue/overlaypanel'
 
+import KeyFilter from 'primevue/keyfilter'
+
+
+
 
 
 
@@ -73,6 +77,9 @@ app.component('Fluid', Fluid)
 
 app.component('ConfirmPopup', ConfirmPopup)
 app.use(ConfirmationService)
+
+// block keys in inputfields based on pattern
+app.directive('keyfilter', KeyFilter)
 
 
 app.use(ToastService)

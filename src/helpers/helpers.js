@@ -50,3 +50,48 @@ export function handleError(error, toast, router) {
   }
   toastService.alertError('Action failed.', error.message, 'Please try again later')
 }
+
+
+/**
+ * Resize an image file to a specific size and return a data-URL.
+ *
+ * @param {File} file The original image file
+ * @param {number} size The desired width and height (in px) for the resized image
+ * @returns {Promise<string>} A Promise that resolves to a base64 encoded dataUrl string.
+ */
+export function resizeImage(file, size) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    const canvas = document.createElement('canvas')
+    const reader = new FileReader()
+
+    // Step 2: When FileReader has loaded the original file as a data url:
+    reader.onload = (e) => {
+      // step 4: called when the image has finished loading after assigning the src attribute below
+      img.onload = () => {
+        canvas.width = size
+        canvas.height = size
+
+        // Draw the original image onto our square canvas
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, size, size)
+
+        const dataUrl = canvas.toDataURL('image/jpeg') // put the resized image into a data url
+
+        // step 5: return the data url with the resized image
+        resolve(dataUrl)
+      }
+
+      // step 3: make the image load the original file
+      img.src = e.target.result // this is the data url of the original image
+    }
+
+    reader.onerror = () => {
+      reader.abort()
+      reject(new Error('Failed to read file as Data URL'))
+    }
+
+    // step 1: read the file, when finished loading the above onload function will be called
+    reader.readAsDataURL(file)
+  })
+}

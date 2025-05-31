@@ -7,11 +7,12 @@ import ProductBody from '@/components/home/shared/ProductBody.vue'
 import ProductHeader from '@/components/home/shared/ProductHeader.vue'
 import { FoodList } from '@/models/FoodList.js'
 import { tryCatch } from '@/helpers/helpers'
+import MissingItem from '@/components/home/productlist/MissingItem.vue'
 
 
 const toast = useToast()
 const toastService = createToastService(toast)
-const visible = ref(false)
+// const visible = ref(false)
 const foodList = new FoodList()
 
 const handleError = (error) => {
@@ -127,11 +128,11 @@ onMounted(async () => {
 <template>
   <Drawer v-model:visible="visible" id="product-list" position="right" :showCloseIcon="false">
     <template #header>
-        <IconField>
-          <InputIcon class="pi pi-search" />
-          <InputText v-model="query" placeholder="Search" @input="onInput" id="search-input" />
-        </IconField>
-        <Button label="Done" class="p-drawer-close-button" @click="visible = false" text />
+      <IconField>
+        <InputIcon class="pi pi-search" />
+        <InputText v-model="query" placeholder="Search" @input="onInput" id="search-input" />
+      </IconField>
+      <Button label="Done" class="p-drawer-close-button" @click="$emit('close')" text />s
     </template>
     <Accordion value="0">
       <AccordionPanel v-for="product in foodList.items.value" :key="product.ean" :value="product.ean"
@@ -147,6 +148,7 @@ onMounted(async () => {
     </Accordion>
     <footer>
       <Button v-show="fetchMore" label="Load more" @click="loadMore" text class="mt-1" />
+      <MissingItem v-show="!fetchMore" @new-product="(data) => foodList.addItems([data])" />
     </footer>
   </Drawer>
 </template>
@@ -165,6 +167,7 @@ footer {
 .p-accordionheader {
   padding: 1rem 0.5rem 0.5rem;
 }
+
 /* .header {
   display: flex;
   justify-content: space-between;

@@ -1,4 +1,5 @@
 import { FetchService } from './fetch.service.js'
+import { AuthService } from './auth.service.js'
 const dataUrl = import.meta.env.VITE_DATA_URL
 
 /**
@@ -50,5 +51,22 @@ export class FoodService {
     })
     const data = await this.#fetchService.handleResponse(response)
     return data
+  }
+
+  /**
+   * Creates a new food item.
+   *
+   * @param {object} food - the new food item data
+   * @param {AuthService} authService - the authentication service to use for getting headers
+   * @returns {Promise<object>} - the created food item
+   */
+  async post(food, authService= new AuthService()) {
+    const response = await this.#fetchService.request({
+      method: 'POST',
+      path: '/foods',
+      body: food,
+      headers: await authService.getHeaders(),
+    })
+    return await this.#fetchService.handleResponse(response)
   }
 }
