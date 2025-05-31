@@ -163,7 +163,7 @@ describe('Req 1.7 - add food item to a meal', function () {
 
         cy.get('#product-7350029731557 input#weight')
           .clear()
-          .type(weight)
+        cy.get('#product-7350029731557 input#weight').type(weight)
 
         cy.get('#product-7350029731557 .save-btn').click()
       })
