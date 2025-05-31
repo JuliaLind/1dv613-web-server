@@ -112,7 +112,7 @@ async function handleSubmit() {
     form.value = getDefaultValues()
     emit('new-product', newProduct)
     emit('close')
-    toastService.alertSuccess('Product added', 'The new product has been successfully added to the database')
+    toastService.alertSuccess('Product created!', 'The new product has been successfully added to the database')
   } catch (error) {
     handleError(error, toast)
   }
@@ -133,55 +133,55 @@ async function handleSubmit() {
 
     <!-- base info section -->
     <label class="label">EAN *</label>
-    <input class="input" v-model="form.ean" v-keyfilter.num required />
+    <input id="ean-input" class="input" v-model="form.ean" v-keyfilter.num required />
 
     <label class="label">Name *</label>
-    <input class="input" v-model="form.name" required />
+    <input id="name-input" class="input" v-model="form.name" required />
 
     <label class="label">Brand</label>
-    <input class="input" v-model="form.brand" />
+    <input id="brand-input" class="input" v-model="form.brand" />
 
     <!-- Nutrient content section -->
     <h3 class="section-title">Fill out the values per 100g</h3>
     <div class="nutrition-grid">
       <label class="inline-field">
         <span>kcal</span>
-        <input class="nutri-input" type="number" v-model.number="form.kcal_100g" />
+        <input id="kcal-input" class="nutri-input" type="number" v-model.number="form.kcal_100g" />
       </label>
 
       <label class="inline-field">
         <span>Fat</span>
-        <input class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.fat" />
+        <input id="fat-input" class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.fat" />
       </label>
 
       <label class="inline-field">
         <span>Saturated Fat</span>
-        <input class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.saturatedFat" />
+        <input id="saturated-fat-input" class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.saturatedFat" />
       </label>
 
       <label class="inline-field">
         <span>Carbohydrates</span>
-        <input class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.carbohydrates" />
+        <input id="carbohydrates-input" class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.carbohydrates" />
       </label>
 
       <label class="inline-field">
         <span>Sugars</span>
-        <input class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.sugars" />
+        <input id="sugars-input" class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.sugars" />
       </label>
 
       <label class="inline-field">
         <span>Protein</span>
-        <input class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.protein" />
+        <input id="protein-input" class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.protein" />
       </label>
 
       <label class="inline-field">
         <span>Salt</span>
-        <input class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.salt" />
+        <input id="salt-input" class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.salt" />
       </label>
 
       <label class="inline-field">
         <span>Fiber</span>
-        <input class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.fiber" />
+        <input id="fiber-input" class="nutri-input" type="number" step="0.1" v-model.number="form.macros_100g.fiber" />
       </label>
     </div>
 
