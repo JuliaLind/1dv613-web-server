@@ -1,4 +1,4 @@
-import { subYears, addDays, format, startOfDay } from 'date-fns'
+import { subYears, addDays, format } from 'date-fns'
 
 describe('Req 1.1 - registration', function () {
   const email = 'testuser@example.com'
