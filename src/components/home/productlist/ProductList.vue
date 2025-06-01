@@ -132,7 +132,7 @@ onMounted(async () => {
         <InputIcon class="pi pi-search" />
         <InputText v-model="query" placeholder="Search" @input="onInput" id="search-input" />
       </IconField>
-      <Button label="Done" class="p-drawer-close-button" @click="$emit('close')" text />s
+      <Button label="Done" class="p-drawer-close-button" @click="$emit('close')" text />
     </template>
     <Accordion value="0">
       <AccordionPanel v-for="product in foodList.items.value" :key="product.ean" :value="product.ean"
@@ -153,25 +153,33 @@ onMounted(async () => {
   </Drawer>
 </template>
 
+<style>
+#product-list {
+  width: 21rem;
+}
+
+#product-list .p-drawer-header {
+  width: fit-content;
+  padding: 0.5rem !important;
+  gap: 0;
+}
+
+#product-list .p-drawer-content {
+  padding-left: 0.5rem;
+}
+
+</style>
+
 <style scoped>
 footer {
   display: flex;
   justify-content: center;
 }
 
-#product-list {
-  width: 22rem;
-}
 
 
 .p-accordionheader {
   padding: 1rem 0.5rem 0.5rem;
 }
 
-/* .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-} */
 </style>

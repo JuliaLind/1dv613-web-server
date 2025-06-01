@@ -43,8 +43,3 @@ h2 {
   color: var(--primary-700);
 }
 
-#product-list .p-drawer-header {
-  width: fit-content;
-  padding: 0.5rem !important;
-  gap: 0;
-}
