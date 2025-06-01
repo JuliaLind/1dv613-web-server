@@ -100,16 +100,6 @@ jobs:
         run: |
           npx cypress run --e2e
 
-      # - name: Upload Cypress Artifacts
-      #   if: always()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: e2e-artifacts
-      #     path: |
-      #       cypress/screenshots
-      #       cypress/videos
-      #       coverage/e2e
-
   build:
     name: Build Frontend
     runs-on: ubuntu-latest

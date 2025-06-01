@@ -74,7 +74,7 @@ const visible = ref(false)
     <Fluid>
       <fieldset>
         <FloatLabel variant="on">
-          <input type="date" required id="birthDate" class="p-filled" v-model="form.birthDate" />
+          <input type="date" required id="birthDate" class="p-filled p-inputtext p-inputtext-fluid" v-model="form.birthDate" />
           <label for="birthDate">Date of birth</label>
         </FloatLabel>
 
@@ -150,7 +150,7 @@ fieldset {
   gap: 0.5rem;
 }
 
-input[type="date"] {
+/* input[type="date"] {
   display: block;
   width: 100%;
   padding: 0.5rem 1rem;
@@ -163,5 +163,5 @@ input[type="date"]:focus {
   border-color: var(--blue-500);
   outline: none;
   box-shadow: 0 0 0 3px var(--clear-blue);
-}
+} */
 </style>
