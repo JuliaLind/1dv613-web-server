@@ -160,7 +160,7 @@ footer {
 }
 
 #product-list {
-  width: 21rem;
+  width: 22rem;
 }
 
 
