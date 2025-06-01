@@ -12,8 +12,10 @@ defineEmits(['update:visible'])
     <details open>
       <summary>Project Status</summary>
       <p>
-        <strong>Note:</strong> This application is a first-year student project developed by Julia Lind. Users should understand 
-        that features, support, and updates are provided on a best-effort basis and may be limited in scope or frequency.
+        <strong>Note:</strong> This application is a first-year student project developed by Julia Lind. Users should
+        understand
+        that features, support, and updates are provided on a best-effort basis and may be limited in scope or
+        frequency.
       </p>
     </details>
 
@@ -108,7 +110,8 @@ defineEmits(['update:visible'])
         <li>
           <strong>Date of Birth</strong>
           <ul>
-            <li><em>Purpose:</em> Verify you are at least 18 years old and calculate age for any age-dependent features.</li>
+            <li><em>Purpose:</em> Verify you are at least 18 years old and calculate age for any age-dependent features.
+            </li>
             <li><em>Legal Basis:</em> Legal obligation/legitimate interest (GDPR Art. 6(1)(c) &amp; (f)).</li>
             <li><em>Storage Location:</em> DigitalOcean droplet in Frankfurt (FRA1), Germany (10.114.0.0/20).</li>
             <li><em>Retention:</em> Deleted immediately when you successfully submit the Delete Account form.</li>
@@ -127,27 +130,33 @@ defineEmits(['update:visible'])
           <strong>Height, Current Weight, Goal Weight, Activity Level, Target Weight Loss per Week</strong>
           <ul>
             <li><em>Purpose:</em> Calculate personalized caloric targets, track progress, and set goals.</li>
-            <li><em>Legal Basis:</em> Your consent (GDPR Art. 6(1)(a)), given implicitly when you enter and click “Save.”</li>
+            <li><em>Legal Basis:</em> Your consent (GDPR Art. 6(1)(a)), given implicitly when you enter and click
+              “Save.”</li>
             <li><em>Storage Location:</em> DigitalOcean droplet in Frankfurt (FRA1), Germany (10.114.0.0/20).</li>
-            <li><em>Retention:</em> Deleted immediately when you successfully submit the Delete Account form. Otherwise, data remains until that deletion.</li>
+            <li><em>Retention:</em> Deleted immediately when you successfully submit the Delete Account form. Otherwise,
+              data remains until that deletion.</li>
           </ul>
         </li>
         <li>
           <strong>Weight &amp; Age History Records (with timestamps)</strong>
           <ul>
             <li><em>Purpose:</em> Monitor your progress over time and refine suggestions.</li>
-            <li><em>Legal Basis:</em> Your consent (GDPR Art. 6(1)(a)), given implicitly when you save history entries.</li>
+            <li><em>Legal Basis:</em> Your consent (GDPR Art. 6(1)(a)), given implicitly when you save history entries.
+            </li>
             <li><em>Storage Location:</em> DigitalOcean droplet in Frankfurt (FRA1), Germany (10.114.0.0/20).</li>
-            <li><em>Retention:</em> Deleted immediately when you successfully submit the Delete Account form. Otherwise, data remains until that deletion.</li>
+            <li><em>Retention:</em> Deleted immediately when you successfully submit the Delete Account form. Otherwise,
+              data remains until that deletion.</li>
           </ul>
         </li>
         <li>
           <strong>Meal Logs (Food Item Name, EAN Code, Weight, Unit, Timestamp)</strong>
           <ul>
             <li><em>Purpose:</em> Calculate nutritional intake and provide feedback.</li>
-            <li><em>Legal Basis:</em> Your consent (GDPR Art. 6(1)(a)), given implicitly when you log meals and click “Save.”</li>
+            <li><em>Legal Basis:</em> Your consent (GDPR Art. 6(1)(a)), given implicitly when you log meals and click
+              “Save.”</li>
             <li><em>Storage Location:</em> DigitalOcean droplet in Frankfurt (FRA1), Germany (10.114.0.0/20).</li>
-            <li><em>Retention:</em> Deleted immediately when you successfully submit the Delete Account form. Otherwise, data remains until that deletion.</li>
+            <li><em>Retention:</em> Deleted immediately when you successfully submit the Delete Account form. Otherwise,
+              data remains until that deletion.</li>
           </ul>
         </li>
       </ul>
@@ -161,23 +170,28 @@ defineEmits(['update:visible'])
       <h5>5.3.1 Security Measures</h5>
       <ul>
         <li><strong>Encryption in Transit:</strong> All communications use HTTPS (TLS).</li>
-        <li><strong>Encryption at Rest:</strong> Data is stored on unencrypted volumes (unless DigitalOcean provides encryption by default).</li>
-        <li><strong>Pseudonymization:</strong> Required data (Server 1) is kept on a separate database from voluntary data (Server 2). No other anonymization steps are applied.</li>
+        <li><strong>Encryption at Rest:</strong> Data is stored on unencrypted volumes (unless DigitalOcean provides
+          encryption by default).</li>
+        <li><strong>Pseudonymization:</strong> Required data (Server 1) is kept on a separate database from voluntary
+          data (Server 2). No other anonymization steps are applied.</li>
         <li>
           <strong>Access Controls &amp; Logging:</strong>
           <ul>
-            <li>Julia Lind is the only person with access to the servers. Access credentials are managed via a key stored on GitHub for CI/CD.</li>
+            <li>Julia Lind is the only person with access to the servers. Access credentials are managed via a key
+              stored on GitHub for CI/CD.</li>
             <li>No additional access controls or logs (beyond DigitalOcean's defaults) are in place.</li>
           </ul>
         </li>
-        <li><strong>Vulnerability Scanning / Pen Testing:</strong> No security scans or penetration testing are performed beyond any default measures by DigitalOcean.</li>
+        <li><strong>Vulnerability Scanning / Pen Testing:</strong> No security scans or penetration testing are
+          performed beyond any default measures by DigitalOcean.</li>
       </ul>
 
       <!-- 5.4 Your GDPR Rights -->
       <h4>5.4 Your GDPR Rights &amp; How to Exercise Them</h4>
       <p>
         Under the GDPR, you have the rights listed below. To exercise any of these rights, please email
-        <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>. We will respond within one year of a valid request.
+        <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>. We will respond within one year of a valid
+        request.
       </p>
       <ul>
         <li>
@@ -193,50 +207,65 @@ defineEmits(['update:visible'])
         <li>
           <strong>Right to Rectification (Art. 16):</strong>
           <ul>
-            <li><em>Required Data:</em> You cannot edit email, date of birth, or password in-app. To request corrections, email <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>, and corrections will be made manually.</li>
-            <li><em>Voluntary Data:</em> You may edit your height, current weight, and other voluntary fields in-app. However, historical entries (past days' weight, past meal logs) cannot be edited once saved.</li>
+            <li><em>Required Data:</em> You cannot edit email, date of birth, or password in-app. To request
+              corrections, email <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>, and corrections
+              will be made manually.</li>
+            <li><em>Voluntary Data:</em> You may edit your height, current weight, and other voluntary fields in-app.
+              However, historical entries (past days' weight, past meal logs) cannot be edited once saved.</li>
           </ul>
         </li>
 
         <li>
           <strong>Right to Erasure (Art. 17):</strong>
           <ul>
-            <li>Use the “Delete Account” form in “Settings → Danger Zone.” You must enter your email and password, and then confirm the prompt. Once successful, all your data on both servers is deleted immediately.</li>
+            <li>Use the “Delete Account” form in “Settings → Danger Zone.” You must enter your email and password, and
+              then confirm the prompt. Once successful, all your data on both servers is deleted immediately.</li>
           </ul>
         </li>
 
         <li>
           <strong>Right to Restrict Processing (Art. 18):</strong>
           <ul>
-            <li>There is no in-app toggle to suspend voluntary data processing. If you want us to stop collecting voluntary data, simply do not save any new entries. Each time you log in without saving new voluntary data, you will be prompted to enter today's weight. If you decline, no new voluntary data is collected. For additional requests, email <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>.</li>
+            <li>There is no in-app toggle to suspend voluntary data processing. If you want us to stop collecting
+              voluntary data, simply do not save any new entries. Each time you log in without saving new voluntary
+              data, you will be prompted to enter today's weight. If you decline, no new voluntary data is collected.
+              For additional requests, email <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>.</li>
           </ul>
         </li>
 
         <li>
           <strong>Right to Data Portability (Art. 20):</strong>
           <ul>
-            <li>To receive your data in JSON format, email us at <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>. We will respond within one year of your request.</li>
+            <li>To receive your data in JSON format, email us at <a
+                href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>. We will respond within one year of your
+              request.</li>
           </ul>
         </li>
 
         <li>
           <strong>Right to Object (Art. 21):</strong>
           <ul>
-            <li>We do not perform any analytics or profiling on user data beyond standard server logs. If you wish to object to any future analytics, email <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>.</li>
+            <li>We do not perform any analytics or profiling on user data beyond standard server logs. If you wish to
+              object to any future analytics, email <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a>.
+            </li>
           </ul>
         </li>
 
         <li>
           <strong>Right to Withdraw Consent (Art. 7(3)):</strong>
           <ul>
-            <li>For any voluntary data you have saved, you may edit or delete entries in-app. To cease processing entirely, delete your account. All voluntary data will be removed immediately upon successful deletion.</li>
+            <li>For any voluntary data you have saved, you may edit or delete entries in-app. To cease processing
+              entirely, delete your account. All voluntary data will be removed immediately upon successful deletion.
+            </li>
           </ul>
         </li>
 
         <li>
           <strong>Right to Lodge a Complaint (Art. 77):</strong>
           <ul>
-            <li>If you believe our processing violates GDPR, you may contact your local supervisory authority or email <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a> first. We will attempt to address your concern.</li>
+            <li>If you believe our processing violates GDPR, you may contact your local supervisory authority or email
+              <a href="mailto:jl225vf@student.lnu.se">jl225vf@student.lnu.se</a> first. We will attempt to address your
+              concern.</li>
           </ul>
         </li>
       </ul>
@@ -262,7 +291,9 @@ defineEmits(['update:visible'])
       <!-- 5.6 Data Protection Impact Assessment (DPIA) -->
       <h4>5.6 Data Protection Impact Assessment (DPIA)</h4>
       <p>
-        We process height, weight, and meal logs as “health data.” To mitigate re-identification, we separate Server 1 and Server 2, limit access to a single developer, and use HTTPS. Residual risk is low. We revisit this DPIA annually.
+        We process height, weight, and meal logs as “health data.” To mitigate re-identification, we separate Server 1
+        and Server 2, limit access to a single developer, and use HTTPS. Residual risk is low. We revisit this DPIA
+        annually.
       </p>
 
       <!-- 5.7 Changes to GDPR & Data Protection Terms -->
@@ -287,28 +318,25 @@ defineEmits(['update:visible'])
 
 
 <style scoped>
-.terms-container {
-  color: var(--base-font-grey);
-}
-
-
-
 .p-drawer-header {
-  padding: 0.25rem !important;
+  /* padding: 0.25rem !important; */
+  padding: 0.5rem 1rem !important;
 }
 
 details {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
   border: 1px solid var(--grey-300);
   border-radius: 5px;
-  padding: 1rem;
   background-color: var(--grey-100);
 }
+
 
 summary {
   font-weight: bold;
   cursor: pointer;
   outline: none;
+  margin-bottom: 0.75rem;
 }
 
 summary::-webkit-details-marker {
@@ -320,6 +348,40 @@ details[open] summary {
 }
 
 p {
-  margin: 0.5rem 0 0 0;
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+
+h4,
+h5 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+
+ul {
+  margin: 0.75rem 0;
+  padding-left: 1.25rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+ul ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+details:last-of-type {
+  margin-bottom: 2rem;
+}
+
+details details {
+  background-color: #f5f5f5;
+  margin: 0.5rem 0;
+  padding: 0.75rem 1rem;
 }
 </style>
