@@ -12,7 +12,7 @@ defineEmits(['update:visible'])
         <summary>1. General Use</summary>
         <p>
           This application is designed to support general wellness and nutrition tracking. It is not intended for
-          diagnostic or therapeutic use.
+          diagnostic or therapeutic use. You must be at least 18 years old to use this application.
         </p>
       </details>
 

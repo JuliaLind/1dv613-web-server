@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach, afterAll } from 'vitest'
 import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { format } from 'date-fns'
 import { mount } from '@vue/test-utils'
 import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
@@ -49,7 +50,7 @@ describe('RegisterForm', () => {
   const password = 'password123'
 
   const latestDate = subYears(new Date(), 18)
-  const birthDate = latestDate.toISOString().split('T')[0]
+  const birthDate = format(latestDate, 'yyyy-MM-dd')
 
   beforeEach(async () => {
     router = createRouter({
@@ -166,7 +167,7 @@ describe('RegisterForm', () => {
       email,
       password,
       confirmPassword: password,
-      birthDate: addDays(latestDate, 1).toISOString().split('T')[0],
+      birthDate: format(addDays(latestDate, 1), 'yyyy-MM-dd'),
       reason: 'user is less than 18 years old',
     },
     {

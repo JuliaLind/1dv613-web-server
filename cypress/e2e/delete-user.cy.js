@@ -1,17 +1,10 @@
-import { format, subYears } from 'date-fns'
+import { format, subYears, startOfDay } from 'date-fns'
 
 describe('Req 1.10 - delete account', function () {
   let token
   const age = 18
-  const birthDate = format(subYears(new Date(), age), 'yyyy-MM-dd')
 
-  const credentials = {
-    email: 'other-user@email.com',
-    password: 'otheruser',
-    birthDate
-  }
-
-  const today = format(new Date(), 'yyyy-MM-dd')
+  const today = format(startOfDay(new Date()), 'yyyy-MM-dd')
   const breakfast = {
     date: today,
     type: 'breakfast',
@@ -23,6 +16,15 @@ describe('Req 1.10 - delete account', function () {
       }
     ]
   }
+
+  const birthDate = format(subYears(today, age), 'yyyy-MM-dd')
+
+  const credentials = {
+    email: 'other-user@email.com',
+    password: 'otheruser',
+    birthDate
+  }
+
 
   beforeEach(() => {
     cy.createUser(credentials)

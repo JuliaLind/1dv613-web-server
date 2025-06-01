@@ -57,7 +57,7 @@ async function delItem(itemId, mealType) {
     <SingleMeal v-for="type in Object.keys(Meal.TYPES)" :key="type" :type="type"
       @select="dayStore.selectMeal(type); visible = true" @delete="foodId => delItem(foodId, type)" />
   </div>
-  <ProductList v-model:visible="visible" @add-food="addToSelected" />
+  <ProductList v-model:visible="visible" @add-food="addToSelected" @close="visible = false" />
 </template>
 
 <style scoped>
