@@ -1,10 +1,11 @@
-import { subYears, addDays } from 'date-fns'
+import { subYears, addDays, format, startOfDay } from 'date-fns'
 
 describe('Req 1.1 - registration', function () {
   const email = 'testuser@example.com'
   const password = 'password123'
-  const birthDate18 = subYears(new Date(), 18).toISOString().split('T')[0]
-  const birthDateUnder18 = addDays(new Date(birthDate18), 1).toISOString().split('T')[0]
+  const today = new Date()
+  const birthDate18 = format(subYears(today, 18), 'yyyy-MM-dd')
+  const birthDateUnder18 = format(addDays(new Date(birthDate18), 1), 'yyyy-MM-dd')
 
   afterEach(() => {
     cy.deleteUser({
